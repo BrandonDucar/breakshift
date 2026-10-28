@@ -5,6 +5,13 @@ recorded Meta-model proposal, challenge it against changed conditions, and expor
 or independently replay the resulting evidence. Passing a simulation does not
 establish a real machine's condition or authorize a physical repair.
 
+## Live Demo & Hosted Bay
+
+Try the live, zero-cost Cloudflare Worker deployment directly in any desktop or mobile browser:
+**https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/**
+
+The live app serves release `live-03370f1c283ea180` across phone, tablet, and desktop viewports with zero credentials or account sign-in required.
+
 ## Offline Quick Start
 
 Use Node.js 22.12 or newer. No packages, API keys or account access are required:

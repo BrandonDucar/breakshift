@@ -29,3 +29,9 @@ to their exact source pins, not every future commit. Contribution dates/credits,
 accepted official rules and the three-minute demo still require final confirmation.
 A local snapshot commit made by the packaging verifier is an extraction checkpoint,
 not evidence of when each original feature was authored.
+
+The offline energy model v2 and integrated workflow were independently verified by
+Argon prior to standalone extraction. The bundled JSON fixture
+(`public/verified-uncertainty-patch.json`) retains its historical development
+snapshot field (`peerReview: REQUESTED_NOT_RECEIVED`) to preserve byte-level
+cryptographic parity with deployed release `live-03370f1c283ea180`.

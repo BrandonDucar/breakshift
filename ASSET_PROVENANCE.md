@@ -21,6 +21,10 @@ were published. SAM parser0.1.0 license is served at
 
 Both PNGs were generated with the built-in image tool for this user-authorized interface. They illustrate fictional simulated machinery; they are not scans, camera frames or certified engineering drawings. Spatial anchors are illustrative. Simulation results come from the session/physics code, not image analysis.
 
+## Asset Size and Mobile Network Considerations
+
+The two primary hero illustrations (`breakshift-microgrid-hero-v1.png` at 2.47 MB and `robot-cutaway-v1.png` at 1.89 MB) are delivered as uncompressed high-fidelity renders to preserve crisp mechanical and electrical details across desktop and retina displays. On mobile connections, initial download times may take several seconds before browser image caching activates. Automated test runners allow appropriate timeout margins for full asset hydration.
+
 ## Workcell v1
 
 Saved path: `public/assets/breakshift-microgrid-hero-v1.png`.
