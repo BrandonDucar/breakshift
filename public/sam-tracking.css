@@ -1,0 +1,18 @@
+#photo-image-wrap>video{display:block;width:100%;height:100%;object-fit:contain;background:#10150f}
+#sam-mask-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.photo-question input{width:100%;background:#13190f;color:var(--ink);border:1px solid #4c5940;padding:10px;font:12px Arial,sans-serif}
+.photo-findings ol{padding-left:20px}.photo-findings ol li{padding:6px 0}.photo-findings ol p{color:var(--muted);margin:8px 0}
+.photo-findings a{color:#a5eaff}.photo-region-list [data-sam-id]{border-color:#5895a9;color:#a5eaff}
+.photo-repair-controls{padding:18px;margin-top:14px;border:1px solid #587076;background:#152023;display:grid;gap:12px}
+.photo-repair-controls label{display:grid;gap:7px;font-size:11px;line-height:1.5;color:var(--ink)}
+.photo-repair-controls select{width:100%;min-width:0;font-size:11px;white-space:normal}
+.photo-repair-controls .photo-assumptions{display:flex;align-items:start}.photo-assumptions input{flex:none;margin-top:3px}
+.photo-repair-controls small,.photo-repair-controls>span{font:10px/1.6 ui-monospace,monospace;color:var(--amber)}
+.photo-repair-controls button{font-size:12px;background:#dbfa86;color:#17200d}
+#photo-overlay-note [data-photo-open-test]{pointer-events:auto;font-size:10px;padding:7px;color:#a5eaff;border-color:#5895a9}
+#photo-first-frame{margin:12px 0;border-color:#5895a9;color:#a5eaff}
+.photo-test-region{fill:#75dbf411;stroke:#a5eaff;stroke-width:2;vector-effect:non-scaling-stroke}
+.photo-proposal-binding{font-size:13px;line-height:1.6;border-left:2px solid #a5eaff;padding-left:12px;overflow-wrap:anywhere}.photo-proposal-binding small{color:var(--muted)}
+.repair-stage[data-artwork=photo]{background:#101310}.repair-stage[data-artwork=photo] #repair-image{object-fit:contain}
+.repair-stage[data-artwork=photo] .repair-art-fault{color:var(--amber)}
+@media(max-width:600px){.photo-repair-controls{padding:12px}.photo-repair-controls select{font-size:10px}.repair-art-toolbar:has([data-repair-art=photo]){flex-wrap:wrap}.repair-art-toolbar:has([data-repair-art=photo])>div{display:flex;gap:4px;flex-wrap:wrap}}

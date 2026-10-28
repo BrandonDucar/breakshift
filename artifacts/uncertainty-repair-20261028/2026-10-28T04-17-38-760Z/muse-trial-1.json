@@ -1,0 +1,146 @@
+{
+  "schema": "breakshift.muse-uncertainty-evaluation.v1",
+  "trial": 1,
+  "modelAttempt": {
+    "id": "9eb36fde-62bb-48fe-93b1-e06038a81b04",
+    "digest": "ec06635a03f2a169a0bea235f6497402236544ffa5b7c2211459898b5505863d",
+    "model": "muse-spark-1.3",
+    "usage": {
+      "promptTokens": 553,
+      "completionTokens": 766,
+      "costUpperEstimateUsd": 0.00394675
+    }
+  },
+  "diagnosis": "Selected low belt speed to minimize belt power, derated arm to meet 1.65kW cap under max load, gap sized to prevent surge overlap under worst jitter, compensation centered to bound timing error, and verified deadline slack.",
+  "candidate": {
+    "armPowerScale": 0.85,
+    "beltSpeedMps": 0.4,
+    "surgeGapMs": 200,
+    "timingCompensationMs": 20
+  },
+  "experiment": {
+    "schema": "breakshift.uncertainty-experiment.v1",
+    "plan": {
+      "schema": "breakshift.uncertain-repair-ir.v1",
+      "model": "breakshift-uncertainty-energy/1",
+      "units": {
+        "power": "W",
+        "time": "ms",
+        "energy": "Wh",
+        "speed": "m/s"
+      },
+      "assumptions": {
+        "snapshotId": "uncertainty-reference-1",
+        "breakerKw": 1.65,
+        "envelope": {
+          "loadMultiplier": [
+            1,
+            1.12
+          ],
+          "sensorDelayMs": [
+            0,
+            40
+          ],
+          "surgeJitterMs": [
+            -15,
+            15
+          ]
+        }
+      },
+      "candidate": {
+        "armPowerScale": 0.85,
+        "beltSpeedMps": 0.4,
+        "surgeGapMs": 200,
+        "timingCompensationMs": 20
+      },
+      "limits": {
+        "graspWindowMs": 22,
+        "jobDeadlineMs": 2400,
+        "orders": 8,
+        "startMs": 300,
+        "baseSurgeMs": 100
+      },
+      "target": "DETERMINISTIC_REFERENCE_MODEL_ONLY",
+      "physicalClearance": false,
+      "executionAuthority": false,
+      "compileStatus": "VALID_PLAN_NOT_TESTED",
+      "planDigest": "914850a8777e73f7961a4fc5268be95a44a4203658b033cd58bba9c907c0a476"
+    },
+    "result": {
+      "nominal": {
+        "input": {
+          "loadMultiplier": 1,
+          "sensorDelayMs": 0,
+          "jitterAMs": -15,
+          "jitterBMs": -15
+        },
+        "passed": true,
+        "failures": [],
+        "peakW": 1328,
+        "marginW": 322,
+        "energyWh": 0.2001787581699346,
+        "jobMs": 2107.6470588235293,
+        "timingErrorMs": 20,
+        "firstBreachMs": null,
+        "packed": 8,
+        "segments": [
+          {
+            "fromMs": 0,
+            "toMs": 285,
+            "watts": 218
+          },
+          {
+            "fromMs": 285,
+            "toMs": 402.6470588235294,
+            "watts": 1328
+          },
+          {
+            "fromMs": 402.6470588235294,
+            "toMs": 485,
+            "watts": 218
+          },
+          {
+            "fromMs": 485,
+            "toMs": 602.6470588235294,
+            "watts": 1328
+          },
+          {
+            "fromMs": 602.6470588235294,
+            "toMs": 2107.6470588235293,
+            "watts": 218
+          }
+        ]
+      },
+      "caseCount": 16,
+      "passedCases": 16,
+      "firstCounterexample": null,
+      "challenger": {
+        "method": "ANALYTIC_INTERVAL_EXTREMA",
+        "robustWithinDeclaredModel": true,
+        "worstPeakW": 1470.8000000000002,
+        "worstTimingErrorMs": 20,
+        "worstMarginW": 179.19999999999982,
+        "possibleOverlap": false,
+        "jobMs": 2107.6470588235293,
+        "reasons": [],
+        "scope": "DECLARED_REFERENCE_MODEL_ONLY_NOT_PHYSICAL_SAFETY"
+      },
+      "verdict": "SUPPORTED_WITHIN_DECLARED_ENVELOPE"
+    },
+    "model": "breakshift-uncertainty-energy/1",
+    "physicalClearance": false,
+    "executionAuthority": false,
+    "synthetic": true,
+    "receiptDigest": "20f999fe1d30d3b8fdccf77224c0de1488491fea79b85ed847ea0266f4e25712"
+  },
+  "interior": {
+    "seed": "0x10282026",
+    "passed": 256,
+    "total": 256,
+    "failures": []
+  },
+  "accepted": true,
+  "peerReview": "ARGON_REQUESTED_NOT_YET_RECEIVED",
+  "physicalClearance": false,
+  "executionAuthority": false
+}

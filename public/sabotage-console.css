@@ -1,0 +1,243 @@
+/* Translucent Genie-style REASONING STEPS HUD + Live Sabotage Command Bar */
+.scene-frame {
+  position: relative;
+}
+.reasoning-hud {
+  position: absolute;
+  top: 38px;
+  left: 18px;
+  width: 288px;
+  z-index: 3;
+  background: rgba(14, 18, 13, 0.86);
+  backdrop-filter: blur(8px);
+  border: 1px solid #49563b;
+  border-radius: 4px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  pointer-events: auto;
+}
+.reasoning-hud-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2e3626;
+}
+.reasoning-hud[data-collapsed="true"] .reasoning-hud-head {
+  border-bottom: 0;
+}
+.reasoning-hud-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 9px/1.2 ui-monospace, Consolas, monospace;
+  letter-spacing: 0.11em;
+  color: var(--ink);
+}
+.reasoning-hud-tag {
+  margin-left: auto;
+  font: 8px/1.2 ui-monospace, Consolas, monospace;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+#reasoning-hud-toggle {
+  padding: 4px 7px;
+  min-height: 24px;
+  font: 600 9px/1 ui-monospace, Consolas, monospace;
+  background: #232a1d;
+  border-color: #4b573c;
+  color: var(--lime);
+}
+.reasoning-hud-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 10px;
+  display: grid;
+  gap: 7px;
+  max-height: 230px;
+  overflow-y: auto;
+}
+.reasoning-step {
+  border-left: 2px solid #5a664b;
+  padding-left: 8px;
+}
+.reasoning-step.green,
+.reasoning-step.lime {
+  border-color: var(--lime);
+}
+.reasoning-step.amber {
+  border-color: var(--amber);
+}
+.reasoning-step.red {
+  border-color: var(--red);
+}
+.reasoning-step-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font: 700 8px/1.3 ui-monospace, Consolas, monospace;
+  letter-spacing: 0.08em;
+}
+.reasoning-step-head span {
+  color: var(--muted);
+}
+.reasoning-step.green .reasoning-step-head strong,
+.reasoning-step.lime .reasoning-step-head strong {
+  color: var(--lime);
+}
+.reasoning-step.amber .reasoning-step-head strong {
+  color: var(--amber);
+}
+.reasoning-step.red .reasoning-step-head strong {
+  color: var(--red);
+}
+.reasoning-step p {
+  margin: 2px 0 0;
+  font: 9px/1.42 ui-monospace, Consolas, monospace;
+  color: #d4dcc9;
+  overflow-wrap: anywhere;
+}
+
+.sabotage-console {
+  border-top: 1px solid var(--border);
+  background: #141812;
+  padding: 12px 16px;
+  display: grid;
+  gap: 8px;
+}
+.sabotage-bar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sabotage-bar-head .eyebrow {
+  margin: 0;
+}
+.wasd-badge {
+  font: 9px/1.3 ui-monospace, Consolas, monospace;
+  color: var(--lime);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.wasd-badge kbd {
+  padding: 2px 5px;
+  background: #232a1d;
+  border: 1px solid #4f5c3f;
+  border-radius: 2px;
+  font: 700 8px/1 ui-monospace, Consolas, monospace;
+  color: var(--ink);
+}
+.sabotage-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#sabotage-input {
+  flex: 1 1 260px;
+  min-width: 0;
+  padding: 9px 11px;
+  background: #0e110d;
+  border: 1px solid #4b5540;
+  border-radius: 3px;
+  color: var(--ink);
+  font: 12px/1.35 ui-monospace, Consolas, monospace;
+}
+#sabotage-input::placeholder {
+  color: #7e8774;
+}
+#sabotage-submit,
+#sabotage-open-twin {
+  padding: 9px 13px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+#sabotage-open-twin {
+  color: var(--lime);
+  background: #2b3521;
+  border-color: #5c6d45;
+}
+.sabotage-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sabotage-chip {
+  padding: 5px 9px;
+  min-height: 28px;
+  font: 600 10px/1.2 ui-monospace, Consolas, monospace;
+  background: #1d2319;
+  border-color: #3f4836;
+  color: #cbd4bf;
+}
+.sabotage-chip:hover {
+  background: #2d3625;
+  color: var(--lime);
+}
+.sabotage-status {
+  margin: 0;
+}
+.sabotage-status.green {
+  color: var(--lime);
+}
+.sabotage-status.amber {
+  color: var(--amber);
+}
+.sabotage-status.red {
+  color: var(--red);
+}
+
+/* On Cutaway, Schematic, Spatial 3D, WebGL fallback, and <=1100px viewports, dock REASONING STEPS cleanly below #scene so zero 3D pins or cutaway details are ever occluded */
+.scene-frame:has(.scene:not([data-view="workcell"])) .reasoning-hud,
+.scene-frame:has(.fallback-mode) .reasoning-hud {
+  position: static;
+  width: 100%;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  background: #121610;
+}
+.scene-frame:has(.scene:not([data-view="workcell"])) .reasoning-hud-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  max-height: none;
+}
+
+@media (max-width: 1100px) {
+  .reasoning-hud {
+    position: static;
+    width: 100%;
+    border-width: 1px 0 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    background: #121610;
+  }
+  .reasoning-hud-list,
+  .scene-frame:has(.scene:not([data-view="workcell"])) .reasoning-hud-list {
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .sabotage-console {
+    padding: 10px 12px;
+  }
+  .reasoning-hud-tag {
+    display: none;
+  }
+  #sabotage-input {
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+  #sabotage-submit,
+  #sabotage-open-twin {
+    flex: 1 1 auto;
+  }
+}

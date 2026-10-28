@@ -1,0 +1,12 @@
+{
+  "schema": "breakshift.recorded-uncertainty-patch.v1",
+  "mode": "RECORDED_PROVIDER_PATCH",
+  "model": "muse-spark-1.3",
+  "energyModel": "breakshift-uncertainty-energy/1",
+  "sourceArtifactSha256": "023da0eeaa0dc29fe8e435939edebe3640050f0ae590033ba626fb1ff906353f",
+  "recordedPlanDigest": "914850a8777e73f7961a4fc5268be95a44a4203658b033cd58bba9c907c0a476",
+  "candidate": { "armPowerScale": 0.85, "beltSpeedMps": 0.4, "surgeGapMs": 200, "timingCompensationMs": 20 },
+  "peerReview": "REQUESTED_NOT_RECEIVED",
+  "physicalClearance": false,
+  "executionAuthority": false
+}

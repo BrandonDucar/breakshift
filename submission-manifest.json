@@ -1,0 +1,1019 @@
+{
+  "schema": "breakshift.standalone-source-manifest.v1",
+  "release": "live-03370f1c283ea180",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "0d0d908a76dfb47d671ff737d533e235d3dde222455d8a099db9298833c32f8a",
+      "bytes": 11343
+    },
+    {
+      "path": "LICENSING.md",
+      "sha256": "ffa55df6f3b84611c3a74e1b657bb10671a6246be88a2445e517bdaf8998f1b6",
+      "bytes": 2607
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "6275422d14b7b3e44a020d5c518c08b2e949daeac0b576bc1945a2621e506477",
+      "bytes": 476
+    },
+    {
+      "path": "artifacts/muse-bay-20261026/live-scan-78d620ae-072e-4d50-9725-cf7ce1458ff8.json",
+      "sha256": "fec1601e018285ad4c0b7f88ff38114b87c070cafa645d71f674ea8eaf8655db",
+      "bytes": 4578
+    },
+    {
+      "path": "artifacts/sam-wonder-20261027/synthetic-tracking-probe.mp4",
+      "sha256": "1506514ab210a4f99bd4ec3aeadb8cb2a468d3dcf922df4a860af5401c82642a",
+      "bytes": 24458
+    },
+    {
+      "path": "artifacts/uncertainty-repair-20261028/2026-10-28T04-17-38-760Z/muse-trial-1.json",
+      "sha256": "023da0eeaa0dc29fe8e435939edebe3640050f0ae590033ba626fb1ff906353f",
+      "bytes": 4062
+    },
+    {
+      "path": "cloudflare/bounded-mp4.mjs",
+      "sha256": "326b7ada969de1280bd90295c326293a15aac17f443a7293c1c5dacfb18093f5",
+      "bytes": 4007
+    },
+    {
+      "path": "cloudflare/build-preview.mjs",
+      "sha256": "017553f1d44eb1da0e6cc7a070cb251d6b83264420eb3c4eda55471f0572be87",
+      "bytes": 8422
+    },
+    {
+      "path": "cloudflare/live-muse.mjs",
+      "sha256": "d1600fe601ed6760ab559e09160324ded3d82089f4d7f912b6338397931119fd",
+      "bytes": 25458
+    },
+    {
+      "path": "cloudflare/photo-contract.mjs",
+      "sha256": "d76cb08e08b8c6ce7d06fa2705c18f4232e54549c580e50c7a2405cabb37c7b1",
+      "bytes": 6845
+    },
+    {
+      "path": "cloudflare/sam-wonder.mjs",
+      "sha256": "62d4058bf0eb811f6c92d78d8866df120d6a939dd114f38fddad7fbaebd72bde",
+      "bytes": 15057
+    },
+    {
+      "path": "cloudflare/test-allowance.mjs",
+      "sha256": "9d664b8af093932de4423016d334de90a50fa09d61f72af1bb3a72508ccc183d",
+      "bytes": 6892
+    },
+    {
+      "path": "cloudflare/test-live-muse.mjs",
+      "sha256": "f04e85107c1fbea6a03b8fa0f9522dd2452b7b4721ef0bd664e1ced3962fdff1",
+      "bytes": 8407
+    },
+    {
+      "path": "cloudflare/test-perception.mjs",
+      "sha256": "f1fe7d2d2f8ce1905cde28d50da586b20ae8a32ff0955561a326be8fd8362bc5",
+      "bytes": 10216
+    },
+    {
+      "path": "cloudflare/test-photo-resume.mjs",
+      "sha256": "986c7ff088d34fb1dc9f249c657312065049f9cc3d90f7550eaecfe537f2623d",
+      "bytes": 4602
+    },
+    {
+      "path": "cloudflare/test-photo.mjs",
+      "sha256": "4d8930b7684687cfe45d0e2cf7c0cb7bd31bd5233953b002803547d166eab966",
+      "bytes": 11673
+    },
+    {
+      "path": "cloudflare/test-preview.mjs",
+      "sha256": "f5dcf746e75d4e2ce1c55a96476606a14a6b3268317fd7113b1c6b731da4c1e4",
+      "bytes": 4843
+    },
+    {
+      "path": "cloudflare/test-public-link.mjs",
+      "sha256": "a27d4bb39bbaa6466f3b428449eb229e0cdcb0fb739c7cd6f21693507bcd48c3",
+      "bytes": 2401
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/LICENSE",
+      "sha256": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be",
+      "bytes": 7353
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/coco-rle.js",
+      "sha256": "8448c2003f03a5b54314d14f2d10b707052f668a57f951358db7377360a2ccc6",
+      "bytes": 4817
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/errors.js",
+      "sha256": "907a37c8301d5646de6897b0660e980058d96860c4df2489396ae4e08206b00e",
+      "bytes": 2231
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/index.js",
+      "sha256": "0fd7c5aa4f253ef9e8b8c5be1d61816512d3bece514c7bab3050875bf3cee609",
+      "bytes": 759
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/mask-codec.js",
+      "sha256": "a1ee71bf3186904696ff790658214ba4d501e14deac9b139d0831b0476a95005",
+      "bytes": 19668
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/mask-conversion.js",
+      "sha256": "a1a687e6d712043664d91b0bd929938b5037b3d3eb83c61779c918a2489febee",
+      "bytes": 1038
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/object-prompt.js",
+      "sha256": "4449ee5544eb373cdd60ac402cbc63a5187975021d9c7475126d2936deeaf403",
+      "bytes": 5098
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/segmentation.js",
+      "sha256": "c56aada3daf313f0fe05569daf67f7f030d76fad01842a713aa3aa73bc1e4b31",
+      "bytes": 16524
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/stream.js",
+      "sha256": "538b26127b5b5c6e2edb6dcbc4e7be0120cd76aded6419acf3f633609fb51c6c",
+      "bytes": 20643
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/svg-path.js",
+      "sha256": "3a8b1bde1c32ea82352060b50338d282ea00203d4e65f05811cb9a9ec109e27d",
+      "bytes": 7434
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/types.js",
+      "sha256": "dddb798fb4ea8a0bb25da07356ee7481f6872d4e8e6ff342c2c98c034963bfdb",
+      "bytes": 93
+    },
+    {
+      "path": "cloudflare/worker.mjs",
+      "sha256": "cada79e82ca2ca110e8e3ade5694cfffe6e8545d54fe3f69b687e771350d8bf7",
+      "bytes": 5363
+    },
+    {
+      "path": "controller/kinematics-timing.mjs",
+      "sha256": "b657b71f6e818e408e88433a580eaed5d4008a8d6d2b892e4cccf15f344ac1d5",
+      "bytes": 695
+    },
+    {
+      "path": "controller/planner.mjs",
+      "sha256": "a3af1c80c59ec34d142d70f4503c95b62e1b932babdc9c4bf8993e6077e5d4f8",
+      "bytes": 464
+    },
+    {
+      "path": "controller/power-governor.mjs",
+      "sha256": "3e0161b79a058f92801a71677c767aebb09d2a2065e08bd7a8d6fbb3ca3a1aa1",
+      "bytes": 988
+    },
+    {
+      "path": "controller/repair-compiler.mjs",
+      "sha256": "a662b4f88004537d35660c924e37df08d452976523e98b3fa27861c11e2c3e7d",
+      "bytes": 2813
+    },
+    {
+      "path": "controller/telemetry-api.mjs",
+      "sha256": "926c13e6673b8b29966af12c8a443674eef3ae8aa88c80cf6ab7c4d5817a758e",
+      "bytes": 741
+    },
+    {
+      "path": "energy-lab/energy-comparison.mjs",
+      "sha256": "74b8836652eaa0ce69ac4aae35ee88d8bf516c23f9ccec6cb0c012a93b451c6b",
+      "bytes": 2942
+    },
+    {
+      "path": "energy-lab/energy-comparison.test.mjs",
+      "sha256": "d02250d00030f52f06d2de3ab26f1aeae56538482e3cb2746e9bcaeea22e9266",
+      "bytes": 3293
+    },
+    {
+      "path": "preview-review.mjs",
+      "sha256": "505faf9ed95e3b23cf06aa57ab0c982852d1fd6f531faf726925e2dd517555c8",
+      "bytes": 2238
+    },
+    {
+      "path": "public/assets/breakshift-microgrid-hero-v1.png",
+      "sha256": "bb1ef683bb85d5408b2434ff3157b9e815a49de33818c24013cdb4bb128e86a6",
+      "bytes": 2524960
+    },
+    {
+      "path": "public/assets/robot-cutaway-v1.png",
+      "sha256": "27a15d234fa834bdcc436dbe3821c3465bf677258968ce91eb8d2ee9e272216e",
+      "bytes": 1931050
+    },
+    {
+      "path": "public/assets/verified-tracking-demo-v1.jpg",
+      "sha256": "6e076febc9ff93de5fc69a2f742c0461ff6c7a8af5fd083ecd15754fa5d9075d",
+      "bytes": 30593
+    },
+    {
+      "path": "public/assets/verified-tracking-demo-v1.mp4",
+      "sha256": "63e8b39b2c705bb183e61931e49ad8b7668b68a8b7dd4830ae703c7b35a13576",
+      "bytes": 24458
+    },
+    {
+      "path": "public/bay-job.css",
+      "sha256": "5f0acc879ec759890dda9b67f287a3ec02dd5c1da983b2ac970faea36652d7eb",
+      "bytes": 4276
+    },
+    {
+      "path": "public/bay-job.mjs",
+      "sha256": "802ddccf05e785fa46001b674960747d3016c28649b21ae9c3805fdd0ff8ebe3",
+      "bytes": 10216
+    },
+    {
+      "path": "public/camera-clip.mjs",
+      "sha256": "6882e6bc5bd07d1824406f5827d7255454199983149718c959b5486716478219",
+      "bytes": 1782
+    },
+    {
+      "path": "public/component-bay.js",
+      "sha256": "0e9dd518acdc1d3e890f465d55424fb5c3f59bd6b655c0c9130b33af331e8b5c",
+      "bytes": 53295
+    },
+    {
+      "path": "public/component-model.mjs",
+      "sha256": "61105c3a5e596374ad96a54d8df5f2a3ebfaeaf2f39a9a5ae28fbcd95d0fdf36",
+      "bytes": 3257
+    },
+    {
+      "path": "public/experiment-replay.mjs",
+      "sha256": "abf9ea6d5079cb243bcc0436f938d88f0ba32b78d768b1a93e8c193eb78ee022",
+      "bytes": 3581
+    },
+    {
+      "path": "public/fault-lab.mjs",
+      "sha256": "c28ca38353d2a467c0486c6e257024397b1890bbf9571f9c8bc60a4f70fb9adf",
+      "bytes": 6757
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "d820fae2432d3d70a590684c41c743714ea41c2a2bf75132835118d4a67f2564",
+      "bytes": 12113
+    },
+    {
+      "path": "public/photo-inspection.mjs",
+      "sha256": "9665d57a9e1a5af7af03e15225cc0872c59c0d3cf4b7c76e639312cf66bb8df3",
+      "bytes": 31120
+    },
+    {
+      "path": "public/photo-repair-bridge.mjs",
+      "sha256": "0ac8648be82ccab58b369ab42995e829b813b5b78d41537ab433fa522238b2e7",
+      "bytes": 3980
+    },
+    {
+      "path": "public/playback-speed.mjs",
+      "sha256": "91f7b3780d5b3452d0d9efe7c1d834d38f86423c2e42b4d682bd1669fd956129",
+      "bytes": 443
+    },
+    {
+      "path": "public/repair-twin-player.mjs",
+      "sha256": "49937397d5850960a7f568474365734436792acae5df0bc3f374ec41d310e6e9",
+      "bytes": 19581
+    },
+    {
+      "path": "public/robot-asset-catalog.json",
+      "sha256": "55e51c98c11579fd794c89216e61294290b4413412f0832f4f70a5360d4413b7",
+      "bytes": 3013
+    },
+    {
+      "path": "public/robot-asset-contract.mjs",
+      "sha256": "848fcb93b9a94861b5c1ebd54905d978cba24fbc55e28607077ab9d4acef2aad",
+      "bytes": 1444
+    },
+    {
+      "path": "public/sabotage-command-guard.mjs",
+      "sha256": "3c280853df94affcd726cc7fcc477ce2fb8447a46c8b4f94ab8be15038814d42",
+      "bytes": 1564
+    },
+    {
+      "path": "public/sabotage-console.css",
+      "sha256": "d4060fe4dd451e9b73006d04d0feb12472cd5b155931449eb5dd9e3936393b33",
+      "bytes": 5173
+    },
+    {
+      "path": "public/sabotage-console.mjs",
+      "sha256": "96eaaec92d20205cee0f34c95653a13c106bbdd7990b8a60f4e92fd0cd04623e",
+      "bytes": 21155
+    },
+    {
+      "path": "public/sam-overlay.mjs",
+      "sha256": "fd9008bebbc694ecda13348a91e6f990d7db8a2d80ca57e2ce9e44b31f18e213",
+      "bytes": 3037
+    },
+    {
+      "path": "public/sam-tracking.css",
+      "sha256": "e0aeee6cd50c22e548bff06cde99bfd5abcb15872e58031c2f27f31ad3e5acda",
+      "bytes": 2096
+    },
+    {
+      "path": "public/spatial-xr.mjs",
+      "sha256": "787ac72e82ac8d03984a3016f1a42fc7888f66fce4dc4b5d958c8f4beed7fedf",
+      "bytes": 33310
+    },
+    {
+      "path": "public/style.css",
+      "sha256": "7cc24d395d8f00ff2f34308114e4ce7bf6c6422a54832dcd389ae01f299cf2d7",
+      "bytes": 32843
+    },
+    {
+      "path": "public/uncertainty-session.mjs",
+      "sha256": "97c11730c55a819afe586616d3a764f235411cacc30a3c23c221836bfc4fc6aa",
+      "bytes": 6702
+    },
+    {
+      "path": "public/uncertainty-workbench.css",
+      "sha256": "14b841ff5a5d386f2f522255d020569f72f7aa6faa5000b77eec6479d59a88db",
+      "bytes": 3237
+    },
+    {
+      "path": "public/uncertainty-workbench.mjs",
+      "sha256": "abb8c6cf2210a80f03a3461ba89633c361156c6078209d317fb03bc04baf1267",
+      "bytes": 9825
+    },
+    {
+      "path": "public/verified-sam-wonder-demo.json",
+      "sha256": "b27e915403c6b986fe054a07db8ce2179ff5530725ed6d8ad01999767b922eef",
+      "bytes": 34122
+    },
+    {
+      "path": "public/verified-uncertainty-patch.json",
+      "sha256": "2a8524db965366e0c975818b64fdd8dec5b3766aa2c6f935e7be4503737cb548",
+      "bytes": 576
+    },
+    {
+      "path": "public/visual-assets.mjs",
+      "sha256": "ac85f818d1b636d1299da16f8e2c1de8e22ee4ee7f61fe6e33f32d04d9af9104",
+      "bytes": 1409
+    },
+    {
+      "path": "public/visual-system.css",
+      "sha256": "7be58dea5b0ba1109b1ed1e0b01c4b473312d50665f9c24aa5cc149fea9e61eb",
+      "bytes": 5133
+    },
+    {
+      "path": "public/worker-intake.mjs",
+      "sha256": "03700be5c75a7c6bfa358603805ad2699e34b9f8c98dcddce199260e74817f16",
+      "bytes": 1169
+    },
+    {
+      "path": "replay-experiment.mjs",
+      "sha256": "6a161e8d941c21d5cce4cf41426140b49000fbcced486d34829f7d558794a4d7",
+      "bytes": 719
+    },
+    {
+      "path": "session/inspection-session-core.mjs",
+      "sha256": "2a72135102b46e78b971654f805beb89ffea86741908cb4fb7e56ebedf90fd99",
+      "bytes": 24922
+    },
+    {
+      "path": "session/muse-diagnosis-contract.mjs",
+      "sha256": "b93dc3b834558acdda0008fa7bbcd5bf4fc434b4f544f4ef9078ed05cd01c49f",
+      "bytes": 7625
+    },
+    {
+      "path": "simulator/repair-run.mjs",
+      "sha256": "54820d9f29eff1499483700707ff6cffb6f3f17a2894fed1486eafd00f19beff",
+      "bytes": 4078
+    },
+    {
+      "path": "simulator/scenarios.mjs",
+      "sha256": "66e0187afa48ec794fc9e089f72901960d0d9f1815ade3412c0dbcc585bb3ebf",
+      "bytes": 544
+    },
+    {
+      "path": "simulator/workcell.mjs",
+      "sha256": "52a03ad7bca2d11b58e04affdd842e3ce30ccb7cd3e370477589dda875ca7d10",
+      "bytes": 2414
+    },
+    {
+      "path": "test-argon-adversarial-compiler-replay.mjs",
+      "sha256": "7df007be27ba41e6e371b365b98dbcac7c480d36940cbd26f656de923553dcf0",
+      "bytes": 15063
+    },
+    {
+      "path": "test-bay-job.mjs",
+      "sha256": "5a4496caffefbe08ca20a321e382c41e3693408de69733afd8af451f4406246d",
+      "bytes": 2350
+    },
+    {
+      "path": "test-console-independent-review.mjs",
+      "sha256": "6f7fcfd979a89632b16e59c2d14493074489cdcd9d15f2f10fabb1080e738659",
+      "bytes": 2468
+    },
+    {
+      "path": "test-experiment-replay.mjs",
+      "sha256": "80961bfe9f4b7461e0db79e81ec8e36e82ae6c1df1918696c93b0438609011d8",
+      "bytes": 5247
+    },
+    {
+      "path": "test-fault-experiment.mjs",
+      "sha256": "ff60c8633a140f9e8d57d2a0a05f6ed9e5d59e2fc4aec356a85d8bf9a607d28c",
+      "bytes": 6993
+    },
+    {
+      "path": "test-photo-repair-bridge.mjs",
+      "sha256": "6d0d345a4aa3c1eb96bb7b0102722a602390d0d203204a4abc76ad3bc9b0d13a",
+      "bytes": 4818
+    },
+    {
+      "path": "test-repair-compiler.mjs",
+      "sha256": "902276556b82524d63cc870a4a33867d72336827bad13b443d3a44befa76fa5b",
+      "bytes": 4575
+    },
+    {
+      "path": "test-repair-twin.mjs",
+      "sha256": "6e70702738b0981170a18f62da252362d7ea7abe8d03976aa5990aaaf0879828",
+      "bytes": 3213
+    },
+    {
+      "path": "test-sabotage-console.mjs",
+      "sha256": "996c6fd1123fc7b94e0dcdd44b3bacc3b570f00dfc0f7d861911c53c15db9369",
+      "bytes": 4889
+    },
+    {
+      "path": "test-uncertainty-workbench.mjs",
+      "sha256": "6c8d5c83285f4f89b9ebcbd354b0f29872155e23c65ceadcd14d38366fe7a892",
+      "bytes": 5581
+    },
+    {
+      "path": "test-worker-flow.mjs",
+      "sha256": "d426d1277a99a4ed502295a6514b0e5771b2763ed6b5caffe8bfc1ea92a12ae9",
+      "bytes": 2153
+    },
+    {
+      "path": "uncertainty-lab/repair-envelope.mjs",
+      "sha256": "61f6370cb0e91b20466900c7115f5ade7c10e63061c30a06065638b7aee581ab",
+      "bytes": 9765
+    },
+    {
+      "path": "uncertainty-lab/repair-envelope.test.mjs",
+      "sha256": "dc5d3688cab4c28fa05810457ceb5b5a73c78deb88de2c69d1833a58fcbb0674",
+      "bytes": 5685
+    },
+    {
+      "path": "uncertainty-lab/review-regressions.test.mjs",
+      "sha256": "98dc7e48005f52d3299620eaa7b8bf92352cc9e025fecd388d037efe8e0c3f64",
+      "bytes": 3141
+    },
+    {
+      "path": "verify-user-facing.mjs",
+      "sha256": "c1bce4e95de46ad21455f95bff9d41c3fd1e52eb777ef421f3a5c53d09ef909b",
+      "bytes": 21404
+    },
+    {
+      "path": "ASSET_PROVENANCE.md",
+      "sha256": "1d4201c20863972c022dbcfd399c8ef34e2c44685e59c79bf771a8d31164803a",
+      "bytes": 3733
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "ebe1d81a495f28b1ca0c09156bdb241abb2df7abd9fd74dd01e0cc375ac8e049",
+      "bytes": 621
+    },
+    {
+      "path": "NEW_WORK.md",
+      "sha256": "c842591fa7bc89269ede6f435952238402ba28e972672fd5eb5c005929d86e9a",
+      "bytes": 1487
+    },
+    {
+      "path": "offline-guard.mjs",
+      "sha256": "055af86db9ce6019d5244fac073715031bf50e5184c292a5a28d1515c316fdfc",
+      "bytes": 562
+    },
+    {
+      "path": "package.json",
+      "sha256": "f565b18b18857fb484a8c2ba5b534e72d0a16686ca79a923157cc8b5c115275a",
+      "bytes": 297
+    },
+    {
+      "path": "README.md",
+      "sha256": "67922fe729b99a6b09b6267a676f4d0addb763affba511a274ecb4cabae433bf",
+      "bytes": 2731
+    },
+    {
+      "path": "test-offline.mjs",
+      "sha256": "3086ed559eb1fc0677dadff90041c1e2132d6161295dabaa7f7cdb3d8152a14b",
+      "bytes": 715
+    }
+  ],
+  "tests": [
+    "test-bay-job.mjs",
+    "test-console-independent-review.mjs",
+    "test-experiment-replay.mjs",
+    "test-fault-experiment.mjs",
+    "test-photo-repair-bridge.mjs",
+    "test-repair-compiler.mjs",
+    "test-repair-twin.mjs",
+    "test-sabotage-console.mjs",
+    "test-uncertainty-workbench.mjs",
+    "test-worker-flow.mjs",
+    "test-argon-adversarial-compiler-replay.mjs",
+    "cloudflare/test-allowance.mjs",
+    "cloudflare/test-live-muse.mjs",
+    "cloudflare/test-perception.mjs",
+    "cloudflare/test-photo-resume.mjs",
+    "cloudflare/test-photo.mjs",
+    "cloudflare/test-preview.mjs",
+    "cloudflare/test-public-link.mjs",
+    "uncertainty-lab/repair-envelope.test.mjs",
+    "uncertainty-lab/review-regressions.test.mjs",
+    "energy-lab/energy-comparison.test.mjs"
+  ],
+  "sourcePins": [
+    {
+      "path": "LICENSE",
+      "sha256": "0d0d908a76dfb47d671ff737d533e235d3dde222455d8a099db9298833c32f8a",
+      "bytes": 11343
+    },
+    {
+      "path": "LICENSING.md",
+      "sha256": "ffa55df6f3b84611c3a74e1b657bb10671a6246be88a2445e517bdaf8998f1b6",
+      "bytes": 2607
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "6275422d14b7b3e44a020d5c518c08b2e949daeac0b576bc1945a2621e506477",
+      "bytes": 476
+    },
+    {
+      "path": "artifacts/muse-bay-20261026/live-scan-78d620ae-072e-4d50-9725-cf7ce1458ff8.json",
+      "sha256": "fec1601e018285ad4c0b7f88ff38114b87c070cafa645d71f674ea8eaf8655db",
+      "bytes": 4578
+    },
+    {
+      "path": "artifacts/sam-wonder-20261027/synthetic-tracking-probe.mp4",
+      "sha256": "1506514ab210a4f99bd4ec3aeadb8cb2a468d3dcf922df4a860af5401c82642a",
+      "bytes": 24458
+    },
+    {
+      "path": "artifacts/uncertainty-repair-20261028/2026-10-28T04-17-38-760Z/muse-trial-1.json",
+      "sha256": "023da0eeaa0dc29fe8e435939edebe3640050f0ae590033ba626fb1ff906353f",
+      "bytes": 4062
+    },
+    {
+      "path": "cloudflare/bounded-mp4.mjs",
+      "sha256": "326b7ada969de1280bd90295c326293a15aac17f443a7293c1c5dacfb18093f5",
+      "bytes": 4007
+    },
+    {
+      "path": "cloudflare/build-preview.mjs",
+      "sha256": "017553f1d44eb1da0e6cc7a070cb251d6b83264420eb3c4eda55471f0572be87",
+      "bytes": 8422
+    },
+    {
+      "path": "cloudflare/live-muse.mjs",
+      "sha256": "d1600fe601ed6760ab559e09160324ded3d82089f4d7f912b6338397931119fd",
+      "bytes": 25458
+    },
+    {
+      "path": "cloudflare/photo-contract.mjs",
+      "sha256": "d76cb08e08b8c6ce7d06fa2705c18f4232e54549c580e50c7a2405cabb37c7b1",
+      "bytes": 6845
+    },
+    {
+      "path": "cloudflare/sam-wonder.mjs",
+      "sha256": "62d4058bf0eb811f6c92d78d8866df120d6a939dd114f38fddad7fbaebd72bde",
+      "bytes": 15057
+    },
+    {
+      "path": "cloudflare/test-allowance.mjs",
+      "sha256": "9d664b8af093932de4423016d334de90a50fa09d61f72af1bb3a72508ccc183d",
+      "bytes": 6892
+    },
+    {
+      "path": "cloudflare/test-live-muse.mjs",
+      "sha256": "f04e85107c1fbea6a03b8fa0f9522dd2452b7b4721ef0bd664e1ced3962fdff1",
+      "bytes": 8407
+    },
+    {
+      "path": "cloudflare/test-perception.mjs",
+      "sha256": "f1fe7d2d2f8ce1905cde28d50da586b20ae8a32ff0955561a326be8fd8362bc5",
+      "bytes": 10216
+    },
+    {
+      "path": "cloudflare/test-photo-resume.mjs",
+      "sha256": "986c7ff088d34fb1dc9f249c657312065049f9cc3d90f7550eaecfe537f2623d",
+      "bytes": 4602
+    },
+    {
+      "path": "cloudflare/test-photo.mjs",
+      "sha256": "4d8930b7684687cfe45d0e2cf7c0cb7bd31bd5233953b002803547d166eab966",
+      "bytes": 11673
+    },
+    {
+      "path": "cloudflare/test-preview.mjs",
+      "sha256": "f5dcf746e75d4e2ce1c55a96476606a14a6b3268317fd7113b1c6b731da4c1e4",
+      "bytes": 4843
+    },
+    {
+      "path": "cloudflare/test-public-link.mjs",
+      "sha256": "a27d4bb39bbaa6466f3b428449eb229e0cdcb0fb739c7cd6f21693507bcd48c3",
+      "bytes": 2401
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/LICENSE",
+      "sha256": "4dea99bfaa016e21bc860d73f344236bd1e5c4977d1a9a8fd32f822b500ae1be",
+      "bytes": 7353
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/coco-rle.js",
+      "sha256": "8448c2003f03a5b54314d14f2d10b707052f668a57f951358db7377360a2ccc6",
+      "bytes": 4817
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/errors.js",
+      "sha256": "907a37c8301d5646de6897b0660e980058d96860c4df2489396ae4e08206b00e",
+      "bytes": 2231
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/index.js",
+      "sha256": "0fd7c5aa4f253ef9e8b8c5be1d61816512d3bece514c7bab3050875bf3cee609",
+      "bytes": 759
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/mask-codec.js",
+      "sha256": "a1ee71bf3186904696ff790658214ba4d501e14deac9b139d0831b0476a95005",
+      "bytes": 19668
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/mask-conversion.js",
+      "sha256": "a1a687e6d712043664d91b0bd929938b5037b3d3eb83c61779c918a2489febee",
+      "bytes": 1038
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/object-prompt.js",
+      "sha256": "4449ee5544eb373cdd60ac402cbc63a5187975021d9c7475126d2936deeaf403",
+      "bytes": 5098
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/segmentation.js",
+      "sha256": "c56aada3daf313f0fe05569daf67f7f030d76fad01842a713aa3aa73bc1e4b31",
+      "bytes": 16524
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/stream.js",
+      "sha256": "538b26127b5b5c6e2edb6dcbc4e7be0120cd76aded6419acf3f633609fb51c6c",
+      "bytes": 20643
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/svg-path.js",
+      "sha256": "3a8b1bde1c32ea82352060b50338d282ea00203d4e65f05811cb9a9ec109e27d",
+      "bytes": 7434
+    },
+    {
+      "path": "cloudflare/vendor/meta-sam-parser/dist/types.js",
+      "sha256": "dddb798fb4ea8a0bb25da07356ee7481f6872d4e8e6ff342c2c98c034963bfdb",
+      "bytes": 93
+    },
+    {
+      "path": "cloudflare/worker.mjs",
+      "sha256": "cada79e82ca2ca110e8e3ade5694cfffe6e8545d54fe3f69b687e771350d8bf7",
+      "bytes": 5363
+    },
+    {
+      "path": "controller/kinematics-timing.mjs",
+      "sha256": "b657b71f6e818e408e88433a580eaed5d4008a8d6d2b892e4cccf15f344ac1d5",
+      "bytes": 695
+    },
+    {
+      "path": "controller/planner.mjs",
+      "sha256": "a3af1c80c59ec34d142d70f4503c95b62e1b932babdc9c4bf8993e6077e5d4f8",
+      "bytes": 464
+    },
+    {
+      "path": "controller/power-governor.mjs",
+      "sha256": "3e0161b79a058f92801a71677c767aebb09d2a2065e08bd7a8d6fbb3ca3a1aa1",
+      "bytes": 988
+    },
+    {
+      "path": "controller/repair-compiler.mjs",
+      "sha256": "a662b4f88004537d35660c924e37df08d452976523e98b3fa27861c11e2c3e7d",
+      "bytes": 2813
+    },
+    {
+      "path": "controller/telemetry-api.mjs",
+      "sha256": "926c13e6673b8b29966af12c8a443674eef3ae8aa88c80cf6ab7c4d5817a758e",
+      "bytes": 741
+    },
+    {
+      "path": "energy-lab/energy-comparison.mjs",
+      "sha256": "74b8836652eaa0ce69ac4aae35ee88d8bf516c23f9ccec6cb0c012a93b451c6b",
+      "bytes": 2942
+    },
+    {
+      "path": "energy-lab/energy-comparison.test.mjs",
+      "sha256": "d02250d00030f52f06d2de3ab26f1aeae56538482e3cb2746e9bcaeea22e9266",
+      "bytes": 3293
+    },
+    {
+      "path": "preview-review.mjs",
+      "sha256": "505faf9ed95e3b23cf06aa57ab0c982852d1fd6f531faf726925e2dd517555c8",
+      "bytes": 2238
+    },
+    {
+      "path": "public/assets/breakshift-microgrid-hero-v1.png",
+      "sha256": "bb1ef683bb85d5408b2434ff3157b9e815a49de33818c24013cdb4bb128e86a6",
+      "bytes": 2524960
+    },
+    {
+      "path": "public/assets/robot-cutaway-v1.png",
+      "sha256": "27a15d234fa834bdcc436dbe3821c3465bf677258968ce91eb8d2ee9e272216e",
+      "bytes": 1931050
+    },
+    {
+      "path": "public/assets/verified-tracking-demo-v1.jpg",
+      "sha256": "6e076febc9ff93de5fc69a2f742c0461ff6c7a8af5fd083ecd15754fa5d9075d",
+      "bytes": 30593
+    },
+    {
+      "path": "public/assets/verified-tracking-demo-v1.mp4",
+      "sha256": "63e8b39b2c705bb183e61931e49ad8b7668b68a8b7dd4830ae703c7b35a13576",
+      "bytes": 24458
+    },
+    {
+      "path": "public/bay-job.css",
+      "sha256": "5f0acc879ec759890dda9b67f287a3ec02dd5c1da983b2ac970faea36652d7eb",
+      "bytes": 4276
+    },
+    {
+      "path": "public/bay-job.mjs",
+      "sha256": "802ddccf05e785fa46001b674960747d3016c28649b21ae9c3805fdd0ff8ebe3",
+      "bytes": 10216
+    },
+    {
+      "path": "public/camera-clip.mjs",
+      "sha256": "6882e6bc5bd07d1824406f5827d7255454199983149718c959b5486716478219",
+      "bytes": 1782
+    },
+    {
+      "path": "public/component-bay.js",
+      "sha256": "0e9dd518acdc1d3e890f465d55424fb5c3f59bd6b655c0c9130b33af331e8b5c",
+      "bytes": 53295
+    },
+    {
+      "path": "public/component-model.mjs",
+      "sha256": "61105c3a5e596374ad96a54d8df5f2a3ebfaeaf2f39a9a5ae28fbcd95d0fdf36",
+      "bytes": 3257
+    },
+    {
+      "path": "public/experiment-replay.mjs",
+      "sha256": "abf9ea6d5079cb243bcc0436f938d88f0ba32b78d768b1a93e8c193eb78ee022",
+      "bytes": 3581
+    },
+    {
+      "path": "public/fault-lab.mjs",
+      "sha256": "c28ca38353d2a467c0486c6e257024397b1890bbf9571f9c8bc60a4f70fb9adf",
+      "bytes": 6757
+    },
+    {
+      "path": "public/index.html",
+      "sha256": "d820fae2432d3d70a590684c41c743714ea41c2a2bf75132835118d4a67f2564",
+      "bytes": 12113
+    },
+    {
+      "path": "public/photo-inspection.mjs",
+      "sha256": "9665d57a9e1a5af7af03e15225cc0872c59c0d3cf4b7c76e639312cf66bb8df3",
+      "bytes": 31120
+    },
+    {
+      "path": "public/photo-repair-bridge.mjs",
+      "sha256": "0ac8648be82ccab58b369ab42995e829b813b5b78d41537ab433fa522238b2e7",
+      "bytes": 3980
+    },
+    {
+      "path": "public/playback-speed.mjs",
+      "sha256": "91f7b3780d5b3452d0d9efe7c1d834d38f86423c2e42b4d682bd1669fd956129",
+      "bytes": 443
+    },
+    {
+      "path": "public/repair-twin-player.mjs",
+      "sha256": "49937397d5850960a7f568474365734436792acae5df0bc3f374ec41d310e6e9",
+      "bytes": 19581
+    },
+    {
+      "path": "public/robot-asset-catalog.json",
+      "sha256": "55e51c98c11579fd794c89216e61294290b4413412f0832f4f70a5360d4413b7",
+      "bytes": 3013
+    },
+    {
+      "path": "public/robot-asset-contract.mjs",
+      "sha256": "848fcb93b9a94861b5c1ebd54905d978cba24fbc55e28607077ab9d4acef2aad",
+      "bytes": 1444
+    },
+    {
+      "path": "public/sabotage-command-guard.mjs",
+      "sha256": "3c280853df94affcd726cc7fcc477ce2fb8447a46c8b4f94ab8be15038814d42",
+      "bytes": 1564
+    },
+    {
+      "path": "public/sabotage-console.css",
+      "sha256": "d4060fe4dd451e9b73006d04d0feb12472cd5b155931449eb5dd9e3936393b33",
+      "bytes": 5173
+    },
+    {
+      "path": "public/sabotage-console.mjs",
+      "sha256": "96eaaec92d20205cee0f34c95653a13c106bbdd7990b8a60f4e92fd0cd04623e",
+      "bytes": 21155
+    },
+    {
+      "path": "public/sam-overlay.mjs",
+      "sha256": "fd9008bebbc694ecda13348a91e6f990d7db8a2d80ca57e2ce9e44b31f18e213",
+      "bytes": 3037
+    },
+    {
+      "path": "public/sam-tracking.css",
+      "sha256": "e0aeee6cd50c22e548bff06cde99bfd5abcb15872e58031c2f27f31ad3e5acda",
+      "bytes": 2096
+    },
+    {
+      "path": "public/spatial-xr.mjs",
+      "sha256": "787ac72e82ac8d03984a3016f1a42fc7888f66fce4dc4b5d958c8f4beed7fedf",
+      "bytes": 33310
+    },
+    {
+      "path": "public/style.css",
+      "sha256": "7cc24d395d8f00ff2f34308114e4ce7bf6c6422a54832dcd389ae01f299cf2d7",
+      "bytes": 32843
+    },
+    {
+      "path": "public/uncertainty-session.mjs",
+      "sha256": "97c11730c55a819afe586616d3a764f235411cacc30a3c23c221836bfc4fc6aa",
+      "bytes": 6702
+    },
+    {
+      "path": "public/uncertainty-workbench.css",
+      "sha256": "14b841ff5a5d386f2f522255d020569f72f7aa6faa5000b77eec6479d59a88db",
+      "bytes": 3237
+    },
+    {
+      "path": "public/uncertainty-workbench.mjs",
+      "sha256": "abb8c6cf2210a80f03a3461ba89633c361156c6078209d317fb03bc04baf1267",
+      "bytes": 9825
+    },
+    {
+      "path": "public/verified-sam-wonder-demo.json",
+      "sha256": "b27e915403c6b986fe054a07db8ce2179ff5530725ed6d8ad01999767b922eef",
+      "bytes": 34122
+    },
+    {
+      "path": "public/verified-uncertainty-patch.json",
+      "sha256": "2a8524db965366e0c975818b64fdd8dec5b3766aa2c6f935e7be4503737cb548",
+      "bytes": 576
+    },
+    {
+      "path": "public/visual-assets.mjs",
+      "sha256": "ac85f818d1b636d1299da16f8e2c1de8e22ee4ee7f61fe6e33f32d04d9af9104",
+      "bytes": 1409
+    },
+    {
+      "path": "public/visual-system.css",
+      "sha256": "7be58dea5b0ba1109b1ed1e0b01c4b473312d50665f9c24aa5cc149fea9e61eb",
+      "bytes": 5133
+    },
+    {
+      "path": "public/worker-intake.mjs",
+      "sha256": "03700be5c75a7c6bfa358603805ad2699e34b9f8c98dcddce199260e74817f16",
+      "bytes": 1169
+    },
+    {
+      "path": "replay-experiment.mjs",
+      "sha256": "6a161e8d941c21d5cce4cf41426140b49000fbcced486d34829f7d558794a4d7",
+      "bytes": 719
+    },
+    {
+      "path": "session/inspection-session-core.mjs",
+      "sha256": "2a72135102b46e78b971654f805beb89ffea86741908cb4fb7e56ebedf90fd99",
+      "bytes": 24922
+    },
+    {
+      "path": "session/muse-diagnosis-contract.mjs",
+      "sha256": "b93dc3b834558acdda0008fa7bbcd5bf4fc434b4f544f4ef9078ed05cd01c49f",
+      "bytes": 7625
+    },
+    {
+      "path": "simulator/repair-run.mjs",
+      "sha256": "54820d9f29eff1499483700707ff6cffb6f3f17a2894fed1486eafd00f19beff",
+      "bytes": 4078
+    },
+    {
+      "path": "simulator/scenarios.mjs",
+      "sha256": "66e0187afa48ec794fc9e089f72901960d0d9f1815ade3412c0dbcc585bb3ebf",
+      "bytes": 544
+    },
+    {
+      "path": "simulator/workcell.mjs",
+      "sha256": "52a03ad7bca2d11b58e04affdd842e3ce30ccb7cd3e370477589dda875ca7d10",
+      "bytes": 2414
+    },
+    {
+      "path": "test-argon-adversarial-compiler-replay.mjs",
+      "sha256": "7df007be27ba41e6e371b365b98dbcac7c480d36940cbd26f656de923553dcf0",
+      "bytes": 15063
+    },
+    {
+      "path": "test-bay-job.mjs",
+      "sha256": "5a4496caffefbe08ca20a321e382c41e3693408de69733afd8af451f4406246d",
+      "bytes": 2350
+    },
+    {
+      "path": "test-console-independent-review.mjs",
+      "sha256": "6f7fcfd979a89632b16e59c2d14493074489cdcd9d15f2f10fabb1080e738659",
+      "bytes": 2468
+    },
+    {
+      "path": "test-experiment-replay.mjs",
+      "sha256": "80961bfe9f4b7461e0db79e81ec8e36e82ae6c1df1918696c93b0438609011d8",
+      "bytes": 5247
+    },
+    {
+      "path": "test-fault-experiment.mjs",
+      "sha256": "ff60c8633a140f9e8d57d2a0a05f6ed9e5d59e2fc4aec356a85d8bf9a607d28c",
+      "bytes": 6993
+    },
+    {
+      "path": "test-photo-repair-bridge.mjs",
+      "sha256": "6d0d345a4aa3c1eb96bb7b0102722a602390d0d203204a4abc76ad3bc9b0d13a",
+      "bytes": 4818
+    },
+    {
+      "path": "test-repair-compiler.mjs",
+      "sha256": "902276556b82524d63cc870a4a33867d72336827bad13b443d3a44befa76fa5b",
+      "bytes": 4575
+    },
+    {
+      "path": "test-repair-twin.mjs",
+      "sha256": "6e70702738b0981170a18f62da252362d7ea7abe8d03976aa5990aaaf0879828",
+      "bytes": 3213
+    },
+    {
+      "path": "test-sabotage-console.mjs",
+      "sha256": "996c6fd1123fc7b94e0dcdd44b3bacc3b570f00dfc0f7d861911c53c15db9369",
+      "bytes": 4889
+    },
+    {
+      "path": "test-uncertainty-workbench.mjs",
+      "sha256": "6c8d5c83285f4f89b9ebcbd354b0f29872155e23c65ceadcd14d38366fe7a892",
+      "bytes": 5581
+    },
+    {
+      "path": "test-worker-flow.mjs",
+      "sha256": "d426d1277a99a4ed502295a6514b0e5771b2763ed6b5caffe8bfc1ea92a12ae9",
+      "bytes": 2153
+    },
+    {
+      "path": "uncertainty-lab/repair-envelope.mjs",
+      "sha256": "61f6370cb0e91b20466900c7115f5ade7c10e63061c30a06065638b7aee581ab",
+      "bytes": 9765
+    },
+    {
+      "path": "uncertainty-lab/repair-envelope.test.mjs",
+      "sha256": "dc5d3688cab4c28fa05810457ceb5b5a73c78deb88de2c69d1833a58fcbb0674",
+      "bytes": 5685
+    },
+    {
+      "path": "uncertainty-lab/review-regressions.test.mjs",
+      "sha256": "98dc7e48005f52d3299620eaa7b8bf92352cc9e025fecd388d037efe8e0c3f64",
+      "bytes": 3141
+    },
+    {
+      "path": "verify-user-facing.mjs",
+      "sha256": "c1bce4e95de46ad21455f95bff9d41c3fd1e52eb777ef421f3a5c53d09ef909b",
+      "bytes": 21404
+    },
+    {
+      "path": "ASSET_PROVENANCE.md",
+      "sha256": "bb28cc6f8177ed7544655867eccf571387e95d1fb51dd76e0d18c50303ed4b87",
+      "bytes": 4003
+    }
+  ],
+  "exclusions": [
+    {
+      "path": "session/muse-bay-service.mjs",
+      "reason": "Private host credential loader and local paid ledger; not used by the Cloudflare app."
+    },
+    {
+      "path": "server.mjs",
+      "reason": "Private host service entry; standalone demo uses the read-only preview server."
+    },
+    {
+      "path": "uncertainty-lab/run-muse-uncertainty.mjs",
+      "reason": "Private campaign runner depends on the shared Change Witness budget ledger; do not copy or reset that ledger."
+    },
+    {
+      "path": "wrangler.jsonc",
+      "reason": "Existing production allowance and deployment bindings are operator state, not public defaults."
+    }
+  ],
+  "transformations": [
+    "ASSET_PROVENANCE.md: removed exactly two private original host paths; prompts and asset provenance retained."
+  ],
+  "fixturePolicy": "Three explicitly allowlisted historical synthetic/model fixtures; no bulk artifacts export.",
+  "sourceCommitAtExport": "ed6803e381247694937964b2592fa50ffd498dfc",
+  "sourceWorkingTreeDirty": true,
+  "publicPushPerformed": false,
+  "newProviderCalls": 0,
+  "physicalClearance": false,
+  "independentPeerReview": "PENDING"
+}

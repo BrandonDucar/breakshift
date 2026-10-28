@@ -1,0 +1,47 @@
+{
+  "schema": "dreamnet.app-robot-catalog.v1",
+  "appId": "breakshift",
+  "tenantId": "dreamnet",
+  "version": "1.0.0",
+  "profiles": [
+    {
+      "assetId": "breakshift-reference-cell",
+      "version": "1.0.0",
+      "label": "BREAKSHIFT reference workcell",
+      "manufacturer": "Fictional reference fixture",
+      "kind": "SYNTHETIC_WORKCELL",
+      "qualification": "SIMULATOR_FIXTURE_ONLY",
+      "adapter": "breakshift-uncertainty-energy/1",
+      "source": { "url": "https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/", "revision": "reference-model-v1", "documentSha256": null, "license": "Apache-2.0", "rightsScope": "Original event-authored fixture; not a manufacturer schematic" },
+      "missingBindings": ["physical equipment identity", "measured motor curves", "hardware safety validation"],
+      "physicalClearance": false
+    },
+    {
+      "assetId": "franka-description-family",
+      "version": "1.0.0",
+      "label": "Franka robot descriptions / reference only",
+      "manufacturer": "Franka Robotics",
+      "kind": "MANUFACTURER_DESCRIPTION_REFERENCE",
+      "qualification": "UNQUALIFIED_REFERENCE_ONLY",
+      "adapter": null,
+      "source": { "url": "https://github.com/frankarobotics/franka_description/tree/7aeeddc449edf8d62b594f9e36a81da53e7796f9", "revision": "7aeeddc449edf8d62b594f9e36a81da53e7796f9", "documentSha256": "fc0223356e8b55b7bff25ae4db5d0587662e62d2aa1cd45a8ee63fb018616f77", "license": "Apache-2.0", "rightsScope": "Repository description/README metadata only; no URDF or meshes copied" },
+      "missingBindings": ["exact robot variant and serial/configuration", "calibration and controller version", "verified dynamics and motor/power envelope", "equipment-specific adapter acceptance"],
+      "physicalClearance": false
+    },
+    {
+      "assetId": "ur-description-family",
+      "version": "1.0.0",
+      "label": "Universal Robots descriptions / reference only",
+      "manufacturer": "Universal Robots",
+      "kind": "MANUFACTURER_DESCRIPTION_REFERENCE",
+      "qualification": "UNQUALIFIED_REFERENCE_ONLY",
+      "adapter": null,
+      "source": { "url": "https://github.com/UniversalRobots/Universal_Robots_ROS2_Description/tree/81f7c9fe003c2f0e02eec5a7253f1b262ad38b61", "revision": "81f7c9fe003c2f0e02eec5a7253f1b262ad38b61", "documentSha256": "7bf26581913a851476323daab7226fb5fb8aa19b0acbda3969abe58be2689a18", "license": "MIXED_BSD_3_CLAUSE_AND_VENDOR_GRAPHICAL_TERMS", "rightsScope": "Metadata and references only. Several mesh sets have separate restrictions; no meshes or CAD copied" },
+      "missingBindings": ["exact robot variant and serial/configuration", "calibration and controller version", "per-file mesh/document rights", "verified dynamics and motor/power envelope", "equipment-specific adapter acceptance"],
+      "physicalClearance": false
+    }
+  ],
+  "coverage": "Three starter profiles, not a complete robotics schematic library",
+  "externalAppSharing": "OPT_IN_TENANT_AND_APP_SCOPED",
+  "authorityGranted": false
+}

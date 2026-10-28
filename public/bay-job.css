@@ -1,0 +1,47 @@
+.bay-job{margin:24px 0;padding:22px 24px;background:#1b2426;color:#e6eceb;border-block:1px solid #3f5c60;scroll-margin-top:16px}
+.intro h1{font-size:34px;line-height:1.15;letter-spacing:0}.intro{padding-block:24px}
+.start-job-link{display:inline-block;margin-top:12px;color:#b3e1d4;font-size:13px;text-underline-offset:4px}
+.public-access-banner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 0;font-size:9px;color:#b8cabb}
+.public-access-banner .start-job-link{margin-top:0;font-size:12px}
+.muse-annotations{position:static;pointer-events:auto}.muse-annotations:empty{display:none}
+.muse-annotations .muse-callout{position:static;width:auto;max-width:none;margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:8px;overflow-wrap:anywhere}
+.workspace button,.muse-panel button,.repair-player button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.repair-controls>button{min-height:40px}.repair-controls>span{overflow-wrap:anywhere}
+.component-detail h2,.surface-card h3{letter-spacing:0}
+.bay-job-heading{display:flex;gap:16px;align-items:start;justify-content:space-between;flex-wrap:wrap}
+.bay-job h2{font-size:20px;line-height:1.3;letter-spacing:0;margin:0 0 16px;max-width:620px}
+.bay-job .eyebrow{color:#a6c5c2;letter-spacing:0}
+.job-tag{font:11px/1.5 ui-monospace,monospace;color:#a6c5c2}
+.job-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.job-progress{display:flex;flex-wrap:wrap;gap:8px 20px;list-style:none;padding:0;margin:0 0 14px;font-size:11px;color:#a6c5c2}
+.job-progress [data-complete=true]{color:#b2e1b4}.job-progress [aria-current=step]{font-weight:700;color:#e6eceb}
+.bay-job button{background:#253437;color:#e6eceb;border:1px solid #668987;min-height:44px;white-space:normal;overflow-wrap:anywhere}
+.bay-job button:hover{background:#344b4e}.bay-job button.primary{background:#b3e1d4;color:#122b27;border-color:#b3e1d4}
+.bay-job button:disabled{cursor:not-allowed;opacity:.55}
+.bay-job button:focus-visible{outline-color:#b3e1d4}
+.job-result-head{display:flex;gap:8px 20px;flex-wrap:wrap;font-size:13px}
+.job-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}
+.job-metrics dt{font:10px/1.5 ui-monospace,monospace;color:#a6c5c2;overflow-wrap:anywhere}
+.job-metrics dd{font-size:22px;margin:4px 0;overflow-wrap:anywhere}
+.bay-job p{line-height:1.5;font-size:13px}.bay-job .scope-note{color:#a6c5c2}
+.bay-job .green{color:#b2e1b4}.bay-job .red{color:#ff9b9b}
+.photo-job-link{color:var(--ink);align-self:center;font-size:13px;text-underline-offset:4px}
+#photo-recorded-fallback{margin-top:10px}
+.worker-intake{border-block:1px solid var(--border);padding:12px 0;margin-bottom:12px}
+.worker-intake dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+.worker-intake dt{font:10px/1.5 ui-monospace,monospace;color:var(--muted);letter-spacing:0}
+.worker-intake dd{font-size:12px;line-height:1.5;margin:4px 0;overflow-wrap:anywhere}
+.clip-playback-speed{display:flex;align-items:center;gap:12px;padding:10px;background:var(--panel);font-size:12px}
+.clip-playback-speed[hidden]{display:none}
+.repair-controls label{display:flex;gap:8px;align-items:center;font-size:12px}
+.repair-controls{flex-wrap:wrap}
+.experiment-trail{border-top:1px solid var(--border);padding:14px 0;margin-top:10px;font-size:12px}
+.experiment-trail .section-heading{gap:10px;flex-wrap:wrap}
+.experiment-trail #experiment-state{overflow-wrap:anywhere;font-size:12px;line-height:1.6}
+.experiment-trail #experiment-replay-result{overflow-wrap:anywhere}
+.experiment-trail .green{color:var(--green)}.experiment-trail .red{color:var(--red)}
+#experiment-events{padding:0;list-style:none;max-height:190px;overflow:auto;margin:10px 0}
+#experiment-events li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:6px 0;border-top:1px solid var(--border)}
+#experiment-events time,#experiment-events small{font:10px/1.5 ui-monospace,monospace;color:var(--muted)}
+#experiment-events small{display:block;overflow-wrap:anywhere}
+@media(max-width:600px){.intro h1{font-size:28px}.bay-job{padding:18px 14px}.job-tag{display:none}.job-actions{display:grid;grid-template-columns:1fr}.job-metrics{gap:8px}.job-metrics dd{font-size:22px}}

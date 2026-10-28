@@ -1,0 +1,127 @@
+{
+  "schema": "breakshift.component-diagnosis.v1",
+  "scanId": "78d620ae-072e-4d50-9725-cf7ce1458ff8",
+  "mode": "LIVE_MUSE",
+  "model": "muse-spark-1.3",
+  "responseId": "chatcmpl-01a17cf8-a676-723c-9d30-921934981b19",
+  "createdAt": "2026-10-27T10:46:22.521Z",
+  "elapsedMs": 3528,
+  "zoneId": "GANTRY-STA-A",
+  "evidenceSnapshotId": "snap-a3ce9f90ae538d9d",
+  "sourceDigest": "a355ba2e5302f97eb5cec3ee007f334983353629c8c63d074142a840120faf3e",
+  "packetDigest": "d99ce0734ec189540d1574398d60c70ff034a544b6e357b46d5b7cbedd07c0ca",
+  "cached": false,
+  "stale": false,
+  "summary": "Station A gripper fault coincides with bus over-power, sensor lag, and failed picks; simulated repair requires coordinated power, timing, and handoff changes.",
+  "evidenceIds": [
+    "OBS-CURR-BUS",
+    "OBS-OPT-LAG",
+    "OBS-STA-GRIP",
+    "CHK-POWER-INTERLEAVE",
+    "CHK-TIMING-SYNC",
+    "CHK-STATION-HANDOFF"
+  ],
+  "limitations": [
+    "Internal solenoid / hall-sensor / mechanical condition of Station A gripper is unknown from supplied simulation evidence.",
+    "Physical cause of Station A fault flag cannot be determined without physical inspection, which is outside simulator scope.",
+    "Long-term wear, wiring integrity, and real-machine safety are unknown."
+  ],
+  "usage": {
+    "promptTokens": 1225,
+    "completionTokens": 678,
+    "estimatedCostUsd": 0.00441275
+  },
+  "fixes": [
+    {
+      "strategyId": "surge_interleave",
+      "title": "Stagger arm surges and throttle belt",
+      "explanation": "Interleaves arm surges to keep peak below 1.65 kW ceiling and throttles belt to reduce timing sensitivity; CHK-POWER-INTERLEAVE shows 1.554 kW with no trip.",
+      "tradeoff": "Reduced throughput from 0.7 m/s throttling; alone does not resolve Station A fault or sensor lag assumption.",
+      "evidenceIds": [
+        "OBS-CURR-BUS",
+        "CHK-POWER-INTERLEAVE"
+      ],
+      "affectedZoneIds": [
+        "PANEL-BUS-48V",
+        "JBOX-OPT-S1"
+      ],
+      "evaluation": {
+        "status": "REJECTED_SIMULATION",
+        "passed": false,
+        "peakKw": 1.554,
+        "packed": 0,
+        "orderCount": 8,
+        "breakerKw": 1.65,
+        "note": "This isolated change fails timing, station availability or the power envelope.",
+        "recipe": {
+          "powerMode": "repair",
+          "timingMode": "working",
+          "handoff": false
+        }
+      }
+    },
+    {
+      "strategyId": "station_handoff",
+      "title": "Hand off orders to Station B",
+      "explanation": "Filters faulted Station A and routes all 8 orders to Station B; CHK-STATION-HANDOFF shows 8/8 routed.",
+      "tradeoff": "Leaves power surge and timing mismatch unresolved, so simultaneous operation can still trip breaker or miss grasps.",
+      "evidenceIds": [
+        "OBS-STA-GRIP",
+        "CHK-STATION-HANDOFF"
+      ],
+      "affectedZoneIds": [
+        "GANTRY-STA-A",
+        "GANTRY-STB-B"
+      ],
+      "evaluation": {
+        "status": "REJECTED_SIMULATION",
+        "passed": false,
+        "peakKw": 2.9,
+        "packed": 0,
+        "orderCount": 8,
+        "breakerKw": 1.65,
+        "note": "This isolated change fails timing, station availability or the power envelope.",
+        "recipe": {
+          "powerMode": "working",
+          "timingMode": "working",
+          "handoff": true
+        }
+      }
+    },
+    {
+      "strategyId": "coordinated_repair",
+      "title": "Coordinate power, timing and handoff",
+      "explanation": "Combines surge interleave, throttled belt-speed timing, Station B handoff, and telemetry filtering; repair twin packs 8/8 at 1.554 kW and challenger packs 8/8 despite telemetry errors. Isolated fixes can fail because power, lag, and fault interact.",
+      "tradeoff": "Lower belt speed and reliance on Station B reduces redundancy and throughput.",
+      "evidenceIds": [
+        "OBS-CURR-BUS",
+        "OBS-OPT-LAG",
+        "OBS-STA-GRIP",
+        "CHK-POWER-INTERLEAVE",
+        "CHK-TIMING-SYNC",
+        "CHK-STATION-HANDOFF",
+        "CHK-TELEMETRY-SCHEMA"
+      ],
+      "affectedZoneIds": [
+        "PANEL-BUS-48V",
+        "JBOX-OPT-S1",
+        "GANTRY-STA-A",
+        "GANTRY-STB-B"
+      ],
+      "evaluation": {
+        "status": "PASSED_SIMULATION",
+        "passed": true,
+        "peakKw": 1.554,
+        "packed": 8,
+        "orderCount": 8,
+        "breakerKw": 1.65,
+        "note": "Passed the named judge and challenger scenarios on this snapshot.",
+        "recipe": {
+          "powerMode": "repair",
+          "timingMode": "repair",
+          "handoff": true
+        }
+      }
+    }
+  ]
+}

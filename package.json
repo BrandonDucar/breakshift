@@ -1,0 +1,13 @@
+{
+  "name": "breakshift",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": { "node": ">=22.12" },
+  "scripts": {
+    "build": "node cloudflare/build-preview.mjs",
+    "test": "node test-offline.mjs",
+    "start": "node preview-review.mjs"
+  }
+}

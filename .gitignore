@@ -1,0 +1,17 @@
+.cf-preview/
+.wrangler/
+.env*
+.local/
+node_modules/
+artifacts/*
+!artifacts/uncertainty-repair-20261028/
+!artifacts/muse-bay-20261026/
+!artifacts/sam-wonder-20261027/
+artifacts/uncertainty-repair-20261028/*
+!artifacts/uncertainty-repair-20261028/2026-10-28T04-17-38-760Z/
+artifacts/uncertainty-repair-20261028/2026-10-28T04-17-38-760Z/*
+!artifacts/uncertainty-repair-20261028/2026-10-28T04-17-38-760Z/muse-trial-1.json
+artifacts/muse-bay-20261026/*
+!artifacts/muse-bay-20261026/live-scan-78d620ae-072e-4d50-9725-cf7ce1458ff8.json
+artifacts/sam-wonder-20261027/*
+!artifacts/sam-wonder-20261027/synthetic-tracking-probe.mp4

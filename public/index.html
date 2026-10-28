@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101210">
+<title>BreakShift — Maintenance &amp; Energy Bay</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23dbfa86'/%3E%3Cpath d='M9 7h8a5 5 0 0 1 3 9 5 5 0 0 1-3 9H9zm5 5v3h3a1.5 1.5 0 0 0 0-3zm0 8v1h3a1.5 1.5 0 0 0 0-3h-3z' fill='%23101210'/%3E%3C/svg%3E"><link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/public/sam-tracking.css">
+<link rel="stylesheet" href="/public/visual-system.css">
+<link rel="stylesheet" href="/public/bay-job.css">
+<link rel="stylesheet" href="/public/sabotage-console.css">
+<link rel="stylesheet" href="/public/uncertainty-workbench.css">
+</head><body>
+<a class="skip-link" href="#component-workspace">Skip to inspection</a>
+<main>
+  <header class="masthead"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">B/</span><span>BREAKSHIFT<small>MAINTENANCE &amp; ENERGY BAY</small></span></a><div class="masthead-state"><span class="status-dot"></span> SIMULATED WORKCELL <span class="build-tag">BAY / 01</span></div></header>
+  <p id="connection-error" class="error-banner" role="alert" hidden></p>
+  <section id="component-workspace" class="workspace" aria-label="Interactive component inspection">
+    <div class="workspace-toolbar"><div class="segmented" aria-label="Inspection view"><button type="button" data-view="workcell" aria-pressed="true">01 Workcell</button><button type="button" data-view="cutaway" aria-pressed="false">02 Robot cutaway</button><button type="button" data-view="schematic" aria-pressed="false">03 Schematic</button><button type="button" data-view="spatial" aria-pressed="false">04 Spatial 3D</button><button type="button" data-view="photo" aria-pressed="false">05 Photo / camera</button></div><label class="twin-picker">TRACE<select id="trace-select"><option value="working">Working / faulted</option><option value="repair">Repair candidate</option><option value="challenger">Challenger test</option></select></label></div>
+    <div id="photo-workspace" hidden></div>
+    <div class="inspection-grid"><div class="visual-column">
+      <div class="scene-frame">
+        <div id="scene" class="scene" data-view="workcell" aria-label="Simulated workcell component map">
+          <img id="workcell-image" class="scene-image" src="/public/assets/breakshift-microgrid-hero-v1.png" alt="Original concept illustration of two robots, a conveyor and a shared microgrid in a fictional workcell" width="1774" height="887" fetchpriority="high">
+          <img id="cutaway-image" class="scene-image" src="/public/assets/robot-cutaway-v1.png" alt="Original fictional robot cutaway exposing motor coils, reduction gears, wiring and gripper internals" width="1774" height="887" hidden>
+          <div id="schematic-stage" class="schematic-stage" hidden></div>
+          <div id="spatial-stage" class="spatial-stage" hidden><canvas id="spatial-canvas" class="spatial-canvas" tabindex="0" aria-label="Interactive 3D simulated workcell spatial anchors"></canvas><div id="spatial-pins" class="hotspots" aria-label="Select a 3D component anchor"></div><div id="spatial-fallback" class="spatial-fallback" hidden></div><div class="spatial-controls" role="group" aria-label="3D camera and WebXR controls"><button type="button" data-cam="default">Iso</button><button type="button" data-cam="top">Top bus</button><button type="button" data-cam="wrist">Arm A</button><button type="button" id="xr-enter" disabled>Checking WebXR…</button></div></div>
+          <svg id="fault-lines" class="fault-lines" viewBox="0 0 1000 500" aria-hidden="true"></svg><svg id="muse-repair-lines" class="fault-lines" viewBox="0 0 1000 500" aria-hidden="true"></svg><div id="hotspots" class="hotspots" aria-label="Select a component"></div>
+          <div class="scene-topline"><span id="scene-mode">WORKCELL / COMPONENT MAP</span><span id="scene-badge">ILLUSTRATED TWIN</span></div><div id="scene-fault" class="scene-fault" aria-live="polite">Loading simulation…</div>
+        </div>
+        <aside id="reasoning-hud" class="reasoning-hud" aria-label="Deterministic simulator reasoning steps"></aside>
+      </div>
+      <div id="muse-annotations" class="muse-annotations" aria-live="polite"></div>
+      <div id="sabotage-console" class="sabotage-console" aria-label="Live perturbation command bar"></div>
+      <div id="component-strip" class="component-strip" aria-label="Component selection"></div>
+      <div class="layer-row"><span class="eyebrow">LAYERS</span><div class="layer-toggles" aria-label="Visible inspection layers"><label><input type="checkbox" data-layer-toggle="mechanical" checked> Mechanical</label><label><input type="checkbox" data-layer-toggle="electrical" checked> Electrical</label><label><input type="checkbox" data-layer-toggle="software" checked> Software</label><label><input type="checkbox" data-layer-toggle="energy" checked> Energy</label></div></div>
+      <div class="scene-key"><span><i class="dot red"></i>Fault</span><span><i class="dot amber"></i>Constraint</span><span><i class="dot green"></i>Passed named simulation check</span><span id="overlay-label">Dashed / proposed repair</span></div>
+    </div><aside id="component-detail" class="component-detail" aria-labelledby="component-name"><p class="eyebrow">COMPONENT INSPECTION</p><h2 id="component-name">Connecting to the bay…</h2></aside></div>
+  </section>
+  <section class="intro"><div><p class="eyebrow">WORKCELL REPAIR / SIMULATION</p><h1>BREAKSHIFT Workbench</h1><p class="intro-description">Station A is faulted. Eight orders are waiting.</p></div><div class="session-meta" aria-label="Shared inspection session"><span id="sync-pill" class="sync-pill" role="status">CONNECTING</span><span id="mission-id">Inspection mission</span><span><b id="mission-version">v—</b> · <code id="mission-snapshot">Awaiting snapshot</code></span></div></section>
+  <section id="bay-job" class="bay-job" aria-label="Demo repair job"></section>
+  <section id="muse-panel" class="muse-panel" aria-labelledby="muse-heading"><div class="muse-diagnosis"><p class="eyebrow">MUSE / COMPONENT ENGINEER</p><h2 id="muse-heading">Scan the evidence. See the options.</h2><p id="muse-summary">Select a component and scan its current simulation evidence with Muse. Choose a suggested fix to preview it on the robot.</p><p id="muse-availability" class="scope-note" role="status">Checking Muse connection…</p><p id="muse-error" class="muse-error" role="alert" hidden></p><div id="muse-evidence"></div></div><div id="muse-fixes" class="muse-fixes"><p class="muted">Possible fixes will appear here after a scan.</p></div></section>
+  <section id="repair-twin" class="repair-player" aria-labelledby="repair-title" hidden></section>
+  <section class="energy-deck" aria-labelledby="energy-title"><div class="energy-controls"><p class="eyebrow">SHARED MICROGRID</p><h2 id="energy-title">Power is a hard constraint.</h2><label class="cap-control">Breaker ceiling <output id="cap-label">1.65 kW</output><input id="cap" type="range" min="1.4" max="3.2" step=".05" value="1.65" disabled></label><div class="action-row"><button id="sabotage" class="primary" type="button" disabled>Run fault scenario ↗</button><button id="overlay-toggle" type="button" disabled>Show verified repair</button></div><p id="run-status" class="muted" role="status">10 ms simulation ticks · comparison against the same scenario</p></div><div class="wave-panel"><div class="section-heading"><h3>Load / breaker ceiling</h3><span id="wave-summary">Awaiting trace</span></div><div id="wave" role="img" aria-label="Power traces for working, repaired and challenger twins"></div><div id="twins" class="twins" aria-live="polite"></div></div></section>
+  <section id="uncertainty-workspace" class="uncertainty-workspace" aria-label="Uncertainty repair checks"></section>
+  <section class="evidence-workspace" aria-label="Inspection evidence and surface projections">
+    <div class="section-heading"><div><p class="eyebrow">SESSION SNAPSHOT / REFERENCE CHECKS</p><h2>Inspection details.</h2></div><button id="download-receipt" type="button" disabled>Download session snapshot ↓</button></div>
+    <div id="pairing-panel" class="pairing-panel" aria-label="Multi-device QR and room-code pairing">
+      <div class="pairing-meta">
+        <p class="eyebrow">PAIR DEVICE / ROOM CODE &amp; LIVE ROSTER</p>
+        <div class="pairing-head"><code id="room-code-badge" class="room-code-badge">LOCAL</code><span id="peer-roster" class="peer-roster" role="status">Connecting roster…</span></div>
+        <div class="pairing-controls"><label class="qr-target-label">QR target<select id="qr-target-select"><option value="ipad">Tablet / schematic</option><option value="glasses">Spatial / headset 3D</option><option value="laptop">Laptop / engineering</option></select></label><button type="button" id="copy-join-url">Copy link</button><button type="button" id="rotate-room-code" hidden>Rotate code</button></div>
+        <code id="join-url-code" class="join-url-code">Awaiting pairing descriptor…</code>
+        <form id="pair-join-form" class="pair-join-form"><input id="join-code-input" type="text" maxlength="7" placeholder="BS-XXXX" aria-label="6-character bay room code" autocomplete="off"><button type="submit" id="join-code-btn">Pair code</button></form>
+        <p id="pairing-notice" class="scope-note">Bound to loopback by default; start with --lan for Wi-Fi pairing.</p>
+      </div>
+      <div class="qr-box-wrap"><div id="qr-svg-box" class="qr-svg-box" aria-live="polite"></div><small id="qr-caption" class="qr-caption">SCAN FOR TABLET</small></div>
+    </div>
+    <div class="surface-tabs segmented" aria-label="Inspection surface"><button type="button" data-surface="all" aria-pressed="true">Overview</button><button type="button" data-surface="laptop" aria-pressed="false">Laptop / engineering</button><button type="button" data-surface="ipad" aria-pressed="false">Tablet / schematic</button><button type="button" data-surface="glasses" aria-pressed="false">Spatial / preview</button></div>
+    <div id="surfaces-container" class="surfaces-grid">
+      <section class="surface-card" data-surface-panel="laptop" aria-labelledby="laptop-heading"><p class="eyebrow">01 / ENGINEERING</p><h3 id="laptop-heading">Trace the repair.</h3><p id="compiler-verdict" class="verdict">Awaiting evaluation</p><div id="laptop-evidence"></div><details><summary>Controller change summary</summary><pre id="diff"></pre></details></section>
+      <section class="surface-card" data-surface-panel="ipad" aria-labelledby="ipad-heading"><p class="eyebrow">02 / FIELD SCHEMATIC</p><h3 id="ipad-heading">Know the component.</h3><label class="zone-picker-label">Selected component<select id="zone-select" disabled></select></label><div id="ipad-schematic"></div><h4>Demo inspection checklist</h4><div id="ipad-checklist"></div><p id="ipad-banner" class="scope-note"></p></section>
+      <section class="surface-card" data-surface-panel="glasses" aria-labelledby="glasses-heading"><p class="eyebrow">03 / SPATIAL PREVIEW</p><h3 id="glasses-heading">Keep the same context.</h3><p id="glasses-warning" class="scope-note"></p><div id="glasses-callouts"></div><p id="xr-status" class="scope-note" role="status">Checking immersive AR support…</p><button type="button" class="inspector-action" id="open-spatial">Open 3D / WebXR stage ↗</button><p class="scope-note">Preview anchors are illustrative. Physical fiducial alignment and service clearance remain separate from simulated checks.</p></section>
+    </div>
+  </section>
+  <footer><span class="brand-word">BREAKSHIFT / BAY 01</span><p>SIMULATED_WORKCELL_ENERGY_MODEL · Original concept imagery and demo schematics. Green applies to the named simulated check on this snapshot. Physical service clearance is separate.</p></footer>
+</main><script type="module" src="/public/component-bay.js"></script></body></html>

@@ -1,0 +1,2 @@
+export const judgeScenario = Object.freeze({ name: 'judge-brownout', breakerKw: 1.65, sensorLagMs: 140, stationAFault: true, orderCount: 8, cloudDips: [{ fromMs: 300, toMs: 520, capKw: 1.65 }] });
+export const challengerScenario = Object.freeze({ ...judgeScenario, name: 'challenger-jitter', sensorLagMs: 167, cloudDips: [{ fromMs: 250, toMs: 610, capKw: 1.65 }], malformedPackets: [{ timestampMs: -1, beltSpeedMps: 0.7, station: 'B', sensorLagMs: 10 }, { timestampMs: 1, beltSpeedMps: 0.7, station: 'B', sensorLagMs: 10, injected: true }] });
