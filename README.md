@@ -56,5 +56,5 @@ See NEW_WORK.md for submission boundaries. Original project code is Apache-2.0;
 retain LICENSE, NOTICE and third-party notices. Generated illustrations and the
 synthetic tracking clip are not real-world inspection evidence. See
 ASSET_PROVENANCE.md and LICENSING.md. Model weights and service credentials are
-not included. This local package has not itself been published or approved by
-the hackathon organizer.
+not included. Public source publication does not establish approval by the
+hackathon organizer. Contributor dates, credits and final demo remain separate gates.

@@ -479,8 +479,8 @@
     },
     {
       "path": "NEW_WORK.md",
-      "sha256": "c842591fa7bc89269ede6f435952238402ba28e972672fd5eb5c005929d86e9a",
-      "bytes": 1487
+      "sha256": "b5d9dd8682ecf8ace5e6c57d242a1e36d3426c1a16a62b1143ff0d8e3a5a0740",
+      "bytes": 1623
     },
     {
       "path": "offline-guard.mjs",
@@ -494,8 +494,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "67922fe729b99a6b09b6267a676f4d0addb763affba511a274ecb4cabae433bf",
-      "bytes": 2731
+      "sha256": "3e591ac15f9e1e6441afebb3f3a7b41b75ed6728d41fac267ee8b66ec546b172",
+      "bytes": 2789
     },
     {
       "path": "test-offline.mjs",

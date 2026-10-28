@@ -23,7 +23,9 @@ or a current provider execution claim.
 
 ## Remaining Submission Gates
 
-Owner review of this exact source/fixture allowlist, independent reviewer sign-off,
-public repository publication, contribution dates/credits and a three-minute demo
-remain separate gates. A local snapshot commit made by the packaging verifier is
-an extraction checkpoint, not evidence of when each original feature was authored.
+The owner authorized public repository publication on October 28, 2026. The
+repository is https://github.com/BrandonDucar/breakshift. Independent reviews apply
+to their exact source pins, not every future commit. Contribution dates/credits,
+accepted official rules and the three-minute demo still require final confirmation.
+A local snapshot commit made by the packaging verifier is an extraction checkpoint,
+not evidence of when each original feature was authored.
