@@ -6,6 +6,8 @@
   "license": "Apache-2.0",
   "engines": { "node": ">=22.12" },
   "scripts": {
+    "pretest": "node cloudflare/build-preview.mjs",
+    "prestart": "node cloudflare/build-preview.mjs",
     "build": "node cloudflare/build-preview.mjs",
     "test": "node test-offline.mjs",
     "start": "node preview-review.mjs"

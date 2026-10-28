@@ -468,6 +468,11 @@
       "bytes": 3733
     },
     {
+      "path": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
       "path": ".gitignore",
       "sha256": "ebe1d81a495f28b1ca0c09156bdb241abb2df7abd9fd74dd01e0cc375ac8e049",
       "bytes": 621
@@ -484,8 +489,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "f565b18b18857fb484a8c2ba5b534e72d0a16686ca79a923157cc8b5c115275a",
-      "bytes": 297
+      "sha256": "7c82bddae294f5681a96e7b8cf7bc454a138973be9d73b5ea6e671290e825f2a",
+      "bytes": 402
     },
     {
       "path": "README.md",
