@@ -83,6 +83,15 @@ try {
       await click('#muse-fixes [data-run-fix="coordinated_repair"]');await frame('#repair-twin');
       await hold(4000);await click('#repair-finish');await frame('#repair-twin');
     } else if(shot.id==='baseline') {
+      // Demo-only magnifier: read actual UI state without changing app outcomes.
+      await page.evaluate(()=>{
+        const panel=document.querySelector('#uncertainty-workspace');
+        const badge=document.createElement('aside');badge.id='demo-state-readback';
+        badge.style.cssText='position:fixed;right:24px;bottom:145px;max-width:650px;padding:14px 18px;background:#101210;color:#fff;border:1px solid #dbfa86;font:22px/1.4 Arial;z-index:9999';
+        document.body.append(badge);
+        const update=()=>{badge.textContent=`DEMO READBACK / ${panel.dataset.state.toUpperCase()} / Export ${document.querySelector('#uncertainty-save').disabled?'LOCKED':'available'}. ${document.querySelector('#uncertainty-review-result').textContent}`;};
+        new MutationObserver(update).observe(panel,{subtree:true,childList:true,attributes:true,characterData:true});update();
+      });
       await click('[data-uncertainty-candidate="reference"]');await click('#uncertainty-run');await frame('#uncertainty-workspace');
       assert.equal(await page.locator('#uncertainty-workspace').getAttribute('data-state'),'refuted');
       assert.match(await page.locator('#uncertainty-rows').textContent(),/1722\.5/);
@@ -106,7 +115,7 @@ try {
       assert.equal(await page.locator('#uncertainty-workspace').getAttribute('data-state'),before);await frame('#uncertainty-workspace');
     } else if(shot.id==='energy') {
       const a=energy.reference.metrics,b=energy.proposed.metrics;
-      await page.setContent(stage('Lower peak. Higher batch energy.',`<p>Computed by the repository's actual <code>energy-comparison.mjs</code>.<br>Same declared nominal disturbance; full batch horizon.</p><table><tr><th>Modeled quantity</th><th>Reference</th><th>Muse proposal</th></tr><tr><td>Peak power</td><td>${a.peakW.toFixed(1)} W</td><td>${b.peakW.toFixed(1)} W</td></tr><tr><td>Batch energy</td><td>${a.energyWh.toFixed(4)} Wh</td><td>${b.energyWh.toFixed(4)} Wh</td></tr><tr><td>Batch duration</td><td>${a.windowMs} ms</td><td>${b.windowMs} ms</td></tr></table><p>No utility-bill savings claim. No calibrated motor model.<br>No physical energy measurements or machine clearance.</p><small>Receipt SHA-256: ${energy.receiptDigest}</small>`));
+      await page.setContent(stage('Lower peak. Higher batch energy.',`<p>Computed by the repository's actual <code>energy-comparison.mjs</code>.<br>Nominal disturbance, full batch horizon; 2310 ms here versus 2350 ms at the envelope worst case.</p><table><tr><th>Modeled quantity</th><th>Reference</th><th>Muse proposal</th></tr><tr><td>Peak power</td><td>${a.peakW.toFixed(1)} W</td><td>${b.peakW.toFixed(1)} W</td></tr><tr><td>Batch energy</td><td>${a.energyWh.toFixed(4)} Wh</td><td>${b.energyWh.toFixed(4)} Wh</td></tr><tr><td>Batch duration</td><td>${a.windowMs} ms</td><td>${b.windowMs} ms</td></tr></table><p>No utility-bill savings claim. No calibrated motor model.<br>No physical energy measurements or machine clearance.</p><small>Receipt SHA-256: ${energy.receiptDigest}</small>`));
     } else if(shot.id==='proof') {
       await page.setContent(stage('Reproduce it. Challenge it.',`<h2>Actual local offline test output</h2><pre>${escape(receipt.testSummary.join('\n'))}</pre><p>Node 22.12+ / npm test / no dependencies / no API keys</p><p>Public source: github.com/BrandonDucar/breakshift<br>Live app: breakshift-maintenance-bay.dreamnet-intel.workers.dev</p><p>Apache-2.0. Recorded model outputs. Fictional workcell.<br>Simulation evidence is not physical machine clearance.</p><small>Source commit: ${escape(receipt.sourceCommit)}<br>Release reproduced: ${escape(release.id)}</small>`));
     }
