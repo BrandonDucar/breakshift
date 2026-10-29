@@ -40,6 +40,11 @@ synthetic browser test, not a physical-device hardware test.
 
 ## Source And Evidence
 
+For the reproducible 2:50 local demo recording, captions, and offline narration,
+see [demo/README.md](demo/README.md). The demo tooling is optional and separate
+from the dependency-free app. Generated video is a review draft, not a hosted
+submission or new live model execution.
+
 The public browser app, Cloudflare backend source, deterministic compiler,
 simulator, uncertainty verifier and offline tests are included. The historical
 build fixtures are explicitly tracked; the generated .cf-preview directory is not.
