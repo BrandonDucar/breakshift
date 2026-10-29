@@ -45,8 +45,9 @@ checks the last word fits, and verifies every caption word is retained in order.
 Speech timestamps use explicit 16 kHz synthesis to match the event clock.
 These measurements do not substitute for listening or independent review.
 See [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) for the rejected original draft
-and its fixes, and [POST_REVIEW_VERIFICATION.md](POST_REVIEW_VERIFICATION.md) for
-the replacement's exact hashes and open review gates.
+and its fixes, [POST_REVIEW_VERIFICATION.md](POST_REVIEW_VERIFICATION.md) for the
+first replacement, and [MODEL_RECHECK.md](MODEL_RECHECK.md) for the newer
+Muse/Copilot-reviewed candidate and open owner gates.
 Larger demo-only state readbacks magnify actual UI values; they
 do not add app functionality or new evidence.
 The public fixture bytes, live deployment, paid allowance and private ledger
