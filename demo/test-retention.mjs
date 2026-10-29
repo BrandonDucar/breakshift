@@ -48,6 +48,8 @@ test('speech timing preserves fractional tempo and emits bounded word timestamps
       if ($tempo -lt 1.28 -or $tempo -gt 1.29) { throw 'FRACTIONAL_TEMPO_LOST' }
       if ($marks.Count -lt 7) { throw 'MISSING_WORD_TIMESTAMPS' }
       if ($marks[-1].Seconds -le $marks[0].Seconds) { throw 'INVALID_WORD_TIMESTAMPS' }
+      $duration=[double](& ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 '${join(dir,'voice.wav').replaceAll("'","''")}')
+      if ($LASTEXITCODE -ne 0 -or $marks[-1].Seconds -ge $duration) { throw 'SPEECH_CLOCK_MISMATCH' }
       $source=Get-Content -Raw '${join(root,'demo/render.ps1').replaceAll("'","''")}'
       if (-not $source.Contains('[Math]::Max([double]1, $duration / $slot)')) { throw 'RENDERER_TEMPO_REGRESSION' }
       @{tempo=$tempo;words=$marks.Count;lastWordSeconds=$marks[-1].Seconds} | ConvertTo-Json -Compress`;

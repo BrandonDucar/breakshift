@@ -38,7 +38,15 @@ TAP output, an exported/replayed uncertainty receipt, an energy comparison,
 capture receipt, narration WAV files, subtitles, and the final draft MP4.
 The media verifier decodes the complete file, checks both stream durations,
 samples a nonblank frame in each chapter, checks audio levels, and seals output
-and tooling digests. It does not substitute for listening or independent review.
+and tooling digests. Render-time source/WAV/filter hashes live in
+`render-receipt.json`; verification refuses existing output receipts. The verifier
+also measures the tempo-adjusted sample duration of all nine narration tracks,
+checks the last word fits, and verifies every caption word is retained in order.
+Speech timestamps use explicit 16 kHz synthesis to match the event clock.
+These measurements do not substitute for listening or independent review.
+See [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) for the rejected original draft
+and its fixes. Larger demo-only state readbacks magnify actual UI values; they
+do not add app functionality or new evidence.
 The public fixture bytes, live deployment, paid allowance and private ledger
 are not modified. A finished draft still needs human/independent visual review,
 hosting approval, a working public video link, and organizer submission.
