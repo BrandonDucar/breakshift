@@ -15,7 +15,7 @@ node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-rehea
 node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-draft
 ./demo/render.ps1 -OutputPath .local/demo-draft
 node demo/verify-media.mjs .local/demo-draft
-node --test demo/test-story.mjs demo/test-retention.mjs
+npm run test:demo
 ```
 
 `--rehearsal` runs the same assertions without timed holds or video encoding.
@@ -44,6 +44,15 @@ also measures the tempo-adjusted sample duration of all nine narration tracks,
 checks the last word fits, and verifies every caption word is retained in order.
 Speech timestamps use explicit 16 kHz synthesis to match the event clock.
 These measurements do not substitute for listening or independent review.
+
+The current `verify-media.mjs` is deliberately restricted to the retained
+reviewed recording. `retained-evidence-binding.json` binds its video, canonical
+capture metadata, TAP and both sidecars. It is a local reviewed-byte baseline,
+not a signature, provider authentication or proof that tests executed. A new
+capture or render will fail this gate until its evidence is separately reviewed
+and a new version of the binding is approved. Do not replace pins just to make
+verification pass. TAP verification supports only the flat, zero-suite Node
+test output this capture produces; it reconciles result rows and counters.
 See [ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md) for the rejected original draft
 and its fixes, [POST_REVIEW_VERIFICATION.md](POST_REVIEW_VERIFICATION.md) for the
 first replacement, and [MODEL_RECHECK.md](MODEL_RECHECK.md) for the newer

@@ -1,11 +1,20 @@
 import assert from 'node:assert/strict';
-import { readFile, writeFile, lstat } from 'node:fs/promises';
+import { readFile as readDiskFile, writeFile, lstat } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { inspectFramePixels } from './frame-quality.mjs';
+import { verifyDemoEvidence, pinDemoInput } from './evidence-consistency.mjs';
+import bindings from './retained-evidence-binding.json' with {type:'json'};
 
 const output=resolve(process.argv[2]||'.local/demo-draft');
+const validatedInputs=new Map();
+async function readFile(path,encoding) {
+  const key=path instanceof URL?fileURLToPath(path):resolve(path);
+  const bytes=pinDemoInput(validatedInputs,key,await readDiskFile(key));
+  return encoding?bytes.toString(encoding):bytes;
+}
 const verificationPath=resolve(output,'media-verification.json');
 await lstat(verificationPath).then(()=>{throw Error('DEMO_VERIFICATION_EVIDENCE_ALREADY_EXISTS');},error=>{if(error.code!=='ENOENT')throw error;});
 const file=resolve(output,'breakshift-demo-draft.mp4');
@@ -14,9 +23,15 @@ const capture=JSON.parse(await readFile(resolve(output,'capture-receipt.json')))
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const render=JSON.parse(await readFile(resolve(output,'render-receipt.json')));
 assert.equal(render.schema,'breakshift.demo-render.v1');assert.equal(render.passed,true);
+assert.equal(render.providerCalls,0);assert.equal(render.incrementalSpendUsd,0);
 assert.equal(render.inputPolicy,'LOCAL_BOUND_SOURCE_AND_CAPTURE_TREE_REQUIRED');
 assert.equal(render.outputSha256,digest(await readFile(file)));
+assert.equal(render.outputSha256,bindings.outputSha256,'DEMO_RETAINED_RECORDING_BINDING');
 for(const pin of render.inputs)assert.equal(digest(await readFile(pin.path)),pin.sha256,`Render input changed: ${pin.path}`);
+const evidenceConsistency=verifyDemoEvidence({capture,story,bindings,
+  tapText:await readFile(resolve(output,'offline-tests.tap'),'utf8'),
+  experimentText:await readFile(resolve(output,'uncertainty-experiment.json'),'utf8'),
+  energyText:await readFile(resolve(output,'energy-comparison.json'),'utf8')});
 function run(cmd,args,encoding='utf8'){
   const result=spawnSync(cmd,args,{encoding,maxBuffer:8000000,timeout:120000});
   assert.equal(result.status,0,`${cmd}: ${result.stderr}`);return result;
@@ -73,6 +88,7 @@ for(const name of ['breakshift-demo-draft.mp4','demo.srt','capture-receipt.json'
   const bytes=await readFile(resolve(output,name));assets.push({name,bytes:bytes.length,sha256:digest(bytes)});
 }
 const receipt={schema:'breakshift.demo-media-verification.v1',passed:true,
+  evidenceConsistency,
   evidence:'LOCAL_MEDIA_DECODE_DIMENSION_DURATION_PIXEL_AND_AUDIO_LEVEL_CHECKS',
   independentReview:'PENDING',humanListeningReview:'PENDING',hostedVideoUrl:null,
   durationSeconds:Number(probe.format.duration),videoDurationSeconds:Number(video[0].duration),
@@ -81,8 +97,14 @@ const receipt={schema:'breakshift.demo-media-verification.v1',passed:true,
   narrationChecks:narration,
   paidAllowanceModified:false,teachingRuntimeContacted:false,productionChanged:false};
 receipt.tooling=[];
-for(const name of ['capture.mjs','render.ps1','story.json','verify-media.mjs','Narration.cs','frame-quality.mjs','narration-timing.ps1']) {
+for(const name of ['capture.mjs','render.ps1','story.json','verify-media.mjs','evidence-consistency.mjs','retained-evidence-binding.json','Narration.cs','frame-quality.mjs','narration-timing.ps1']) {
   receipt.tooling.push({name:`demo/${name}`,sha256:digest(await readFile(new URL(`./${name}`,import.meta.url)))});
 }
+for(const name of ['public/uncertainty-session.mjs','public/verified-uncertainty-patch.json','uncertainty-lab/repair-envelope.mjs','energy-lab/energy-comparison.mjs','session/inspection-session-core.mjs']) {
+  receipt.tooling.push({name,sha256:digest(await readFile(new URL(`../${name}`,import.meta.url)))});
+}
+// A receipt may bind only the input bytes used above, never later replacement bytes.
+for(const [path] of validatedInputs)pinDemoInput(validatedInputs,path,await readDiskFile(path));
+receipt.inputSnapshotRechecked=true;
 await writeFile(verificationPath,JSON.stringify(receipt,null,2),{flag:'wx'});
 console.log(JSON.stringify(receipt,null,2));

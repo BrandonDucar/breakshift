@@ -33,11 +33,14 @@ submission repository. Recheck dependency notices if combining this workcell wit
 Change Witness, whose THIRD_PARTY_NOTICES.md and licenses/ inventory cover its
 separate npm/frontend/skill dependencies.
 
-The deployed Cloudflare URL is not evidence of a public GitHub repository. This
-review found this workcell untracked in DreamNet and no matching submission repo
-in the first 100 repositories returned for BrandonDucar. That is a release gap,
-not proof that no repository exists elsewhere. Do not publish the whole dirty
-monorepo to resolve it. Review an explicit file allowlist and secret scan first.
+Historical extraction review (October 27, 2026): the workcell was untracked in
+DreamNet, and no matching submission repo appeared in the first 100 repositories
+checked. That was a release gap at that time, not proof that none existed elsewhere.
+The standalone submission repository now exists at
+https://github.com/BrandonDucar/breakshift; recheck signed-out judge access before
+submission. A deployed Cloudflare URL alone still does not prove repository
+visibility. Never publish the whole dirty monorepo to resolve an extraction gap;
+retain the explicit file allowlist and secret-review boundary.
 
 Historical repair ZIPs and the existing hosted deployment were not repackaged or
 redeployed by this licensing update; ensure notices accompany the final artifact.

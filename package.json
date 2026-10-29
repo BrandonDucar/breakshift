@@ -10,6 +10,7 @@
     "prestart": "node cloudflare/build-preview.mjs",
     "build": "node cloudflare/build-preview.mjs",
     "test": "node test-offline.mjs",
+    "test:demo": "node --test demo/test-evidence-consistency.mjs demo/test-frame-quality.mjs demo/test-retention.mjs demo/test-story.mjs",
     "start": "node preview-review.mjs"
   }
 }

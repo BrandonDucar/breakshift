@@ -1,0 +1,9 @@
+{
+  "schema": "breakshift.retained-demo-binding.v1",
+  "outputSha256": "82d6332bc339f9c95b716e999f8202b7843d4b0df9717057b1b0d0330a854857",
+  "authentication": "LOCAL_REVIEWED_BYTE_BINDING_NOT_PROVIDER_OR_PHYSICAL_AUTHENTICATION",
+  "captureSha256": "e0f785cc8cc503981fee08c992097c10d9c348c46ccb708f38b7371381ea5340",
+  "tapSha256": "5ba1088aa4934fbd59f3f332fe6fb9993e2d3e03a437cef395573bd35c1d9950",
+  "experimentSha256": "000212def48e34c22d58b785d30805f5bf8ebc556d65eb14827d5114de52fbc2",
+  "energySha256": "30b4b0fade6065307ad0e2f09e0b4d4f2a76b54e4ab763b1de1bad0681556197"
+}

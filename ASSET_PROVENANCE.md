@@ -13,9 +13,14 @@ with a small synthetic horizontal camera pan. They are generated illustration
 media, not physical camera recordings. Native SAM3.1 tracked17frames; the
 associated Wonder diagnosis/plan is projected into
 `public/verified-sam-wonder-demo.json` as an explicit recorded demo. Image/video
-hashes bind the public derivative to the exact canary receipt under
-`artifacts/sam-wonder-20261027/`; no user media, financial or transport fields
-were published. SAM parser0.1.0 license is served at
+hashes bind the public derivative bytes to that public fixture. The public
+repository does not include the historical provider-response receipt or its
+projection mapping, so provider execution cannot be independently authenticated
+from these public files. `artifacts/sam-wonder-20261027/` retains a probe clip,
+not that missing receipt. Probe and public MP4 containers have different hashes
+and durations but identical H.264 packet hashes; matching encoded imagery alone
+does not authenticate a provider call. No user media, financial or transport
+fields were published. SAM parser0.1.0 license is served at
 `/third-party/meta-sam-LICENSE.txt`. Detailed intake and test evidence:
 `SAM_WONDER_INTEGRATION.md`.
 
