@@ -8,7 +8,11 @@ Add-Type -AssemblyName System.Speech
 $voice = New-Object System.Speech.Synthesis.SpeechSynthesizer
 $voice.Rate = 0
 $voice.SelectVoice('Microsoft Zira Desktop')
-$inputs = @('-y', '-ss', [string]$receipt.startVideoSeconds, '-i', $receipt.rawVideoPath)
+$rawDuration = [double](& ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $receipt.rawVideoPath)
+if ($LASTEXITCODE -ne 0) { throw 'Raw video probe failed' }
+# Browser recording begins on the first rendered frame, not newPage wall time.
+$trim = [Math]::Max(0, $rawDuration - [double]$story.durationSeconds)
+$inputs = @('-y', '-ss', $trim.ToString('0.000000',[Globalization.CultureInfo]::InvariantCulture), '-i', $receipt.rawVideoPath)
 $filters = @()
 $channels = @()
 $srt = New-Object System.Collections.Generic.List[string]
@@ -45,8 +49,8 @@ try {
   }
 } finally { $voice.Dispose() }
 [IO.File]::WriteAllLines((Join-Path $OutputPath 'demo.srt'),$srt,[Text.UTF8Encoding]::new($false))
-$filters += (($channels -join '') + ('amix=inputs={0}:normalize=0,apad,atrim=duration={1},alimiter=limit=0.95[audio]' -f $story.shots.Count,$story.durationSeconds))
-$filters += "[0:v]fps=30,subtitles=demo.srt:force_style='FontName=Arial,FontSize=20,Outline=2,MarginV=18',drawtext=text='LOCAL REPLAY | RECORDED META OUTPUTS | SIMULATION':fontcolor=white:fontsize=18:box=1:boxcolor=black@0.7:x=18:y=12[video]"
+$filters += (($channels -join '') + ('amix=inputs={0}:normalize=0,apad,atrim=duration={1},aresample=48000,alimiter=limit=0.95[audio]' -f $story.shots.Count,$story.durationSeconds))
+$filters += "[0:v]fps=30,tpad=stop_mode=clone:stop_duration=1,subtitles=demo.srt:force_style='FontName=Arial,FontSize=12,Outline=1,MarginV=12',drawtext=text='LOCAL REPLAY | RECORDED META OUTPUTS | SIMULATION':fontcolor=white:fontsize=18:box=1:boxcolor=black@0.7:x=18:y=12[video]"
 Push-Location -LiteralPath $OutputPath
 try {
   & ffmpeg @inputs -filter_complex ($filters -join ';') -map '[video]' -map '[audio]' -t $story.durationSeconds -c:v libx264 -preset fast -crf 20 -pix_fmt yuv420p -c:a aac -b:a 160k -movflags +faststart 'breakshift-demo-draft.mp4'

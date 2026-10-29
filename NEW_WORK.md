@@ -12,6 +12,8 @@ official rules, contributor identification and dated development evidence.
 - Uncertainty-envelope checks, stale-result rejection and receipt replay.
 - Independent tests and the offline energy comparison module.
 - Original fictional-machine illustrations and locally encoded synthetic clip.
+- Optional locally reproducible demo capture, narration, caption and media
+  verification tooling; see `demo/VERIFICATION.md` for its separate review stage.
 
 ## Existing External Material
 

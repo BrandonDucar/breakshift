@@ -14,6 +14,8 @@ These tools are not needed for the app or its 147 offline tests.
 node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-rehearsal --rehearsal
 node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-draft
 ./demo/render.ps1 -OutputPath .local/demo-draft
+node demo/verify-media.mjs .local/demo-draft
+node --test demo/test-story.mjs
 ```
 
 `--rehearsal` runs the same assertions without timed holds or video encoding.
@@ -25,6 +27,9 @@ assertion, unexpected network attempt, JavaScript error, or shot overrun.
 Output remains in ignored `.local/`: screenshots, raw video, actual offline
 TAP output, an exported/replayed uncertainty receipt, an energy comparison,
 capture receipt, narration WAV files, subtitles, and the final draft MP4.
+The media verifier decodes the complete file, checks both stream durations,
+samples a nonblank frame in each chapter, checks audio levels, and seals output
+and tooling digests. It does not substitute for listening or independent review.
 The public fixture bytes, live deployment, paid allowance and private ledger
 are not modified. A finished draft still needs human/independent visual review,
 hosting approval, a working public video link, and organizer submission.
