@@ -3,6 +3,7 @@ import { readFile, writeFile, lstat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
+import { inspectFramePixels } from './frame-quality.mjs';
 
 const output=resolve(process.argv[2]||'.local/demo-draft');
 const verificationPath=resolve(output,'media-verification.json');
@@ -13,6 +14,7 @@ const capture=JSON.parse(await readFile(resolve(output,'capture-receipt.json')))
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const render=JSON.parse(await readFile(resolve(output,'render-receipt.json')));
 assert.equal(render.schema,'breakshift.demo-render.v1');assert.equal(render.passed,true);
+assert.equal(render.inputPolicy,'LOCAL_BOUND_SOURCE_AND_CAPTURE_TREE_REQUIRED');
 assert.equal(render.outputSha256,digest(await readFile(file)));
 for(const pin of render.inputs)assert.equal(digest(await readFile(pin.path)),pin.sha256,`Render input changed: ${pin.path}`);
 function run(cmd,args,encoding='utf8'){
@@ -32,10 +34,10 @@ assert.equal(digest(await readFile(new URL('./story.json',import.meta.url))),cap
 run('ffmpeg',['-v','error','-i',file,'-f','null','-']);
 const samples=[];
 for(const shot of story.shots){
-  const result=run('ffmpeg',['-v','error','-ss',String((shot.start+shot.end)/2),'-i',file,'-frames:v','1','-vf','scale=1:1','-f','rawvideo','-pix_fmt','rgb24','-'],null);
-  assert.equal(result.stdout.length,3);const rgb=[...result.stdout];
-  assert.ok(rgb.some(v=>v>6),'Blank frame');assert.ok(rgb.some(v=>v<245),'Blank white frame');
-  samples.push({shot:shot.id,timeSeconds:(shot.start+shot.end)/2,averageRgb:rgb});
+  for(const timeSeconds of [shot.start+.8,(shot.start+shot.end)/2,shot.end-.8]){
+    const result=run('ffmpeg',['-v','error','-ss',String(timeSeconds),'-i',file,'-frames:v','1','-vf','scale=64:36','-f','rawvideo','-pix_fmt','rgb24','-'],null);
+    samples.push({shot:shot.id,timeSeconds,...inspectFramePixels(result.stdout)});
+  }
 }
 const volume=run('ffmpeg',['-hide_banner','-i',file,'-vn','-af','volumedetect','-f','null','-']).stderr;
 const mean=Number(volume.match(/mean_volume: ([-\d.]+)/)?.[1]);
@@ -79,7 +81,7 @@ const receipt={schema:'breakshift.demo-media-verification.v1',passed:true,
   narrationChecks:narration,
   paidAllowanceModified:false,teachingRuntimeContacted:false,productionChanged:false};
 receipt.tooling=[];
-for(const name of ['capture.mjs','render.ps1','story.json','verify-media.mjs','Narration.cs']) {
+for(const name of ['capture.mjs','render.ps1','story.json','verify-media.mjs','Narration.cs','frame-quality.mjs','narration-timing.ps1']) {
   receipt.tooling.push({name:`demo/${name}`,sha256:digest(await readFile(new URL(`./${name}`,import.meta.url)))});
 }
 await writeFile(verificationPath,JSON.stringify(receipt,null,2),{flag:'wx'});

@@ -44,14 +44,17 @@ test('speech timing preserves fractional tempo and emits bounded word timestamps
       Add-Type -AssemblyName System.Speech
       Add-Type -Path '${join(root,'demo/Narration.cs').replaceAll("'","''")}' -ReferencedAssemblies System.Speech
       $marks=[DemoNarration]::Synthesize('Simulation evidence is never physical machine clearance.','${join(dir,'voice.wav').replaceAll("'","''")}')
-      $tempo=[Math]::Max([double]1,20.045986/15.6)
+      . '${join(root,'demo/narration-timing.ps1').replaceAll("'","''")}'
+      $tempo=Get-DemoTempo 20.045986 15.6
       if ($tempo -lt 1.28 -or $tempo -gt 1.29) { throw 'FRACTIONAL_TEMPO_LOST' }
       if ($marks.Count -lt 7) { throw 'MISSING_WORD_TIMESTAMPS' }
       if ($marks[-1].Seconds -le $marks[0].Seconds) { throw 'INVALID_WORD_TIMESTAMPS' }
       $duration=[double](& ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 '${join(dir,'voice.wav').replaceAll("'","''")}')
       if ($LASTEXITCODE -ne 0 -or $marks[-1].Seconds -ge $duration) { throw 'SPEECH_CLOCK_MISMATCH' }
-      $source=Get-Content -Raw '${join(root,'demo/render.ps1').replaceAll("'","''")}'
-      if (-not $source.Contains('[Math]::Max([double]1, $duration / $slot)')) { throw 'RENDERER_TEMPO_REGRESSION' }
+      foreach($invalid in @(0,-1,[double]::NaN,[double]::PositiveInfinity)) {
+        $rejected=$false;try { Get-DemoTempo $invalid 15.6 | Out-Null } catch { $rejected=$true };if(-not $rejected){throw 'INVALID_DURATION_ACCEPTED'}
+      }
+      $rejected=$false;try { Get-DemoWordMark @([pscustomobject]@{Position=5;Seconds=1}) 0 | Out-Null } catch { $rejected=$true };if(-not $rejected){throw 'MISSING_MARK_ACCEPTED'}
       @{tempo=$tempo;words=$marks.Count;lastWordSeconds=$marks[-1].Seconds} | ConvertTo-Json -Compress`;
     const result=spawnSync('powershell.exe',['-NoProfile','-Command',script],{encoding:'utf8',timeout:30000});
     assert.equal(result.status,0,result.stdout+result.stderr);

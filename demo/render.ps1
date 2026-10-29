@@ -26,6 +26,7 @@ foreach ($name in $reserved) {
 }
 Add-Type -AssemblyName System.Speech
 Add-Type -Path (Join-Path $PSScriptRoot 'Narration.cs') -ReferencedAssemblies 'System.Speech'
+. (Join-Path $PSScriptRoot 'narration-timing.ps1')
 $rawDuration = [double](& ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $receipt.rawVideoPath)
 if ($LASTEXITCODE -ne 0) { throw 'Raw video probe failed' }
 # Browser recording begins on the first rendered frame, not newPage wall time.
@@ -44,8 +45,7 @@ function CueTime([double]$seconds) { return ([TimeSpan]::FromSeconds($seconds)).
     $duration = [double](& ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 $wav)
     if ($LASTEXITCODE -ne 0) { throw 'Audio duration probe failed' }
     $slot = [double]$shot.end - [double]$shot.start - 0.4
-    # An integer first argument selects Math.Max(int,int), silently losing tempo.
-    $rate = [Math]::Max([double]1, $duration / $slot)
+    $rate = Get-DemoTempo $duration $slot
     if ($rate -gt 1.3) { throw ('Narration too dense: ' + $shot.id) }
     $rateText = $rate.ToString('0.000000',[Globalization.CultureInfo]::InvariantCulture)
     $delay = [int]([double]$shot.start * 1000)
@@ -58,11 +58,11 @@ function CueTime([double]$seconds) { return ([TimeSpan]::FromSeconds($seconds)).
     for ($g=0; $g -lt $groups; $g++) {
       $first = $g*14
       $last = [Math]::Min($words.Length-1, ($g+1)*14-1)
-      $mark = @($marks | Where-Object { $_.Position -le $words[$first].Index })[-1]
+      $mark = Get-DemoWordMark $marks $words[$first].Index
       $from = [double]$shot.start + $mark.Seconds/$rate
       $to = [double]$shot.start + $duration/$rate
       if ($last+1 -lt $words.Length) {
-        $next = @($marks | Where-Object { $_.Position -le $words[$last+1].Index })[-1]
+        $next = Get-DemoWordMark $marks $words[$last+1].Index
         $to = [double]$shot.start + $next.Seconds/$rate
       }
       if ($to -le $from -or $to -gt [double]$shot.end) { throw ('Invalid speech cue: {0} {1} -> {2}, words {3}, mark {4}' -f $shot.id,$from,$to,$words.Length,$mark.Position) }
@@ -79,7 +79,7 @@ $filters += (($channels -join '') + ('amix=inputs={0}:normalize=0,apad,atrim=dur
 $filters += "[0:v]fps=30,tpad=stop_mode=clone:stop_duration=1,subtitles=demo.srt:force_style='FontName=Arial,FontSize=12,Outline=1,MarginV=12',drawtext=text='LOCAL REPLAY | RECORDED META OUTPUTS | SIMULATION':fontcolor=white:fontsize=18:box=1:boxcolor=black@0.7:x=w-tw-18:y=12[video]"
 [IO.File]::WriteAllText((Join-Path $OutputPath 'filter-graph.txt'),($filters -join ';'),[Text.UTF8Encoding]::new($false))
 $pins = @()
-foreach ($path in @($PSCommandPath,(Join-Path $PSScriptRoot 'Narration.cs'),(Join-Path $PSScriptRoot 'capture.mjs'),(Join-Path $PSScriptRoot 'story.json'),$receipt.rawVideoPath) + @($reserved | Where-Object { $_ -notin @('breakshift-demo-draft.mp4','media-verification.json','render-receipt.json') } | ForEach-Object { Join-Path $OutputPath $_ })) {
+foreach ($path in @($PSCommandPath,(Join-Path $PSScriptRoot 'Narration.cs'),(Join-Path $PSScriptRoot 'narration-timing.ps1'),(Join-Path $PSScriptRoot 'capture.mjs'),(Join-Path $PSScriptRoot 'story.json'),$receipt.rawVideoPath) + @($reserved | Where-Object { $_ -notin @('breakshift-demo-draft.mp4','media-verification.json','render-receipt.json') } | ForEach-Object { Join-Path $OutputPath $_ })) {
   $pins += [pscustomobject]@{path=$path; sha256=(FileDigest $path)}
 }
 Push-Location -LiteralPath $OutputPath
@@ -88,6 +88,6 @@ try {
   if ($LASTEXITCODE -ne 0) { throw 'Demo encoding failed' }
   & ffprobe -v error -show_entries format=duration,size:stream=codec_type,width,height -of json 'breakshift-demo-draft.mp4'
   if ($LASTEXITCODE -ne 0) { throw 'Final media probe failed' }
-  $render = @{schema='breakshift.demo-render.v1';passed=$true;inputs=$pins;filterGraph=($filters -join ';');voice='Microsoft Zira Desktop';providerCalls=0;incrementalSpendUsd=0;outputSha256=(FileDigest (Join-Path $OutputPath 'breakshift-demo-draft.mp4'))}
+  $render = @{schema='breakshift.demo-render.v1';passed=$true;inputPolicy='LOCAL_BOUND_SOURCE_AND_CAPTURE_TREE_REQUIRED';inputs=$pins;filterGraph=($filters -join ';');voice='Microsoft Zira Desktop';providerCalls=0;incrementalSpendUsd=0;outputSha256=(FileDigest (Join-Path $OutputPath 'breakshift-demo-draft.mp4'))}
   [IO.File]::WriteAllText((Join-Path $OutputPath 'render-receipt.json'),($render | ConvertTo-Json -Depth 5),[Text.UTF8Encoding]::new($false))
 } finally { Pop-Location }
