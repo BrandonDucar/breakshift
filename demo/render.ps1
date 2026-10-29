@@ -1,9 +1,23 @@
-param([Parameter(Mandatory=$true)][string]$OutputPath)
+param([Parameter(Mandatory=$true)][string]$OutputPath, [string]$RenderPath)
 $ErrorActionPreference = 'Stop'
 $OutputPath = (Resolve-Path -LiteralPath $OutputPath).Path
 $story = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'story.json') -Raw | ConvertFrom-Json
 $receipt = Get-Content -LiteralPath (Join-Path $OutputPath 'capture-receipt.json') -Raw | ConvertFrom-Json
 if (-not $receipt.passed -or -not $receipt.recording) { throw 'A passing recorded capture is required' }
+$capturePath = $OutputPath
+if ($RenderPath) {
+  $target = [IO.Path]::GetFullPath($RenderPath)
+  if (Test-Path -LiteralPath $target) { throw 'DEMO_RENDER_EVIDENCE_ALREADY_EXISTS' }
+  New-Item -ItemType Directory -Path $target | Out-Null
+  $OutputPath = $target
+  foreach ($name in @('capture-receipt.json','offline-tests.tap','uncertainty-experiment.json','energy-comparison.json')) {
+    Copy-Item -LiteralPath (Join-Path $capturePath $name) -Destination (Join-Path $OutputPath $name)
+  }
+}
+$reserved = @('demo.srt','breakshift-demo-draft.mp4','media-verification.json') + @($story.shots | ForEach-Object { $_.id + '.wav' })
+foreach ($name in $reserved) {
+  if (Test-Path -LiteralPath (Join-Path $OutputPath $name)) { throw ('DEMO_RENDER_EVIDENCE_ALREADY_EXISTS: ' + $name) }
+}
 Add-Type -AssemblyName System.Speech
 $voice = New-Object System.Speech.Synthesis.SpeechSynthesizer
 $voice.Rate = 0

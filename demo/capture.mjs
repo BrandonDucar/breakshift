@@ -13,7 +13,9 @@ const story = JSON.parse(await readFile(new URL('./story.json', import.meta.url)
 const output = resolve(process.argv[3] || resolve(root, '.local/demo-draft'));
 const quick = process.argv.includes('--rehearsal');
 assert.ok(process.argv[2], 'Pass the absolute path to an existing Playwright index.mjs');
-await mkdir(output, {recursive:true});
+await mkdir(dirname(output), {recursive:true});
+// One capture owns one evidence directory, including failed runs.
+await mkdir(output);
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const receipt = {schema:'breakshift.demo-capture.v1',mode:story.mode,recording:!quick,

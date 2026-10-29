@@ -15,10 +15,19 @@ node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-rehea
 node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-draft
 ./demo/render.ps1 -OutputPath .local/demo-draft
 node demo/verify-media.mjs .local/demo-draft
-node --test demo/test-story.mjs
+node --test demo/test-story.mjs demo/test-retention.mjs
 ```
 
 `--rehearsal` runs the same assertions without timed holds or video encoding.
+Capture requires a new output directory; a failed or successful capture is not
+overwritten. Rendering also refuses an existing output set. For a narration or
+caption revision from the same capture, use a fresh render directory:
+
+```powershell
+./demo/render.ps1 -OutputPath .local/demo-draft -RenderPath .local/demo-render-v4
+node demo/verify-media.mjs .local/demo-render-v4
+```
+
 The recorded run targets 170 seconds. The renderer adds captions and offline
 narration; it does not alter application outcomes. All non-loopback requests
 and all browser mutation requests are blocked. The capture stops on a failed
