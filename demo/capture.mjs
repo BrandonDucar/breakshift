@@ -89,7 +89,7 @@ try {
         const badge=document.createElement('aside');badge.id='demo-state-readback';
         badge.style.cssText='position:fixed;right:24px;bottom:145px;max-width:650px;padding:14px 18px;background:#101210;color:#fff;border:1px solid #dbfa86;font:22px/1.4 Arial;z-index:9999';
         document.body.append(badge);
-        const update=()=>{badge.textContent=`DEMO READBACK / ${panel.dataset.state.toUpperCase()} / Export ${document.querySelector('#uncertainty-save').disabled?'LOCKED':'available'}. ${document.querySelector('#uncertainty-review-result').textContent}`;};
+        const update=()=>{const locked=document.querySelector('#uncertainty-save').disabled;badge.textContent=`DEMO READBACK / ${panel.dataset.state.toUpperCase()} / ${locked?'Export LOCKED: inputs changed':'Export current evidence, including failed runs; never machine clearance'}. ${document.querySelector('#uncertainty-review-result').textContent}`;};
         new MutationObserver(update).observe(panel,{subtree:true,childList:true,attributes:true,characterData:true});update();
       });
       await click('[data-uncertainty-candidate="reference"]');await click('#uncertainty-run');await frame('#uncertainty-workspace');
