@@ -197,7 +197,7 @@ function mutate(payload, expectedSnapshotId) {
       const action = { ...payload, surface: surface === 'all' ? 'laptop' : surface, expectedVersion: envelope.version };
       if (connected && !hostedPreview) {
         const response = await fetch('/api/session/mutate', { method: 'POST', headers: authHeaders({ 'content-type': 'application/json' }), body: JSON.stringify(action), signal: AbortSignal.timeout(5000) });
-        const body = await response.json();
+        const body = await response.json().catch(() => ({}));
         if (response.status === 409) { acceptEnvelope(body.currentEnvelope); throw new Error('Another surface changed this session. The latest version is shown; repeat your action.'); }
         if (response.status === 403 && body.error === 'ROOM_CODE_REQUIRED') { savePairToken(''); await refreshPairing(); setConnection(false); throw new Error('Room code rotated or required — enter the 6-character code below to re-pair.'); }
         if (!response.ok) throw new Error(body.error || 'Session change rejected');
@@ -402,7 +402,7 @@ async function scanWithMuse() {
   const request = hostedPreview ? { zoneId: envelope.projections.laptop.activeZoneId, snapshotId: envelope.evidenceSnapshotId, breakerKw: envelope.projections.laptop.breakerKw, requestId: crypto.randomUUID(), consent: museStatus.consent } : { zoneId: envelope.projections.laptop.activeZoneId, snapshotId: envelope.evidenceSnapshotId, requestToken: museStatus.requestToken, consent: museStatus.consent };
   try {
     const response = await fetch('/api/muse/scan', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(request), signal: AbortSignal.timeout(55000) });
-    const result = await response.json();
+    const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || 'MUSE_SCAN_UNAVAILABLE');
     receiveDiagnosis(result);
   } catch (error) { scanError = error.message === 'MUSE_STALE_COMPONENT_SNAPSHOT' ? 'The bay changed before Muse started. Scan the current conditions.' : `Muse scan did not complete (${error.message}). No repair was applied.`; }
@@ -551,8 +551,8 @@ $('#pair-join-form').addEventListener('submit', async event => {
       body: JSON.stringify({ roomCode: code, surface: surface === 'all' ? 'ipad' : surface }),
       signal: AbortSignal.timeout(4000),
     });
-    const body = await res.json();
-    if (!res.ok) throw new Error(body.error === 'TOO_MANY_PAIRING_ATTEMPTS' ? 'Too many pairing attempts. Wait 60 seconds and retry.' : 'Invalid room code. Enter the 6-character BS-XXXX code displayed on the host workbench.');
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error === 'TOO_MANY_PAIRING_ATTEMPTS' ? 'Too many pairing attempts. Wait 60 seconds and retry.' : !pairingDescriptor ? 'Shared room pairing is unavailable in this offline preview.' : 'Invalid room code. Enter the 6-character BS-XXXX code displayed on the host workbench.');
     savePairToken(body.pairToken);
     $('#join-code-input').value = '';
     showError();
@@ -606,8 +606,9 @@ async function connect(skipAutoRoom = false) {
   try {
     const response = await fetch('/api/session', { headers: authHeaders(), signal: AbortSignal.timeout(4000) });
     if (!response.ok) throw new Error('Shared session unavailable');
-    const body = await response.json(); setConnection(true); acceptEnvelope(body, true);
+    const body = await response.json(); acceptEnvelope(body, true); setConnection(true);
   } catch { setConnection(false); render(); }
+  if (!connected && !everConnected) return;
   if (typeof EventSource !== 'function') return;
   if (activeStream) { activeStream.close(); activeStream = null; }
   const streamQuery = new URLSearchParams({ surface, ...(pairToken ? { token: pairToken } : {}) });

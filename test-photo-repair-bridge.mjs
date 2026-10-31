@@ -1,4 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {photoRepairBinding,executePhotoRepairTest,photoTestReceipt,validateTwinProposals} from './public/photo-repair-bridge.mjs';
 import {validateWonder} from './cloudflare/sam-wonder.mjs';
 import {lowerRepairPlan} from './controller/repair-compiler.mjs';
@@ -31,4 +32,14 @@ test('Wonder optional structured candidates are strict and remain tied to a regi
   assert.deepEqual(validateWonder(diagnosis).twinProposals,[]);assert.equal(validateWonder({...diagnosis,twinProposals:[proposal]}).twinProposals[0].strategyId,'coordinated_repair');
   for(const p of [{...proposal,regionIndex:99},{...proposal,fixIndex:-1},{...proposal,strategyId:'eval'},{...proposal,code:'execute'},{...proposal,assumptions:[]}])assert.throws(()=>validateTwinProposals([p],diagnosis.regions));
   assert.throws(()=>validateTwinProposals([proposal,proposal],diagnosis.regions));
+});
+test('photo intake and local session entry preserve active state across rejected uploads, cancels and unhosted loads',async()=>{
+  const photoSrc=await readFile(new URL('./public/photo-inspection.mjs',import.meta.url),'utf8');
+  const selectBody=photoSrc.slice(photoSrc.indexOf('async function selectImage'),photoSrc.indexOf('function renderAssessment'));
+  assert.ok(selectBody.indexOf('crypto.subtle.digest')>0&&selectBody.indexOf('clearClip()')>selectBody.indexOf('crypto.subtle.digest'),'selectImage must validate and hash before clearing active clip/photo state');
+  assert.match(photoSrc,/q\('#photo-file'\)\.addEventListener\('change'[^\n]+finally\{event\.target\.value='';\}/);
+  assert.match(photoSrc,/catch\(e\)\{if\(!controller\.signal\.aborted\)error\(e\.message\);\}/);
+  const baySrc=await readFile(new URL('./public/component-bay.js',import.meta.url),'utf8');
+  assert.match(baySrc,/acceptEnvelope\(body,\s*true\);\s*setConnection\(true\);/);
+  assert.match(baySrc,/if \(!connected && !everConnected\) return;/);
 });

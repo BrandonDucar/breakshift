@@ -54,11 +54,11 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
   }
   function clearResult(){invalidatePhoto();result=null;attempt={status:'NOT_REQUESTED'};selection=0;fixIndex=0;recipeOverride='';assumptionsAck=false;inspectionStill=false;frameButton.hidden=true;photoTestControls.hidden=true;photoTestControls.textContent='';samOverlay.clear();q('#photo-pins').textContent='';q('#photo-overlay-note').hidden=true;q('#photo-findings').innerHTML=waiting();update();}
   async function selectImage(blob,sourceKind){
-    q('#photo-image-wrap').classList.remove('recorded-media');
-    if(image?.sourceKind==='DEMO_ILLUSTRATION'&&sourceKind!=='DEMO_ILLUSTRATION')q('#photo-note').value='';
-    const current=++revision;error();clearResult();clearClip();
-    if(blob.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(blob.type))throw Error('Choose a JPEG, PNG or WebP image under 8 MB.');
-    const bitmap=await createImageBitmap(blob,{imageOrientation:'from-image'});
+    if(!blob||blob.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(blob.type))throw Error('Choose a JPEG, PNG or WebP image under 8 MB.');
+    const current=++revision;
+    let bitmap;
+    try{bitmap=await createImageBitmap(blob,{imageOrientation:'from-image'});}
+    catch{throw Error('This image file could not be decoded. Choose a valid JPEG, PNG or WebP image.');}
     try{
       if(bitmap.width*bitmap.height>20000000)throw Error('This image is too large to preview. Choose a smaller image.');
       const scale=Math.min(1,768/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');
@@ -67,14 +67,18 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
       canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
       const dataUrl=canvas.toDataURL('image/jpeg',.82);const bytes=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));
       if(bytes.length>500000)throw Error('The resized image is still too large. Choose a tighter crop.');
-      const imageDigest=hex(await crypto.subtle.digest('SHA-256',bytes));if(current!==revision)return;
+      const imageDigest=hex(await crypto.subtle.digest('SHA-256',bytes));if(current!==revision)return false;
+      const clearDemoNote=image?.sourceKind==='DEMO_ILLUSTRATION'&&sourceKind!=='DEMO_ILLUSTRATION';
+      error();clearResult();clearClip();
+      q('#photo-image-wrap').classList.remove('recorded-media');
+      if(clearDemoNote)q('#photo-note').value='';
       image={imageDataUrl:dataUrl,imageDigest,sourceKind,width:canvas.width,height:canvas.height};
       q('#photo-image').src=dataUrl;q('#photo-image').hidden=false;q('#photo-empty').hidden=true;
       q('#photo-image-wrap').style.aspectRatio=`${canvas.width}/${canvas.height}`;
       q('#photo-source').textContent=sourceKind==='DEMO_ILLUSTRATION'?'DEMO ILLUSTRATION / NOT A REAL INSPECTION':sourceKind==='CAMERA_FRAME'?'CAMERA FRAME / USER-SUPPLIED EVIDENCE':'UPLOADED IMAGE / PROVENANCE UNVERIFIED';
       q('#photo-dimensions').textContent=`${canvas.width} × ${canvas.height} · metadata removed`;
       if(sourceKind==='DEMO_ILLUSTRATION')q('#photo-note').value='Demo cutaway illustration: inspect the wrist and gripper; report only what is visible. Exposed internals are intentional.';
-      update();
+      update();return true;
     }finally{bitmap.close();}
   }
   function renderAssessment(){
@@ -125,14 +129,17 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     }catch(e){attempt={...attempt,status:e.message.includes('MUSE_PHOTO_BOX_OUT_OF_RANGE')?'ASSESSMENT_REJECTED':'FAILED_OR_UNCERTAIN',errorCode:e.message.match(/MUSE_[A-Z_0-9]+/)?.[0]||'SCAN_OUTCOME_UNCONFIRMED'};error(scanFailure(e));}
     finally{busy=false;await refreshStatus();update();}
   }
-  q('#photo-file').addEventListener('change',async event=>{const file=event.target.files?.[0];if(file)try{stopCamera();await selectImage(file,'USER_SUPPLIED_IMAGE');}catch(e){error(e.message);}});
+  q('#photo-file').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file)return;try{stopCamera();await selectImage(file,'USER_SUPPLIED_IMAGE');}catch(e){error(e.message);}finally{event.target.value='';}});
   q('#photo-demo').addEventListener('click',async()=>{try{stopCamera();const response=await fetch('/public/assets/robot-cutaway-v1.png');if(!response.ok)throw Error('Demo image unavailable. Upload an image instead.');await selectImage(await response.blob(),'DEMO_ILLUSTRATION');}catch(e){error(e.message);}});
   async function recordClip(draw,width,height,sourceKind){
-    busy=true;error();update();captureAbort=new AbortController();
+    const controller=new AbortController(),epoch=cameraEpoch;captureAbort=controller;busy=true;error();update();
     try{
-      const captured=await captureInspectionClip(draw,{width,height,signal:captureAbort.signal});
-      await selectImage(captured.poster,sourceKind);clip=captured;clipUrl=URL.createObjectURL(captured.blob);clipPlayer.src=clipUrl;clipPlayer.hidden=false;q('#photo-image').hidden=true;q('#photo-dimensions').textContent+=' · captured clip / local preview';
-    }catch(e){error(e.message);}finally{busy=false;captureAbort=null;stopCamera();update();}
+      const captured=await captureInspectionClip(draw,{width,height,signal:controller.signal});
+      if(captureAbort===controller)captureAbort=null;
+      if(controller.signal.aborted||epoch!==cameraEpoch)return;
+      if(await selectImage(captured.poster,sourceKind)===false||epoch!==cameraEpoch)return;
+      clip=captured;clipUrl=URL.createObjectURL(captured.blob);clipPlayer.src=clipUrl;clipPlayer.hidden=false;q('#photo-image').hidden=true;q('#photo-dimensions').textContent+=' · captured clip / local preview';
+    }catch(e){if(!controller.signal.aborted)error(e.message);}finally{busy=false;if(captureAbort===controller)captureAbort=null;stopCamera();update();}
   }
   async function verifiedDemo(){
     const intent=++revision;

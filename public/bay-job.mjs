@@ -54,8 +54,8 @@ export function createBayJob(root, { getContext, prepare, openRecordedDemo, onRe
   let phase = 0, result = null, busy = false;
   const stages = [
     { action: 'Start demo job', strategyId: 'station_handoff', cap: 1.65 },
-    { action: 'Test power-only fix', strategyId: 'surge_interleave' },
-    { action: 'Test coordinated fix', strategyId: 'coordinated_repair' },
+    { action: 'Test power-only fix', strategyId: 'surge_interleave', cap: 1.65 },
+    { action: 'Test coordinated fix', strategyId: 'coordinated_repair', cap: 1.65 },
     { action: 'Stress at 1.45 kW', strategyId: 'coordinated_repair', cap: 1.45 },
     { action: 'Restore 1.65 kW', strategyId: 'coordinated_repair', cap: 1.65 },
   ];
@@ -76,8 +76,8 @@ export function createBayJob(root, { getContext, prepare, openRecordedDemo, onRe
     if (busy || phase === stages.length) return;
     busy = true; sync();
     try {
-      const stage = stages[phase % stages.length];
-      await prepare(stage.cap);
+      const stage = stages[phase % stages.length], before = getContext();
+      await prepare(stage.cap !== undefined && before.breakerKw !== stage.cap ? stage.cap : undefined);
       const context = getContext();
       if (!context.available || (stage.cap !== undefined && context.breakerKw !== stage.cap)) throw Error('Session unavailable or conditions changed. Reconnect before continuing.');
       result = evaluateBayJob({ strategyId: stage.strategyId, ...context });
