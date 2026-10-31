@@ -34,7 +34,7 @@ The tests' fake camera is not a real phone hardware or permissions test.
 ## Muse Review And Disposition
 
 Muse Wonder 1.0 reviewed nine public-source files and three rendered screenshots.
-Muse Spark 1.3 independently reviewed the supplied source and challenged that
+Muse Spark 1.3 rechecked the supplied source and challenged that
 review. Both are developer API calls, not desktop/phone Muse app execution.
 They did not run tests or inspect physical machinery. Their outputs are advisory.
 
@@ -46,6 +46,15 @@ They did not run tests or inspect physical machinery. Their outputs are advisory
 
 No finding was promoted to a verified defect solely because two models agreed.
 No proposed cross-profile import change was applied.
+
+## Continuous Verification
+
+The public PR now includes a read-only, secret-free GitHub Actions workflow on a
+standard Ubuntu runner, with pinned checkout/setup-node actions and Node 24.
+It runs `npm test` and `npm run test:demo` without installing dependencies or
+loading provider credentials. Two Windows-only rendering/speech tests skip on
+Linux; their local Windows execution is recorded separately above. A workflow
+definition is not a passing CI result; check the exact PR head's returned check.
 
 ## Retained Video
 
