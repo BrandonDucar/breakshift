@@ -97,12 +97,22 @@ definition is not a passing CI result; check the exact PR head's returned check.
   still depicts the currently deployed baseline; no exact-byte match to the
   later local copy-polish build is claimed.
 
+## Later Hosting Update (October 31)
+
+The owner approved the exact retained video above, then approved its Unlisted
+upload and the upload terms. It is hosted on the existing channel; authenticated
+HD playback was verified at 170.021 seconds, 1920x1080, with no media error.
+The link and upload receipt remain in the private owner handoff, not this public
+repository. This does not change the sealed acceptance receipt or the video's
+bytes. Signed-out playback has not independently been checked.
+
 ## Still Required
 
-The owner must listen to and approve the exact video. A judge-accessible hosted
-video URL is still pending. Check the final links signed out and confirm current
-organizer rules, eligible human contributors, track and submission fields before
-submitting. The demo-tooling PR has not been merged by this acceptance work.
+Check the final links signed out and confirm current organizer rules, eligible
+human contributors, track and submission fields before submitting. A final
+independent review is in progress, not a completed sign-off. The demo-tooling PR
+has not been merged and the local copy-polish build has not been deployed.
+See [dated readiness snapshot](submission-readiness-20261031.json).
 
 No deployment, submission, hardware control, paid-photo allowance change, held
 reservation release, new service or live teaching-runtime access occurred.

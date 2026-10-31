@@ -1,0 +1,56 @@
+{
+  "schema": "breakshift.submission-readiness.v1",
+  "version": "1.0.0",
+  "asOfDate": "2026-10-31",
+  "status": "HOSTED_DEMO_FINAL_REVIEW_PENDING_NOT_SUBMITTED",
+  "snapshotOnly": true,
+  "source": {
+    "repository": "https://github.com/BrandonDucar/breakshift",
+    "reviewPullRequest": "https://github.com/BrandonDucar/breakshift/pull/1",
+    "appAcceptanceHead": "4a023dc55114e1c4c1eb679445a78e7543b23f82"
+  },
+  "demo": {
+    "sha256": "82d6332bc339f9c95b716e999f8202b7843d4b0df9717057b1b0d0330a854857",
+    "durationSeconds": 170.021,
+    "width": 1920,
+    "height": 1080,
+    "ownerVideoApproved": true,
+    "ownerUnlistedUploadApproved": true,
+    "uploadCompleted": true,
+    "visibility": "UNLISTED",
+    "linkDisclosure": "PRIVATE_OWNER_SUBMISSION_HANDOFF_ONLY",
+    "authenticatedPlaybackVerified": true,
+    "signedOutPlaybackVerified": false,
+    "predatesCopyPolish": true,
+    "modelExecution": "RECORDED_REPLAY_NOT_NEW_LIVE_INFERENCE",
+    "narration": "WINDOWS_OFFLINE_NOT_META_VOICE"
+  },
+  "release": {
+    "lastVerifiedPublicBuild": "live-03370f1c283ea180",
+    "localCopyPolishBuild": "live-9f6612f4cb88fafd",
+    "copyPolishDeployed": false,
+    "reviewPullRequestMerged": false
+  },
+  "remainingGates": [
+    "FINAL_INDEPENDENT_EXACT_BYTE_REVIEW",
+    "SIGNED_OUT_LINK_CHECKS",
+    "OWNER_CONFIRM_HUMAN_CONTRIBUTORS_AND_TRACK",
+    "VERIFY_ACCEPTED_RULES_AND_SUBMISSION_FORM",
+    "OWNER_DECIDE_SOURCE_AND_RELEASE_PROMOTION",
+    "OWNER_APPROVE_EXACT_ORGANIZER_ENTRY"
+  ],
+  "organizerOverview": {
+    "url": "https://dev.meta.ai/events/global-hackathon",
+    "checkedOn": "2026-10-31",
+    "listedDeadline": "2026-11-04T21:00:00-05:00",
+    "fullAcceptedRulesVerified": false,
+    "submissionFormVerified": false
+  },
+  "authority": {
+    "organizerSubmitted": false,
+    "mergeApprovedByThisSnapshot": false,
+    "deployApprovedByThisSnapshot": false,
+    "submissionApprovedByThisSnapshot": false,
+    "physicalRepairClearance": false
+  }
+}

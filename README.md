@@ -7,7 +7,7 @@ establish a real machine's condition or authorize a physical repair.
 
 ## Live Demo & Hosted Bay
 
-Try the live, zero-cost Cloudflare Worker deployment directly in any desktop or mobile browser:
+Try the existing Cloudflare Worker deployment directly in any desktop or mobile browser:
 **https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/**
 
 The live app serves release `live-03370f1c283ea180` across phone, tablet, and desktop viewports with zero credentials or account sign-in required.
@@ -42,8 +42,10 @@ synthetic browser test, not a physical-device hardware test.
 
 For the reproducible 2:50 local demo recording, captions, and offline narration,
 see [demo/README.md](demo/README.md). The demo tooling is optional and separate
-from the dependency-free app. Generated video is a review draft, not a hosted
-submission or new live model execution.
+from the dependency-free app. The exact retained recording was approved and
+uploaded Unlisted on October 31; its link stays in the private submission handoff.
+It is not an organizer submission or new live model execution. See
+[submission draft](SUBMISSION_DRAFT.md) for completed and remaining gates.
 
 The public browser app, Cloudflare backend source, deterministic compiler,
 simulator, uncertainty verifier and offline tests are included. The historical

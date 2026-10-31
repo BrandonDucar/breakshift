@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { compileEnvelopePlan, evaluateEnvelope, DEFAULT_CONTEXT, BASELINE } from '../uncertainty-lab/repair-envelope.mjs';
 import { createEnergyComparison } from '../energy-lab/energy-comparison.mjs';
+import { assertSubmissionSnapshot, assertNoPublicVideoLink } from './submission-contract.mjs';
 
 const story=JSON.parse(await readFile(new URL('./story.json',import.meta.url)));
 const source=JSON.parse(await readFile(new URL('../public/verified-uncertainty-patch.json',import.meta.url)));
@@ -36,4 +37,50 @@ test('demo tooling retains explicit recorded-model and physical-clearance disclo
   assert.match(story.shots.find(s=>s.id==='proof').narration,/never physical machine clearance/);
   const source=await readFile(new URL('./capture.mjs',import.meta.url),'utf8');
   assert.match(source,/url.origin!==base/);assert.match(source,/GET','HEAD/);
+});
+
+test('dated submission snapshot binds the approved video without promoting open gates',async()=>{
+  const packet=JSON.parse(await readFile(new URL('./submission-readiness-20261031.json',import.meta.url)));
+  const binding=JSON.parse(await readFile(new URL('./retained-evidence-binding.json',import.meta.url)));
+  assertSubmissionSnapshot(packet,binding,story);
+});
+
+test('current submission documents preserve the private unlisted-link boundary',async()=>{
+  const paths=['../README.md','../SUBMISSION_DRAFT.md','./README.md','./ACCEPTANCE_20261030.md','./submission-readiness-20261031.json'];
+  for(const path of paths){
+    const text=await readFile(new URL(path,import.meta.url),'utf8');
+    assert.match(text,/private/i,path);
+    assertNoPublicVideoLink(text);
+  }
+  const draft=await readFile(new URL('../SUBMISSION_DRAFT.md',import.meta.url),'utf8');
+  assert.doesNotMatch(draft,/not uploaded or verified yet|owner review and hosted video link pending/);
+  assert.match(draft,/Remaining Owner Gates/);
+});
+
+test('dated snapshot rejects omitted gates and unsupported approval or visibility changes',async()=>{
+  const packet=JSON.parse(await readFile(new URL('./submission-readiness-20261031.json',import.meta.url)));
+  const binding=JSON.parse(await readFile(new URL('./retained-evidence-binding.json',import.meta.url)));
+  const mutations=[
+    p=>{p.authority={};},
+    p=>{delete p.authority.physicalRepairClearance;},
+    p=>{p.authority.submissionApprovedByThisSnapshot=true;},
+    p=>{p.remainingGates=p.remainingGates.slice(0,1);},
+    p=>{p.demo.visibility='PUBLIC';},
+    p=>{p.demo.linkDisclosure='PUBLIC';},
+    p=>{p.organizerOverview.submissionFormVerified=true;},
+    p=>{delete p.organizerOverview.fullAcceptedRulesVerified;},
+    p=>{p.demo.sha256='0'.repeat(64);},
+  ];
+  for(const mutate of mutations){
+    const changed=structuredClone(packet);mutate(changed);
+    assert.throws(()=>assertSubmissionSnapshot(changed,binding,story));
+  }
+});
+
+test('public-video check rejects alternate hosts and embed, shorts, live and short-link routes',()=>{
+  for(const link of ['https://youtu.be/example','https://www.youtube.com/watch?v=example',
+    'https://youtube.com/embed/example','https://m.youtube.com/shorts/example',
+    'https://www.youtube-nocookie.com/embed/example','//www.youtube.com/live/example'])
+    assert.throws(()=>assertNoPublicVideoLink(link));
+  assertNoPublicVideoLink('Unlisted link remains in the private owner handoff.');
 });

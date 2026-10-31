@@ -60,8 +60,11 @@ Muse/Copilot-reviewed candidate and open owner gates.
 Larger demo-only state readbacks magnify actual UI values; they
 do not add app functionality or new evidence.
 The public fixture bytes, live deployment, paid allowance and private ledger
-are not modified. A finished draft still needs human/independent visual review,
-hosting approval, a working public video link, and organizer submission.
+are not modified. A newly rendered draft needs separate review and approval.
+The exact retained video was approved and hosted Unlisted on October 31; it has
+not been submitted. Its link remains in the private owner handoff. Final
+independent review, signed-out access and organizer-entry gates remain open;
+see [dated readiness snapshot](submission-readiness-20261031.json).
 
 See [Fresh-Checkout Acceptance](ACCEPTANCE_20261030.md) for the later 149-test
 regression run, source-versus-model finding reconciliation and retained-video
