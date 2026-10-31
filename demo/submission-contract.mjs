@@ -33,6 +33,20 @@ export function assertSubmissionSnapshot(packet,binding,story){
   assert.equal(packet.organizerOverview.submissionFormVerified,false);
 }
 
+export function decodePublicText(text){
+  let decoded=text;
+  // Decode individual bytes so an unrelated malformed escape cannot hide a URL.
+  for(let depth=0;depth<8;depth++){
+    const next=decoded.replace(/%([a-f0-9]{2})/gi,(_,hex)=>String.fromCharCode(parseInt(hex,16)));
+    if(next===decoded)return decoded;
+    decoded=next;
+  }
+  assert.doesNotMatch(decoded,/%[a-f0-9]{2}/i,'PUBLIC_LINK_ENCODING_DEPTH_LIMIT');
+  return decoded;
+}
+
 export function assertNoPublicVideoLink(text){
-  assert.doesNotMatch(text,/\b(?:[\w-]+\.)?(?:youtube(?:-nocookie)?\.com|youtu\.be)\b/i);
+  const hosts=/\b(?:[\w-]+\.)?(?:youtube(?:-nocookie)?\.com|youtu\.be)\b/i;
+  assert.doesNotMatch(text,hosts);
+  assert.doesNotMatch(decodePublicText(text),hosts);
 }

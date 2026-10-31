@@ -53,9 +53,9 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     fallback.hidden=busy||Boolean(result)||Boolean(status?.enabled);
   }
   function clearResult(){invalidatePhoto();result=null;attempt={status:'NOT_REQUESTED'};selection=0;fixIndex=0;recipeOverride='';assumptionsAck=false;inspectionStill=false;frameButton.hidden=true;photoTestControls.hidden=true;photoTestControls.textContent='';samOverlay.clear();q('#photo-pins').textContent='';q('#photo-overlay-note').hidden=true;q('#photo-findings').innerHTML=waiting();update();}
-  async function selectImage(blob,sourceKind){
+  async function selectImage(blob,sourceKind,isCurrent=()=>true){
     if(!blob||blob.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(blob.type))throw Error('Choose a JPEG, PNG or WebP image under 8 MB.');
-    const current=++revision;
+    const current=++revision,priorNote=q('#photo-note').value;
     let bitmap;
     try{bitmap=await createImageBitmap(blob,{imageOrientation:'from-image'});}
     catch{throw Error('This image file could not be decoded. Choose a valid JPEG, PNG or WebP image.');}
@@ -67,8 +67,8 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
       canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
       const dataUrl=canvas.toDataURL('image/jpeg',.82);const bytes=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));
       if(bytes.length>500000)throw Error('The resized image is still too large. Choose a tighter crop.');
-      const imageDigest=hex(await crypto.subtle.digest('SHA-256',bytes));if(current!==revision)return false;
-      const clearDemoNote=image?.sourceKind==='DEMO_ILLUSTRATION'&&sourceKind!=='DEMO_ILLUSTRATION';
+      const imageDigest=hex(await crypto.subtle.digest('SHA-256',bytes));if(current!==revision||!isCurrent())return false;
+      const clearDemoNote=image?.sourceKind==='DEMO_ILLUSTRATION'&&sourceKind!=='DEMO_ILLUSTRATION'&&q('#photo-note').value===priorNote;
       error();clearResult();clearClip();
       q('#photo-image-wrap').classList.remove('recorded-media');
       if(clearDemoNote)q('#photo-note').value='';
@@ -137,9 +137,9 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
       const captured=await captureInspectionClip(draw,{width,height,signal:controller.signal});
       if(captureAbort===controller)captureAbort=null;
       if(controller.signal.aborted||epoch!==cameraEpoch)return;
-      if(await selectImage(captured.poster,sourceKind)===false||epoch!==cameraEpoch)return;
+      if(await selectImage(captured.poster,sourceKind,()=>!controller.signal.aborted&&epoch===cameraEpoch)===false)return;
       clip=captured;clipUrl=URL.createObjectURL(captured.blob);clipPlayer.src=clipUrl;clipPlayer.hidden=false;q('#photo-image').hidden=true;q('#photo-dimensions').textContent+=' · captured clip / local preview';
-    }catch(e){if(!controller.signal.aborted)error(e.message);}finally{busy=false;if(captureAbort===controller)captureAbort=null;stopCamera();update();}
+    }catch(e){if(!controller.signal.aborted&&epoch===cameraEpoch)error(e.message);}finally{busy=false;if(captureAbort===controller)captureAbort=null;stopCamera();update();}
   }
   async function verifiedDemo(){
     const intent=++revision;

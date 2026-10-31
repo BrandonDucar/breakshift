@@ -1,7 +1,8 @@
 # BREAKSHIFT Submission Draft
 
 Status as of October 31, 2026: tested source candidate; exact demo approved and
-hosted Unlisted. Final independent review and organizer submission remain pending.
+hosted Unlisted. The source candidate has a later independent local review;
+owner source promotion and organizer submission remain pending.
 This is draft text, not an organizer submission or eligibility guarantee.
 
 ## Project
@@ -45,7 +46,9 @@ and tested; see demo/ACCEPTANCE_20261030.md. Phone execution is not claimed.
 - Candidate: 170 seconds, 1920x1080 H.264/AAC with burned-in captions.
 - Hosted video: the approved recording is uploaded Unlisted; its link is retained
   in the private owner handoff for the entry, not published in this repository.
-  Authenticated HD playback was verified; signed-out playback still needs checking.
+  Authenticated HD playback was verified. A retained independent signed-out
+  browser check also verified player readiness and the 170-second duration;
+  that automated check is not another human listening pass.
 - Original code: Apache-2.0; third-party material retains its own terms.
 
 See NEW_WORK.md, LICENSING.md, ASSET_PROVENANCE.md and demo/MODEL_RECHECK.md.
@@ -61,17 +64,19 @@ The source app runs offline with Node 22.12+; no package install or key is requi
 
 ## Remaining Owner Gates
 
-- Obtain the final independent review of the exact video and source candidate.
+- Review the reconciled private entry packet for the exact source candidate.
 - Confirm eligible human contributors, team listing, event-only contributions,
   accepted official rules, track and deadline. AI agents are not human team members.
 - Decide whether to merge the optional demo-tooling PR before submission.
-- Check links signed-out and submit through the organizer form.
+- Recheck links before entry and approve the exact completed organizer submission.
 
 The public app remains `live-03370f1c283ea180`. The later copy-polish build
 `live-9f6612f4cb88fafd` is local only; its name is not evidence of deployment.
-The reviewed application head is `4a023dc55114e1c4c1eb679445a78e7543b23f82`.
+The earlier accepted application head is `4a023dc55114e1c4c1eb679445a78e7543b23f82`.
+The later local candidate includes the independently reviewed photo/session fixes
+and their follow-up regressions; see [final local review](demo/FINAL_REVIEW_20261031.md).
 See [dated readiness snapshot](demo/submission-readiness-20261031.json) for the
-same explicit completed/pending split. It is not a live status service.
+historical completed/pending split. It is not current readiness or a live status service.
 
 The [Meta event page](https://dev.meta.ai/events/global-hackathon), checked
 October 31, lists November 4 at 9:00 PM Eastern as the submission deadline.

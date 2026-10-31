@@ -158,6 +158,11 @@ const bayJob = createBayJob($('#bay-job'), {
 
 function authHeaders(extra = {}) { return pairToken ? { ...extra, 'x-breakshift-token': pairToken } : { ...extra }; }
 function savePairToken(next) { pairToken = next || ''; try { if (pairToken) sessionStorage.setItem('breakshift.pairToken', pairToken); else sessionStorage.removeItem('breakshift.pairToken'); } catch {} }
+function verifiedPairToken(body) {
+  if(typeof body?.pairToken!=='string'||!body.pairToken||body.pairToken.length>4096||/\s/.test(body.pairToken))
+    throw new Error('Pairing response could not be verified. Your existing connection was kept. Retry the room code.');
+  return body.pairToken;
+}
 
 function showError(message = '') { $('#connection-error').textContent = message; $('#connection-error').hidden = !message; }
 function setConnection(value) {
@@ -553,7 +558,7 @@ $('#pair-join-form').addEventListener('submit', async event => {
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(body.error === 'TOO_MANY_PAIRING_ATTEMPTS' ? 'Too many pairing attempts. Wait 60 seconds and retry.' : !pairingDescriptor ? 'Shared room pairing is unavailable in this offline preview.' : 'Invalid room code. Enter the 6-character BS-XXXX code displayed on the host workbench.');
-    savePairToken(body.pairToken);
+    savePairToken(verifiedPairToken(body));
     $('#join-code-input').value = '';
     showError();
     await connect(true);
@@ -596,7 +601,7 @@ async function connect(skipAutoRoom = false) {
         body: JSON.stringify({ roomCode: initialRoomCode, surface: surface === 'all' ? 'ipad' : surface }),
         signal: AbortSignal.timeout(4000),
       });
-      if (joinRes.ok) { const joined = await joinRes.json(); savePairToken(joined.pairToken); }
+      if (joinRes.ok) { const joined = await joinRes.json(); savePairToken(verifiedPairToken(joined)); }
     } catch { /* Offline fallback handled below */ }
   }
   await refreshPairing();

@@ -38,7 +38,7 @@ test('photo intake and local session entry preserve active state across rejected
   const selectBody=photoSrc.slice(photoSrc.indexOf('async function selectImage'),photoSrc.indexOf('function renderAssessment'));
   assert.ok(selectBody.indexOf('crypto.subtle.digest')>0&&selectBody.indexOf('clearClip()')>selectBody.indexOf('crypto.subtle.digest'),'selectImage must validate and hash before clearing active clip/photo state');
   assert.match(photoSrc,/q\('#photo-file'\)\.addEventListener\('change'[^\n]+finally\{event\.target\.value='';\}/);
-  assert.match(photoSrc,/catch\(e\)\{if\(!controller\.signal\.aborted\)error\(e\.message\);\}/);
+  assert.match(photoSrc,/catch\(e\)\{if\(!controller\.signal\.aborted&&epoch===cameraEpoch\)error\(e\.message\);\}/);
   const baySrc=await readFile(new URL('./public/component-bay.js',import.meta.url),'utf8');
   assert.match(baySrc,/acceptEnvelope\(body,\s*true\);\s*setConnection\(true\);/);
   assert.match(baySrc,/if \(!connected && !everConnected\) return;/);

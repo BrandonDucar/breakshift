@@ -8,7 +8,7 @@ a Meta voice-model output. No presenter avatar is implied.
 
 Prerequisites: the normal Node offline build, an already-installed Playwright
 module and Edge, plus FFmpeg and Windows System.Speech for the optional render.
-These tools are not needed for the app or its 147 offline tests.
+These tools are not needed for the app or its Node offline tests.
 
 ```powershell
 node demo/capture.mjs C:/absolute/path/to/playwright/index.mjs .local/demo-rehearsal --rehearsal
@@ -63,9 +63,24 @@ The public fixture bytes, live deployment, paid allowance and private ledger
 are not modified. A newly rendered draft needs separate review and approval.
 The exact retained video was approved and hosted Unlisted on October 31; it has
 not been submitted. Its link remains in the private owner handoff. Final
-independent review, signed-out access and organizer-entry gates remain open;
-see [dated readiness snapshot](submission-readiness-20261031.json).
+source review and signed-out player verification have since been reconciled;
+owner promotion and organizer-entry gates remain open. See the
+[final local review](FINAL_REVIEW_20261031.md). The
+[dated readiness snapshot](submission-readiness-20261031.json) is retained unchanged
+as historical evidence, not a current readiness declaration.
 
 See [Fresh-Checkout Acceptance](ACCEPTANCE_20261030.md) for the later 149-test
 regression run, source-versus-model finding reconciliation and retained-video
 recheck. Historical test counts and receipts above are not rewritten.
+
+To exercise the later asynchronous intake and pairing regressions against the
+local build with an already-installed Playwright module and Edge:
+
+```powershell
+npm run build
+node demo/verify-readiness-regressions.mjs C:/absolute/path/to/playwright/index.mjs
+```
+
+The harness blocks non-loopback traffic, uses a synthetic browser camera, and
+answers pairing writes with local fixtures. It does not send a model request or
+prove physical camera hardware, real pairing or a deployed release.

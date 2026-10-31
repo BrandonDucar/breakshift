@@ -84,3 +84,21 @@ test('public-video check rejects alternate hosts and embed, shorts, live and sho
     assert.throws(()=>assertNoPublicVideoLink(link));
   assertNoPublicVideoLink('Unlisted link remains in the private owner handoff.');
 });
+
+test('public-video check rejects percent-encoded hosts and nested encoding',()=>{
+  for(const link of ['https://youtu%2ebe/example','https://www.you%74ube.com/watch?v=example',
+    'https%3A%2F%2Fyoutu.be%2Fexample','https://youtu%252ebe/example',
+    'https://youtube%2Dnocookie%2Ecom/embed/example'])assert.throws(()=>assertNoPublicVideoLink(link));
+});
+
+test('malformed escapes do not prevent inspection of a later encoded video host',()=>{
+  assert.throws(()=>assertNoPublicVideoLink('Malformed %ZZ then https://youtu%2ebe/example'));
+  assert.throws(()=>assertNoPublicVideoLink('%E0%A4%A https://you%74ube.com/embed/example'));
+  assertNoPublicVideoLink('The draft is 100% complete; this %ZZ is not a video link.');
+});
+
+test('excessively nested percent encoding fails closed',()=>{
+  let encoded='https://youtu.be/example';
+  for(let i=0;i<12;i++)encoded=encodeURIComponent(encoded);
+  assert.throws(()=>assertNoPublicVideoLink(encoded),/PUBLIC_LINK_ENCODING_DEPTH_LIMIT/);
+});
