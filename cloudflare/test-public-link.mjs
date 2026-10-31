@@ -32,7 +32,9 @@ test('anonymous paid scan attempts reject before budget access or provider work'
 
 test('public build has open access state and no visible access-code form by default', async () => {
   const html = await readFile(new URL('../.cf-preview/index.html', import.meta.url), 'utf8');
-  assert.match(html, /OPEN ACCESS · NO SIGN-IN REQUIRED/);
+  assert.match(html, /OPEN DEMO · NO SIGN-IN REQUIRED/);
+  assert.match(html, /Start simulated repair job/);
+  assert.match(html, /Show simulator-verified repair/);
   assert.match(html, /id="tester-access-form" hidden/);
   assert.doesNotMatch(html, /<input[^>]+type="email"/);
   assert.doesNotMatch(html, /Enable live scans/);

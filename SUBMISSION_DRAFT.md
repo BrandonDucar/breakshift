@@ -32,6 +32,9 @@ Recorded SAM 3.1 tracking and Muse Wonder inspection are separate from engineeri
 verification. Muse Spark/Wonder also assisted development and post-repair review.
 The video replays retained outputs; it does not show new live model execution.
 Its narration uses Windows offline synthesis, not a Meta voice model.
+Desktop Muse separately reviewed public source and the GET-only app. Its
+missing-build guidance and simulator-qualified label suggestions were adopted
+and tested; see demo/ACCEPTANCE_20261030.md. Phone execution is not claimed.
 
 ## Links And Deliverables
 

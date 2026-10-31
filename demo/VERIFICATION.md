@@ -1,5 +1,11 @@
 # Demo Draft Verification - October 28, 2026
 
+Historical draft, superseded by [MODEL_RECHECK.md](MODEL_RECHECK.md) and
+[ACCEPTANCE_20261030.md](ACCEPTANCE_20261030.md). The old `0f596de2...` video below
+is retained evidence, not the current submission candidate. The current retained
+candidate is `82d6332bc339f9c95b716e999f8202b7843d4b0df9717057b1b0d0330a854857`.
+Its public hosted URL and owner listening approval remain pending.
+
 Status: locally recorded and tested; independent review and human listening pass
 pending. Not uploaded, hosted, submitted, or deployed by this work.
 

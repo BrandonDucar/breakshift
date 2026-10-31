@@ -13,7 +13,8 @@ official rules, contributor identification and dated development evidence.
 - Independent tests and the offline energy comparison module.
 - Original fictional-machine illustrations and locally encoded synthetic clip.
 - Optional locally reproducible demo capture, narration, caption and media
-  verification tooling; see `demo/VERIFICATION.md` for its separate review stage.
+  verification tooling; see `demo/README.md` and `demo/ACCEPTANCE_20261030.md` for
+  current review gates. `demo/VERIFICATION.md` retains an explicitly historical draft.
 
 ## Existing External Material
 

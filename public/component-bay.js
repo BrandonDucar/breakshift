@@ -506,7 +506,7 @@ function render() {
   $('#cap').value = s.breakerKw;
   $('#cap-label').value = `${s.breakerKw.toFixed(2)} kW`;
   $$('[data-layer-toggle]').forEach(input => input.checked = s.visibleLayers.includes(input.dataset.layerToggle));
-  $('#overlay-toggle').textContent = !s.allSimulatedChecksGreen ? 'Repair blocked by constraint' : s.repairOverlayMode === 'GHOSTED_PROPOSAL' ? 'Show verified repair' : 'Show proposed repair';
+  $('#overlay-toggle').textContent = !s.allSimulatedChecksGreen ? 'Repair blocked by constraint' : s.repairOverlayMode === 'GHOSTED_PROPOSAL' ? 'Show simulator-verified repair' : 'Show proposed repair';
   renderScene(); renderDetail(); renderWave(); renderSurfaces(); renderPairing(); setConnection(connected);
   renderMuse(); findCachedScan();
   if (focusZone && !focusIsSpatialPin) document.querySelector(`.component-button[data-zone="${focusZone}"]`)?.focus({ preventScroll: true });

@@ -8,6 +8,15 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
+test('direct offline runner reports a missing build before spawning the suite',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'breakshift-runner-preflight-'));
+  try {
+    await writeFile(join(dir,'test-offline.mjs'),await readFile(join(root,'test-offline.mjs')));
+    const result=spawnSync(process.execPath,[join(dir,'test-offline.mjs')],{cwd:dir,encoding:'utf8'});
+    assert.notEqual(result.status,0);assert.match(result.stderr,/BREAKSHIFT_BUILD_REQUIRED/);
+    assert.match(result.stderr,/npm test/);assert.doesNotMatch(result.stdout,/# Subtest:/);
+  } finally { await rm(dir,{recursive:true,force:true}); }
+});
 test('capture refuses an existing evidence directory before launching a browser',async()=>{
   const dir=await mkdtemp(join(tmpdir(),'breakshift-capture-retention-'));
   try {

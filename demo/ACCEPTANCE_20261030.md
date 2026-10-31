@@ -6,11 +6,14 @@ Version 1.0.0. Local acceptance evidence, not organizer acceptance or a release.
 
 - Public default branch tested: `a4a09202affd592c9499a937c546df158db0d355`.
 - Demo candidate tested: `71d3e42ba67c24eefe224c121772442992f5efa2`.
-- Follow-up changes add regression coverage and this report; app and worker
-  behavior, frozen fixtures and generated demo video are unchanged.
+- Follow-up changes add regression coverage, a clear missing-build error,
+  simulator-qualified client labels and this report. Controller verdicts,
+  worker API policy, frozen fixtures and generated demo video are unchanged.
 - Public app: https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/
 - Public static readback: all 45 manifest assets matched the rebuilt
   `live-03370f1c283ea180` release. This is asset-byte parity, not backend authority.
+- The later copy-polish build is `live-9f6612f4cb88fafd`, locally built only and
+  not deployed. The `live-` build-ID prefix does not mean it has been published.
 
 ## Reproduced Checks
 
@@ -18,9 +21,9 @@ Version 1.0.0. Local acceptance evidence, not organizer acceptance or a release.
 | --- | --- | --- |
 | Default-branch offline suite | 147 passed | Fresh clone; no dependency install or key |
 | Demo-candidate offline suite | 147 passed | Exact candidate commit |
-| Added regression coverage | 149 total passed | Two new tests, app behavior unchanged |
-| Demo-tooling tests | 29 passed | Includes retention, evidence consistency and timing |
-| Browser journeys | 24 passed | Phone 390x844, tablet 768x1024, desktop 1440x1000 |
+| Added regression coverage | 149 total passed | Two new workcell/rejection tests |
+| Demo-tooling tests | 30 passed | 29 existing tests plus missing-build preflight regression |
+| Browser journeys | 24 passed on baseline and again on copy-polish candidate | Phone 390x844, tablet 768x1024, desktop 1440x1000 |
 | Enabled button targets | 90 exercised per viewport | No unexplained enabled target left unclicked |
 | Browser errors / unexpected POSTs | 0 / 0 | Local preview, no model calls |
 | Demo rehearsal | 9 checkpoints passed | Actual interactions and exported/replayed evidence |
@@ -47,6 +50,29 @@ They did not run tests or inspect physical machinery. Their outputs are advisory
 No finding was promoted to a verified defect solely because two models agreed.
 No proposed cross-profile import change was applied.
 
+## Desktop Muse Contribution
+
+Desktop Muse separately reviewed the public source and GET-only public app.
+It reported its own 147 offline passes and 27 demo passes with two declared
+Windows skips; it did not perform phone tests, the browser button sweep or
+byte-level media verification. This is a chat-attributable review, not a
+cryptographic runtime attestation or independent GitHub approval.
+
+Adopted contributions:
+
+- Direct `node test-offline.mjs` now explains `BREAKSHIFT_BUILD_REQUIRED` and
+  names `npm test` / `npm run build` before spawning a suite without its preview.
+  The new test runs that missing-build case in an isolated temporary directory.
+- The candidate banner says `OPEN DEMO`; its action names a simulated repair
+  job. The repair overlay says `Show simulator-verified repair`. Model access
+  gates are unchanged. These label changes are staged, not on the deployed app.
+- The original verification note now explicitly identifies its old video digest
+  as historical and points to the current retained candidate.
+
+The raw-HTML empty version placeholder was not treated as a persistent runtime defect:
+the browser verifier now requires a populated numeric mission version after
+the session is ready. No claim of desktop-to-phone sync or phone execution is made.
+
 ## Continuous Verification
 
 The public PR now includes a read-only, secret-free GitHub Actions workflow on a
@@ -67,6 +93,9 @@ definition is not a passing CI result; check the exact PR head's returned check.
   host-bound evidence, not a self-contained portable media verification bundle.
 - The recording shows its historical 147-test run. The two later tests do not
   change the app demonstration or turn that recorded counter into 149.
+- The retained recording predates the candidate's copy-only label changes. It
+  still depicts the currently deployed baseline; no exact-byte match to the
+  later local copy-polish build is claimed.
 
 ## Still Required
 

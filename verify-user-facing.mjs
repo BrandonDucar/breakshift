@@ -32,6 +32,8 @@ try {
     const check=async(label,run)=>{try{await reset();await run();await scan();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);report.checks.push({viewport:name,label,passed:true});}catch(error){report.checks.push({viewport:name,label,passed:false,error:error.message,stack:error.stack});}};
 
     await check('visual-first entry and five inspection views',async()=>{
+      if(!deployed){assert.match(await page.locator('#public-access-state').textContent(),/OPEN DEMO/);assert.match(await page.locator('.start-job-link').textContent(),/simulated repair job/);}
+      assert.match(await page.locator('#mission-version').textContent(),/^v\d+$/);
       const frame=await page.locator('#scene').boundingBox();assert.ok(frame.y<height&&frame.y+frame.height>0,'workcell visual intersects first viewport');
       assert.ok(await page.locator('#workcell-image').evaluate(el=>el.complete&&el.naturalWidth>0));
       assert.ok((await page.locator('#bay-job').boundingBox()).y>frame.y+frame.height);
