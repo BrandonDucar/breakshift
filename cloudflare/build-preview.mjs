@@ -10,6 +10,7 @@ const files = [
   ...['component-bay.js','component-model.mjs','bay-job.mjs','spatial-xr.mjs','repair-twin-player.mjs','photo-inspection.mjs','camera-clip.mjs','sam-overlay.mjs','photo-repair-bridge.mjs'].map(name=>[`public/${name}`,`public/${name}`]),
   ['cloudflare/vendor/meta-sam-parser/LICENSE','third-party/meta-sam-LICENSE.txt'],
   ['public/bay-job.css','public/bay-job.css'],
+  ['public/mobile-readability.css','public/mobile-readability.css'],
   ['public/sabotage-console.css','public/sabotage-console.css'],
   ...['playback-speed.mjs','worker-intake.mjs','sabotage-console.mjs'].map(name=>[`public/${name}`,`public/${name}`]),
   ...['fault-lab.mjs','sabotage-command-guard.mjs','experiment-replay.mjs'].map(name=>[`public/${name}`,`public/${name}`]),

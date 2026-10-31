@@ -1,0 +1,189 @@
+/* Keep the desktop instrument layout; use reading sizes on handheld screens. */
+@media (max-width: 900px) {
+  body { font-size: 16px; line-height: 1.5; --muted: #b8c3b1; }
+  body *, body *::before, body *::after { letter-spacing: 0 !important; }
+  .workspace, .workspace-toolbar, .section-heading, .repair-header,
+  .muse-panel, .surface-card, .pairing-panel { min-width: 0; }
+  .masthead { height: auto; min-height: 80px; flex-wrap: wrap; padding-block: 12px; gap: 12px; }
+  .brand { font-size: 20px; }
+  .brand { min-width: 0; max-width: 100%; }
+  .brand > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+  .brand-mark { flex: none; }
+  .brand small { font-size: 12px; line-height: 1.5; }
+  .masthead-state { max-width: none; flex-wrap: wrap; font-size: 14px; }
+  .build-tag { font-size: 14px; }
+  .public-access-banner, .public-access-banner .start-job-link { font-size: 14px; line-height: 1.5; }
+  .public-access-banner .start-job-link { padding-block: 10px; }
+  .workspace-toolbar { flex-wrap: wrap; padding: 12px; }
+  .workspace-toolbar > .segmented { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .workspace-toolbar .segmented button { text-align: left; }
+  .twin-picker { width: 100%; font-size: 14px; }
+  .twin-picker select { flex: 1; min-width: 0; }
+
+  body button:not(.hotspot):not(.photo-region), body select, body textarea, body input:not([type=range]):not([type=checkbox]):not([type=file]),
+  body .photo-upload {
+    font-size: 16px !important; line-height: 1.4; min-height: 44px !important;
+    white-space: normal; overflow-wrap: anywhere;
+  }
+  body button:not(.hotspot):not(.photo-region) { padding: 10px 12px; }
+  body input, body textarea, body select { max-width: 100%; }
+  body input[type=range] { min-height: 44px; }
+  body input[type=checkbox] { width: 20px; height: 20px; flex: none; }
+  .layer-toggles label, .checklist label { min-height: 44px; }
+  body p, body li, body label, .component-detail .detail-description,
+  .component-detail p.check-text, .muse-diagnosis > p:not(.eyebrow):not(.scope-note),
+  .photo-intro p, .photo-findings p, .photo-findings li, .bay-job p,
+  .evidence-item p, .callout p, .fix-card p, #repair-results, .worker-intake dd {
+    font-size: 16px !important; line-height: 1.6; overflow-wrap: anywhere;
+  }
+  /* Existing scope-note uses !important; limitations must not stay at 10px. */
+  body .scope-note { font-size: 16px !important; line-height: 1.6; }
+  body .muted { font-size: 16px; line-height: 1.6; }
+  body .eyebrow, body small, body dt, body code, body pre,
+  .session-meta, .scene-key, .section-heading > span, .status-label,
+  .component-detail .status-label, .component-detail h4, .component-detail code,
+  .detail-metric span, .evidence-item small, .callout small, .job-tag, .job-progress,
+  .job-metrics dt, .worker-intake dt, .clip-playback-speed, .repair-controls label,
+  .experiment-trail #experiment-state, #experiment-events time, #experiment-events small,
+  .photo-source-row, .photo-findings h4, .fix-footer > span, .muse-evidence,
+  .uncertainty-candidate dt, .uncertainty-workspace code, .brand-word, footer p {
+    font-size: 14px !important; line-height: 1.5; overflow-wrap: anywhere;
+  }
+  body a:not(.brand), body summary { font-size: 16px; line-height: 1.5; }
+  body summary { min-height: 44px; padding-block: 10px; }
+  .public-access-banner .start-job-link { min-height: 44px; }
+  body h3 { font-size: 20px; line-height: 1.4; }
+  .intro h1 { overflow-wrap: anywhere; }
+  .section-heading h3 { font-size: 20px; line-height: 1.4; }
+  body h4 { font-size: 16px; line-height: 1.5; }
+  .muse-fix .fix-heading h3 { font-size: 20px; line-height: 1.4; }
+  .fix-heading { flex-wrap: wrap; gap: 10px; }
+  .fix-heading span { font-size: 14px; line-height: 1.5; white-space: normal; overflow-wrap: anywhere; }
+  .photo-job-link { display: inline-flex; align-items: center; min-height: 44px; }
+  .checklist-item { min-height: 44px; }
+  .checklist-item span { font-size: 16px; line-height: 1.6; }
+  .scene-topline, .scene-fault { font-size: 14px; line-height: 1.5; }
+  .experiment-trail .section-heading strong, .job-result-head,
+  .job-result-head > *, .fix-footer > span, .callout strong,
+  .field-reference, .check-item span, .cap-control, #cap-label,
+  #run-status, #compiler-verdict, #repair-current-kw, #repair-results h3,
+  .repair-meters > div > span, .twins article p { font-size: 16px !important; line-height: 1.6; }
+  .component-detail .detail-index, .layer-row .eyebrow, .muse-citations,
+  .fix-status, .repair-comparison thead th { font-size: 14px; line-height: 1.5; }
+  .twins header, .wasd-badge, .wasd-badge kbd { font-size: 16px; line-height: 1.5; }
+  .twin header { flex-wrap: wrap; overflow-wrap: anywhere; }
+  .muse-annotations .muse-callout span { font-size: 16px; }
+  .photo-repair-controls label, .photo-question { font-size: 16px !important; }
+  .photo-repair-controls small, .photo-repair-controls > span { font-size: 14px !important; }
+  .sabotage-console > *, .uncertainty-layout > * { min-width: 0; }
+  .component-button small { font-size: 14px; line-height: 1.5; }
+  .layer-row { align-items: start; }
+  .layer-toggles { flex-wrap: wrap; gap: 8px 16px; }
+  .scene-key { gap: 10px 16px; }
+  .component-detail h2, .repair-header h2, .photo-intro h2 { font-size: 26px; line-height: 1.25; }
+  .component-detail h4 { margin-top: 20px; }
+  .detail-metric { gap: 16px; flex-wrap: wrap; }
+  .fix-footer { align-items: stretch; }
+  .fix-footer button { flex: 1 1 auto; }
+
+  .reasoning-hud-head { flex-wrap: wrap; padding: 12px; }
+  .reasoning-hud-title, .reasoning-hud-tag, .reasoning-step-head { font-size: 14px; line-height: 1.5; }
+  .reasoning-hud-tag { order: 3; flex-basis: 100%; margin-left: 0; }
+  .reasoning-step-head { flex-wrap: wrap; }
+  .reasoning-hud-list { padding: 14px 12px; gap: 16px; }
+  .reasoning-step p { font: 16px/1.6 Arial, sans-serif; }
+  #reasoning-hud-toggle { margin-left: auto; }
+  #sabotage-input, #sabotage-submit, #sabotage-open-twin, .sabotage-chip { font-size: 16px; min-height: 44px; }
+  #sabotage-input::placeholder { color: #b8c3b1; }
+  .sabotage-form > button { flex: 1 1 auto; }
+  .muse-callout small, .muse-callout span { font-size: 14px; line-height: 1.5; }
+  .muse-callout strong { font-size: 16px; line-height: 1.5; }
+  .muse-callout select { width: 100%; }
+
+  .photo-tools { gap: 10px; }
+  .photo-source-row { gap: 12px; }
+  .photo-source-row > * { min-width: 0; overflow-wrap: anywhere; }
+  /* Long evidence notes belong below the image, not across the inspected part. */
+  .photo-image-wrap:has(#photo-overlay-note:not([hidden])) { display: grid; grid-template-columns: minmax(0, 1fr); aspect-ratio: auto !important; }
+  .photo-image-wrap:has(#photo-overlay-note:not([hidden])) > img,
+  #photo-image-wrap:has(#photo-overlay-note:not([hidden])) > video { grid-area: 1 / 1 / 2 / 2; height: auto; }
+  .photo-image-wrap:has(#photo-overlay-note:not([hidden])) > :is(#photo-pins, #sam-mask-overlay) { grid-area: 1 / 1 / 2 / 2; }
+  #photo-overlay-note { grid-area: 2 / 1; position: relative; bottom: auto; left: auto; max-width: none; margin: 0; padding: 12px; }
+  #photo-overlay-note small { font-size: 14px; }
+  #photo-overlay-note strong, #photo-overlay-note span { font-size: 16px; line-height: 1.5; max-height: none; overflow: visible; }
+  #photo-empty .bay-reference figcaption small { font-size: 14px; }
+  #photo-empty .bay-reference figcaption strong { font-size: 20px; }
+  .bay-reference figcaption > span { font-size: 14px; }
+  .photo-image-wrap:has(#photo-empty:not([hidden])) { aspect-ratio: auto !important; }
+  .photo-image-wrap #photo-empty { position: static; }
+  #photo-empty .bay-reference { height: auto; }
+  #photo-empty .bay-reference img { height: auto; }
+  #photo-empty .bay-reference figcaption { position: static; padding: 14px; background: #101310; }
+  .worker-intake dl, .job-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .worker-intake dl > div, .job-metrics > div { min-width: 0; }
+
+  .repair-controls, .repair-art-toolbar, .repair-art-caption { flex-wrap: wrap; gap: 12px; }
+  .repair-art-toolbar > span { max-width: none; font-size: 14px; }
+  .repair-art-badges { position: static; flex-wrap: wrap; padding: 10px; font-size: 14px; }
+  .repair-art-stage { display: grid; grid-template-columns: minmax(0, 1fr); aspect-ratio: auto !important; }
+  .repair-art-stage > img { grid-area: 1 / 1 / 2 / 2; height: auto; }
+  .repair-art-stage > svg { grid-area: 1 / 1 / 2 / 2; height: 100%; top: 0; }
+  .repair-art-badges { grid-area: 2 / 1; }
+  .repair-art-caption, .repair-art-caption span, .repair-order small { font-size: 14px; line-height: 1.5; }
+  .repair-order-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .repair-order b { font-size: 16px; }
+  .repair-comparison { max-width: 100%; overflow-x: auto; }
+  .repair-comparison table { font-size: 14px; min-width: 440px; }
+  .repair-comparison th small { font-size: 14px; }
+  .repair-meters span, .repair-controls > span { font-size: 14px; line-height: 1.5; }
+  .repair-meters > div > span { font-size: 16px; }
+  .repair-plot-heading > span { font-size: 16px; line-height: 1.5; }
+  #repair-scrub { min-height: 44px; }
+  .repair-verdict { font-size: 16px; line-height: 1.5; }
+
+  .uncertainty-workspace .uncertainty-status, .uncertainty-bound,
+  .uncertainty-bound output, .uncertainty-candidate dd, .uncertainty-failure { font-size: 16px; line-height: 1.5; }
+  .uncertainty-settings > *, .uncertainty-bound { min-width: 0; }
+  .uncertainty-bound:has(select) { grid-template-columns: minmax(0, 1fr); }
+  .uncertainty-bound select { min-width: 0; width: 100%; }
+  .uncertainty-workspace .scope-note { font-size: 16px; }
+  .uncertainty-table th, .uncertainty-table td, .uncertainty-table thead th { font-size: 14px; }
+  .uncertainty-table { min-width: 480px; }
+  .uncertainty-workspace h3 { font-size: 18px; }
+  .uncertainty-plot { overflow-x: auto; }
+  .uncertainty-plot svg { min-width: 600px; }
+  .uncertainty-plot text { font-size: 14px; }
+  .surface-card pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .section-heading { flex-wrap: wrap; gap: 12px; }
+  .session-meta { text-align: left; min-width: 0; }
+}
+
+@media (max-width: 600px) {
+  main { padding-inline: 12px; }
+  .brand small { font-size: 12px; }
+  .component-detail { grid-template-columns: minmax(0, 1fr); }
+  .component-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .twins { grid-template-columns: minmax(0, 1fr); }
+  .component-button { min-width: 0; }
+  .scene-topline { font-size: 14px; flex-wrap: wrap; gap: 4px; top: 8px; left: 10px; right: 10px; }
+  .scene-fault { position: static; font-size: 14px; margin: 0; max-width: none; }
+  .scene:has(.scene-fault:not([hidden])) { aspect-ratio: auto; }
+  .scene > .scene-image { height: auto; aspect-ratio: 2 / 1; }
+  .scene > .hotspots, .scene > .fault-lines { height: auto; aspect-ratio: 2 / 1; bottom: auto; }
+  .scene[data-view=spatial] { aspect-ratio: 5 / 4; }
+  .scene[data-view=spatial] .scene-fault { display: none; }
+  .spatial-controls { top: auto; bottom: 0; left: 0; right: 0; padding: 6px; background: #10140f; }
+  .spatial-controls button { flex: 1 1 auto; }
+  .scene[data-view=spatial] .scene-topline { display: none; }
+  .sabotage-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .sabotage-presets button { text-align: left; }
+  .reasoning-hud-tag { display: block; margin-left: 0; }
+  .intro { display: block; }
+  .session-meta { margin-top: 16px; }
+  .repair-header h2, .photo-intro h2, .component-detail h2 { font-size: 24px; }
+  .repair-art-toolbar { display: grid; }
+  .repair-art-toolbar > div { flex-wrap: wrap; }
+  .repair-verdict { max-width: none; text-align: left; }
+  .uncertainty-settings .segmented { grid-template-columns: 1fr; }
+  .clip-playback-speed, .pairing-controls { flex-wrap: wrap; }
+}

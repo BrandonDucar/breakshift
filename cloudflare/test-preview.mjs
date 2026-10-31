@@ -32,7 +32,8 @@ test('recorded diagnosis is scoped to exact component/snapshot and actual model 
   for(const wrong of [path.replace(diagnosis.zoneId,'PANEL-BUS-48V'),path.replace(state.evidenceSnapshotId,'new-snapshot')])assert.equal((await(await worker.fetch(request(wrong),{})).json()).result,null);
 });
 test('deployment manifest contains browser-only allowlisted files and no provider/billing records',()=>{
-  assert.equal(release.manifest.length,release.manifest.some(f=>f.path==='public/verified-sam-wonder-demo.json')?45:42);
+  assert.equal(release.manifest.length,release.manifest.some(f=>f.path==='public/verified-sam-wonder-demo.json')?46:43);
+  assert.ok(release.manifest.some(file=>file.path==='public/mobile-readability.css'));
   for(const path of ['public/uncertainty-workbench.mjs','public/uncertainty-session.mjs','public/uncertainty-workbench.css','public/verified-uncertainty-patch.json','uncertainty-lab/repair-envelope.mjs','public/robot-asset-catalog.json','public/robot-asset-contract.mjs'])assert.ok(release.manifest.some(file=>file.path===path));
   assert.ok(release.manifest.some(file=>file.path==='public/experiment-replay.mjs'));
   assert.ok(release.manifest.some(file=>file.path==='controller/repair-compiler.mjs'));
