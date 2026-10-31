@@ -54,6 +54,18 @@ test('receipt review has controlled errors for primitive inputs and never mutate
   assert.deepEqual(s.state(),before);
 });
 
+test('saved receipts cannot qualify another robot or restore stale export authority',()=>{
+  const {s}=rig();s.setSelection('muse');s.run();const saved=JSON.stringify(s.exportReceipt());
+  for(const profile of s.state().profiles.filter(p=>p.qualification!=='SIMULATOR_FIXTURE_ONLY')){
+    s.setAsset(profile.assetId);const before=s.state();
+    assert.throws(()=>s.reviewReceipt(saved),/ROBOT_ADAPTER_UNQUALIFIED/);
+    assert.deepEqual(s.state(),before);assert.equal(s.state().canExport,false);
+  }
+  s.setAsset('breakshift-reference-cell');const before=s.state();
+  assert.equal(s.reviewReceipt(saved).currentStateChanged,false);assert.deepEqual(s.state(),before);
+  assert.equal(s.state().stale,true);assert.throws(()=>s.exportReceipt(),/UNCERTAINTY_STALE_EXPORT_BLOCKED/);
+});
+
 test('AR-UI-01: plotted energy horizon follows maximum delay even when timing error peaks at zero',()=>{
   const {s}=rig();s.setSelection('muse');
   for(const delayMaxMs of [0,5,20,35,40]){

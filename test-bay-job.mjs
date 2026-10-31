@@ -37,3 +37,17 @@ test('paused scans never advertise availability or recommend retrying', () => {
   assert.match(scanFailure(Error('MUSE_LEDGER_RECONCILIATION_REQUIRED')), /No new scan was sent/);
   assert.match(scanAvailability({ reason: 'LOCAL_PREVIEW_NO_PROVIDER' }), /Local review build/);
 });
+
+test('every rejected supported demo combination explains its terminal outcome', () => {
+  let rejected=0;
+  for(const strategyId of ['station_handoff','surge_interleave','timing_compensation','coordinated_repair']){
+    for(const breakerKw of [1.4,1.45,1.65,2,2.5,3.2]){
+      const result=evaluateBayJob({strategyId,breakerKw,snapshotId:'acceptance-fixture'});
+      if(result.passed)continue;
+      rejected++;assert.ok(result.blockers.length>0);
+      assert.ok(result.blockers.every(reason=>typeof reason==='string'&&reason.trim()));
+      assert.match(bayJobReport(result),/<h2>Decision<\/h2><p>[^<]+<\/p>/);
+    }
+  }
+  assert.ok(rejected>0);
+});

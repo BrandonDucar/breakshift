@@ -62,3 +62,7 @@ do not add app functionality or new evidence.
 The public fixture bytes, live deployment, paid allowance and private ledger
 are not modified. A finished draft still needs human/independent visual review,
 hosting approval, a working public video link, and organizer submission.
+
+See [Fresh-Checkout Acceptance](ACCEPTANCE_20261030.md) for the later 149-test
+regression run, source-versus-model finding reconciliation and retained-video
+recheck. Historical test counts and receipts above are not rewritten.

@@ -49,6 +49,9 @@ The public browser app, Cloudflare backend source, deterministic compiler,
 simulator, uncertainty verifier and offline tests are included. The historical
 build fixtures are explicitly tracked; the generated .cf-preview directory is not.
 `submission-manifest.json` lists exported source hashes and deliberate exclusions.
+It is the original export snapshot, not a claim that later Git commits have the
+same file hashes. Later acceptance evidence is summarized in
+[demo/ACCEPTANCE_20261030.md](demo/ACCEPTANCE_20261030.md); Git records those changes.
 The private host service, credential loaders, campaign runner, shared accounting
 ledger and production deployment configuration are not distributed. The Cloudflare
 backend is included for inspection and fixture tests, not enabled by this preview.
