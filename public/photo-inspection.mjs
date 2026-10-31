@@ -8,7 +8,7 @@ import {PHOTO_RECIPES,validateTwinProposals} from './photo-repair-bridge.mjs';
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const hex=bytes=>[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
 export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeInTwin,onTestPhotoFixInTwin,onPhotoContextChanged}){
-  let image=null,result=null,stream=null,busy=false,selection=0,fixIndex=0,revision=0,active=false,cameraEpoch=0;
+  let image=null,result=null,stream=null,busy=false,capturing=false,selection=0,fixIndex=0,revision=0,active=false,cameraEpoch=0;
   const cache=new Map();const q=selector=>root.querySelector(selector);
   let recipeOverride='',assumptionsAck=false,inspectionStill=false,photoEpoch=0;
   function invalidatePhoto(){photoEpoch++;onPhotoContextChanged?.();}
@@ -44,11 +44,12 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     q('#worker-intake-download').disabled=!image||busy;
     speed.hidden=!clip;q('#photo-playback-speed').disabled=busy||!clip;
     const status=getStatus();q('#photo-analyze').disabled=busy||!image||Boolean(stream)||(!result&&(!status?.authenticated||!status.enabled));
-    q('#photo-analyze').textContent=busy?'SAM + Wonder are inspecting…':result?'Review image assessment ↗':'Outline with SAM + diagnose with Wonder ↗';
+    q('#photo-analyze').textContent=capturing?'Preparing local clip…':busy?'SAM + Wonder are inspecting…':result?'Review image assessment ↗':'Outline with SAM + diagnose with Wonder ↗';
     q('#photo-clear').disabled=busy||!image;q('#photo-file').disabled=busy;q('#photo-demo').disabled=busy;q('#photo-camera').disabled=busy;
     q('#photo-note').disabled=busy;q('#photo-target').disabled=busy;q('#photo-demo-track').disabled=busy;q('#photo-record').disabled=busy;
     const allowanceLabel=getStatus()?.authenticated===false?'live model analysis restricted':`${getStatus()?.remainingScans??'—'} shared scans remaining`;
     q('#photo-status').textContent=busy?'Muse is inspecting this image. Checking for the result; no automatic scan retries.':result?`${result.model} · ${result.mode==='TEST_ADAPTER'?'TEST ADAPTER / NO PROVIDER CALL':result.mode==='RECORDED_SAM_WONDER_DEMO'?'VERIFIED DEMO REPLAY / NO NEW MODEL CALL':result.cached?'cached image assessment':'LIVE IMAGE ASSESSMENT'} · ${allowanceLabel}`:!getStatus()?.authenticated?'Open access. Live model analysis is restricted.':getStatus()?.reason==='MUSE_LEDGER_RECONCILIATION_REQUIRED'?'Live analysis is paused: an earlier request has an uncertain outcome. Upload, camera and demo preview remain available.':getStatus()?.reason==='MUSE_SCAN_BUDGET_NOT_AVAILABLE'?'The current scan allowance is used. Preview, capture and verified demo playback remain available.':image?`${getStatus()?.remainingScans??0} shared scans remaining · review the image before sending.`:'Choose an image to begin.';
+    if(capturing)q('#photo-status').textContent='Preparing the camera encoder and recording locally. No model request has been sent.';
     if(!busy&&!result&&!status?.enabled)q('#photo-status').textContent=scanAvailability(status);
     fallback.hidden=busy||Boolean(result)||Boolean(status?.enabled);
   }
@@ -132,14 +133,14 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
   q('#photo-file').addEventListener('change',async event=>{const file=event.target.files?.[0];if(!file)return;try{stopCamera();await selectImage(file,'USER_SUPPLIED_IMAGE');}catch(e){error(e.message);}finally{event.target.value='';}});
   q('#photo-demo').addEventListener('click',async()=>{try{stopCamera();const response=await fetch('/public/assets/robot-cutaway-v1.png');if(!response.ok)throw Error('Demo image unavailable. Upload an image instead.');await selectImage(await response.blob(),'DEMO_ILLUSTRATION');}catch(e){error(e.message);}});
   async function recordClip(draw,width,height,sourceKind){
-    const controller=new AbortController(),epoch=cameraEpoch;captureAbort=controller;busy=true;error();update();
+    const controller=new AbortController(),epoch=cameraEpoch;captureAbort=controller;busy=true;capturing=true;error();update();
     try{
       const captured=await captureInspectionClip(draw,{width,height,signal:controller.signal});
       if(captureAbort===controller)captureAbort=null;
       if(controller.signal.aborted||epoch!==cameraEpoch)return;
       if(await selectImage(captured.poster,sourceKind,()=>!controller.signal.aborted&&epoch===cameraEpoch)===false)return;
       clip=captured;clipUrl=URL.createObjectURL(captured.blob);clipPlayer.src=clipUrl;clipPlayer.hidden=false;q('#photo-image').hidden=true;q('#photo-dimensions').textContent+=' · captured clip / local preview';
-    }catch(e){if(!controller.signal.aborted&&epoch===cameraEpoch)error(e.message);}finally{busy=false;if(captureAbort===controller)captureAbort=null;stopCamera();update();}
+    }catch(e){if(!controller.signal.aborted&&epoch===cameraEpoch)error(e.message);}finally{busy=false;capturing=false;if(captureAbort===controller)captureAbort=null;stopCamera();update();}
   }
   async function verifiedDemo(){
     const intent=++revision;

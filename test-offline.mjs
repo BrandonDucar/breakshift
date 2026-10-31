@@ -8,7 +8,7 @@ catch (error) {
   process.exit(1);
 }
 const manifest = JSON.parse(await readFile(new URL('./submission-manifest.json', import.meta.url)));
-const child = spawnSync(process.execPath, ['--import', './offline-guard.mjs', '--test', '--test-reporter=tap', ...manifest.tests], {
+const child = spawnSync(process.execPath, ['--import', './offline-guard.mjs', '--test', '--test-reporter=tap', ...manifest.tests, 'test-camera-clip.mjs'], {
   cwd: new URL('./', import.meta.url), encoding: 'utf8', timeout: 120000,
   maxBuffer: 4000000,
   env: { ...process.env, MUSE_SPARK_API_KEY: '', META_MODEL_API_KEY: '', BREAKSHIFT_MUSE_BUDGET_USD: '0' },

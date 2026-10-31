@@ -29,7 +29,9 @@ or a current provider execution claim.
 The owner authorized public repository publication on October 28, 2026. The
 repository is https://github.com/BrandonDucar/breakshift. Independent reviews apply
 to their exact source pins, not every future commit. Contribution dates/credits,
-accepted official rules and the three-minute demo still require final confirmation.
+and accepted official rules still require final confirmation. The exact
+170.021-second demo and its Unlisted upload were owner-approved on October 31;
+that approval does not authorize an organizer submission or a replacement video.
 A local snapshot commit made by the packaging verifier is an extraction checkpoint,
 not evidence of when each original feature was authored.
 
@@ -37,4 +39,4 @@ The offline energy model v2 and integrated workflow were independently verified 
 Argon prior to standalone extraction. The bundled JSON fixture
 (`public/verified-uncertainty-patch.json`) retains its historical development
 snapshot field (`peerReview: REQUESTED_NOT_RECEIVED`) to preserve byte-level
-cryptographic parity with deployed release `live-03370f1c283ea180`.
+cryptographic parity with the historical release `live-03370f1c283ea180`.

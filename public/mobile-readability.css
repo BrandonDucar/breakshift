@@ -170,9 +170,12 @@
   .scene:has(.scene-fault:not([hidden])) { aspect-ratio: auto; }
   .scene > .scene-image { height: auto; aspect-ratio: 2 / 1; }
   .scene > .hotspots, .scene > .fault-lines { height: auto; aspect-ratio: 2 / 1; bottom: auto; }
-  .scene[data-view=spatial] { aspect-ratio: 5 / 4; }
+  .scene[data-view=spatial] { aspect-ratio: auto; }
   .scene[data-view=spatial] .scene-fault { display: none; }
-  .spatial-controls { top: auto; bottom: 0; left: 0; right: 0; padding: 6px; background: #10140f; }
+  .spatial-stage { height: auto; }
+  #spatial-canvas { height: auto; aspect-ratio: 5 / 4; }
+  #spatial-pins { height: auto; aspect-ratio: 5 / 4; bottom: auto; }
+  .spatial-controls { position: static; padding: 6px; background: #10140f; }
   .spatial-controls button { flex: 1 1 auto; }
   .scene[data-view=spatial] .scene-topline { display: none; }
   .sabotage-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

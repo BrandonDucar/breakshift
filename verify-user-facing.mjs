@@ -152,5 +152,5 @@ try {
     await context.close();
   }
   report.passed=report.checks.every(c=>c.passed)&&report.buttonCoverage.every(c=>c.notClickedEnabled.length===0)&&report.unexpectedPosts===0&&report.errors.length===0;if(!report.passed)process.exitCode=1;
-} finally {await browser.close();if(server)await new Promise(done=>server.close(done));await writeFile(resolve(output,'receipt.json'),JSON.stringify(report,null,2));}
+} finally {await browser.close();if(server){server.closeAllConnections();await new Promise(done=>server.close(done));}await writeFile(resolve(output,'receipt.json'),JSON.stringify(report,null,2));}
 console.log(JSON.stringify({output,...report},null,2));

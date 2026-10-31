@@ -1,8 +1,9 @@
 # BREAKSHIFT Submission Draft
 
-Status as of October 31, 2026: tested source candidate; exact demo approved and
-hosted Unlisted. The source candidate has a later independent local review;
-owner source promotion and organizer submission remain pending.
+Status as of October 31, 2026: a reviewed app release and its source branch have
+been published; the exact demo is approved and hosted Unlisted. Later mobile and
+camera closeout changes require their own exact-source verification and release
+approval. Organizer submission remains pending.
 This is draft text, not an organizer submission or eligibility guarantee.
 
 ## Project
@@ -15,8 +16,9 @@ compile a typed repair plan, challenge it against declared uncertainty, and save
 or independently replay the evidence. Changed assumptions withdraw a previous
 green result instead of silently leaving it trusted.
 
-Suggested theme: Push the Frontier (software, robotics and modeled energy).
-Suggested track: Indie Developer, subject to owner/organizer confirmation.
+Owner-confirmed team: DreamNet; Brandon Ducar is the sole human team member.
+Owner-confirmed theme: Push the Frontier (software, robotics and modeled energy).
+Owner-confirmed track: Indie Developer.
 
 ## Demonstrated Outcome
 
@@ -65,22 +67,28 @@ The source app runs offline with Node 22.12+; no package install or key is requi
 ## Remaining Owner Gates
 
 - Review the reconciled private entry packet for the exact source candidate.
-- Confirm eligible human contributors, team listing, event-only contributions,
-  accepted official rules, track and deadline. AI agents are not human team members.
+- Confirm eligibility, event-only contributions and accepted official rules.
+  Team listing and track are confirmed; AI agents are not human team members.
 - Decide whether to merge the optional demo-tooling PR before submission.
 - Recheck links before entry and approve the exact completed organizer submission.
 
-The public app remains `live-03370f1c283ea180`. The later copy-polish build
-`live-9f6612f4cb88fafd` is local only; its name is not evidence of deployment.
-The earlier accepted application head is `4a023dc55114e1c4c1eb679445a78e7543b23f82`.
-The later local candidate includes the independently reviewed photo/session fixes
-and their follow-up regressions; see [final local review](demo/FINAL_REVIEW_20261031.md).
+The October 31 publication receipt binds source
+`5340e96d337f841b85d332c90433b936795a9488` to `live-46011f8bdd4bae08`.
+Read the hosted app's `/release.json` and the selected Git commit for current
+identity; do not use an older draft's release name as live deployment evidence.
+Later closeout changes and their tests must be pinned in the final entry handoff.
+The optional demo-tooling PR is not itself the identity of the deployed source.
 See [dated readiness snapshot](demo/submission-readiness-20261031.json) for the
 historical completed/pending split. It is not current readiness or a live status service.
 
 The [Meta event page](https://dev.meta.ai/events/global-hackathon), checked
 October 31, lists November 4 at 9:00 PM Eastern as the submission deadline.
-That overview is not the accepted full rules or a verified submission form.
+The organizer submission form has now been inspected in the accepted account.
+It asks for team members, track, theme, project description, a public GitHub
+repository, a three-minute demo video, Meta product usage and importance, API
+feedback, and permission to promote submitted materials. The owner selected
+Somewhat likely and Somewhat favorable for API feedback. The final
+permission/submission action remains an owner decision.
 
 No calibrated hardware result, physical repair clearance, safety certification,
 electricity-bill saving or world-first claim is established. Nothing here grants

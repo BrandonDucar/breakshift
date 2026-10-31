@@ -10,7 +10,9 @@ establish a real machine's condition or authorize a physical repair.
 Try the existing Cloudflare Worker deployment directly in any desktop or mobile browser:
 **https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/**
 
-The live app serves release `live-03370f1c283ea180` across phone, tablet, and desktop viewports with zero credentials or account sign-in required.
+The hosted workbench opens without credentials or account sign-in. Its current
+published build is identified by `/release.json`; a source checkout may include
+newer, unpublished changes. Fresh paid model analysis remains operator-restricted.
 
 ## Offline Quick Start
 

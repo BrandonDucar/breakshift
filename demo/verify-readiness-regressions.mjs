@@ -44,7 +44,10 @@ try{
     });
     const check=async(label,fn)=>{
       try{await fn();report.checks.push({viewport:name,label,passed:true});}
-      catch(error){report.checks.push({viewport:name,label,passed:false,error:error.message});}
+      catch(error){report.checks.push({viewport:name,label,passed:false,error:error.message,stack:error.stack,
+        captureState:await page.evaluate(()=>({held:window.__held,delayBitmap:window.__delayBitmap,delayDigest:window.__delayDigest,
+          error:document.querySelector('#photo-error')?.textContent,status:document.querySelector('#photo-status')?.textContent,
+          fileDisabled:document.querySelector('#photo-file')?.disabled,cameraVisible:!document.querySelector('#photo-camera-panel')?.hidden})).catch(()=>null)});}
     };
     await page.goto(base+'/?view=photo&webgl=off');
     await page.waitForFunction(()=>document.querySelector('#mission-version')?.textContent.startsWith('v'));
@@ -61,6 +64,9 @@ try{
       assert.equal(await page.locator('#photo-file').inputValue(),'');
     });
     for(const [kind,leave,reject] of [['Bitmap',false,false],['Digest',true,false],['Bitmap',false,true]])await check(`cancelled capture preserves prior evidence during deferred ${kind.toLowerCase()}${reject?' rejection':''}`,async()=>{
+      // Isolate deferred hooks so an earlier failure cannot hold this case's work.
+      await page.goto(base+'/?view=photo&webgl=off');
+      await page.waitForFunction(()=>document.querySelector('#mission-version')?.textContent.startsWith('v'));
       await page.locator('button[data-view="photo"]').click();
       await page.locator('#photo-demo-track').click();
       await page.waitForFunction(()=>document.querySelector('#photo-source').textContent.startsWith('VERIFIED SYNTHETIC DEMO'));
