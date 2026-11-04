@@ -1,11 +1,30 @@
 # BREAKSHIFT
 
+**Your AI says "fixed." BREAKSHIFT says: prove it.**
+
 A simulated robotic-workcell repair workbench. Inspect a component, replay a
 recorded Meta-model proposal, challenge it against changed conditions, and export
 or independently replay the resulting evidence. Passing a simulation does not
 establish a real machine's condition or authorize a physical repair.
 
 ## Live Demo & Hosted Bay
+
+[Open the workbench](https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/) |
+[Watch the corrected v2.2 demo](https://www.youtube.com/watch?v=o6qEsiYmQdM)
+
+**Inspect. Challenge. Replay.** Change the modeled conditions and see whether a
+repair plan still holds up. Changed assumptions withdraw stale green verdicts;
+a fluent proposal is not proof that a physical machine is repaired.
+
+Team DreamNet #217, Meta Global AI Developer Hackathon. The existing entry's
+demo link was updated and reloaded on November 4, 2026. This is not a judging,
+eligibility, organizer endorsement or prize claim.
+
+The corrected 2:13 recording replays retained Meta-model outputs. Its fictional
+presenter and synthetic voice were produced with Google Vids; the script was
+Muse Wonder-assisted. Meta Voice and Muse Code use are not claimed. The
+recording's closing source identifiers and test counts describe its historical
+capture, not every subsequent app revision.
 
 Try the existing Cloudflare Worker deployment directly in any desktop or mobile browser:
 **https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/**
@@ -42,12 +61,13 @@ synthetic browser test, not a physical-device hardware test.
 
 ## Source And Evidence
 
-For the reproducible 2:50 local demo recording, captions, and offline narration,
+For the historical reproducible 2:50 local demo recording, captions, and offline narration,
 see [demo/README.md](demo/README.md). The demo tooling is optional and separate
 from the dependency-free app. The exact retained recording was approved and
 uploaded Unlisted on October 31; its link stays in the private submission handoff.
-It is not an organizer submission or new live model execution. See
-[submission draft](SUBMISSION_DRAFT.md) for completed and remaining gates.
+That historical upload is not itself an organizer submission or new live model
+execution. The [October 31 submission draft](SUBMISSION_DRAFT.md) records
+historical completed and pending gates, not the November 4 demo-link closeout.
 
 The public browser app, Cloudflare backend source, deterministic compiler,
 simulator, uncertainty verifier and offline tests are included. The historical
@@ -76,4 +96,7 @@ retain LICENSE, NOTICE and third-party notices. Generated illustrations and the
 synthetic tracking clip are not real-world inspection evidence. See
 ASSET_PROVENANCE.md and LICENSING.md. Model weights and service credentials are
 not included. Public source publication does not establish approval by the
-hackathon organizer. Contributor dates, credits and final demo remain separate gates.
+hackathon organizer. Contributor dates and credits remain independently scoped.
+
+Public overview revision: **1.0.0**, November 4, 2026. Documentation only; this
+revision does not change the application build, model access or runtime policy.
