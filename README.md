@@ -9,8 +9,7 @@ establish a real machine's condition or authorize a physical repair.
 
 ## Live Demo & Hosted Bay
 
-[Open the workbench](https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/) |
-[Watch the corrected v2.2 demo](https://www.youtube.com/watch?v=o6qEsiYmQdM)
+[Open the workbench](https://breakshift-maintenance-bay.dreamnet-intel.workers.dev/)
 
 **Inspect. Challenge. Replay.** Change the modeled conditions and see whether a
 repair plan still holds up. Changed assumptions withdraw stale green verdicts;
