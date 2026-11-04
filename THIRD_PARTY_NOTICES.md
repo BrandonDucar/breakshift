@@ -15,7 +15,7 @@ This project incorporates third-party software, specifications, and open-source 
 ## 2. Meta SAM Parser
 
 - **Package:** `@meta-sam/parser` (version 0.1.0)
-- **License:** BSD-3-Clause / MIT
+- **License:** SAM License (the complete bundled license governs this vendored component; it is not labeled BSD-3-Clause or MIT).
 - **Vendored Location:** `cloudflare/vendor/meta-sam-parser/LICENSE` (served at `/third-party/meta-sam-LICENSE.txt`)
 - **Usage:** Used for parsing binary mask buffers and run-length encodings from Segment Anything Model (SAM) perception outputs in the Cloudflare Worker perception pipeline.
 

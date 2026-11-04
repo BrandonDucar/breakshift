@@ -1,5 +1,6 @@
 import {sha256Hex} from '../session/inspection-session-core.mjs';
 import {executeRepairRun} from '../simulator/repair-run.mjs';
+import {assertPhotoAssessmentFresh} from './photo-assessment-freshness.mjs';
 export const PHOTO_RECIPES=Object.freeze({surge_interleave:'Stagger surges / throttle belt',timing_compensation:'Compensate sensor timing',station_handoff:'Route to backup station',coordinated_repair:'Coordinate power, timing and handoff'});
 export function validateTwinProposals(proposals,regions){
   if(!Array.isArray(proposals)||proposals.length>4)throw Error('PHOTO_TWIN_PROPOSALS_INVALID');
@@ -14,6 +15,7 @@ export function validateTwinProposals(proposals,regions){
 export function photoRepairBinding({image,result,regionIndex,fixIndex,strategyId,origin,revision}){
   const region=result?.regions?.[regionIndex],fix=region?.possibleFixes?.[fixIndex];
   if(!image||result?.kind!=='PHOTO_VISUAL_ASSESSMENT'||result.imageDigest!==image.imageDigest||!/^[a-f0-9]{64}$/.test(image.imageDigest)||!/^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/.test(image.imageDataUrl)||image.imageDataUrl.length>700000||!Number.isInteger(regionIndex)||!Number.isInteger(fixIndex)||!fix||!Object.hasOwn(PHOTO_RECIPES,strategyId)||!Number.isSafeInteger(revision)||revision<0)throw Error('PHOTO_TWIN_CONTEXT_INVALID');
+  assertPhotoAssessmentFresh(result);
   if(origin==='WONDER_PROPOSAL'){
     const proposal=validateTwinProposals(result.twinProposals||[],result.regions).find(p=>p.regionIndex===regionIndex&&p.fixIndex===fixIndex);
     if(proposal?.strategyId!==strategyId)throw Error('PHOTO_TWIN_MAPPING_MISMATCH');

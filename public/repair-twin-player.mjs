@@ -78,23 +78,24 @@ export function createRepairTwinPlayer(root) {
     q('#repair-scrub').value = Math.round(elapsed);
     q('#repair-progress').textContent = frame.phase === 'POWER_TRACE' ? `${Math.round(elapsed)} / 1200 ms power trace` : `${frame.checked}/${run.repair.orderCount} batch order checks`;
     q('#repair-phase').textContent = stale ? 'Return to the current component diagnosis before another run.' : frame.phase === 'POWER_TRACE' ? '01 / Shared bus · acceleration surges' : done ? '03 / Judge + challenger verdict' : '02 / Timing + handoff · order checks';
-    q('#repair-current-kw').textContent = `${frame.sample.kw.toFixed(3)} kW`;
-    q('#repair-bus-state').textContent = (run.photoBinding?'MODEL / ':'')+(frame.sample.tripped ? 'BREAKER TRIPPED' : 'BUS WITHIN CAP');
-    q('#repair-bus-state').style.color = frame.sample.tripped ? '#ff8777' : '#dbfa86';
-    q('#repair-stage').classList.toggle('bus-tripped', frame.sample.tripped);
-    q('#repair-packed').textContent = `${frame.packed}/${run.repair.orderCount}`;
-    q('#repair-arm-a').classList.toggle('surging', frame.armSurges.includes('A'));
-    q('#repair-arm-b').classList.toggle('surging', frame.armSurges.includes('B'));
-    q('#repair-queue').textContent = run.recipe.handoff ? 'QUEUE → STATION B' : 'QUEUE → A + B / A FAULTED';
+    q('#repair-current-kw').textContent = stale ? 'NOT CURRENT' : `${frame.sample.kw.toFixed(3)} kW`;
+    q('#repair-bus-state').textContent = stale ? 'STALE / BUS NOT EVALUATED' : (run.photoBinding?'MODEL / ':'')+(frame.sample.tripped ? 'BREAKER TRIPPED' : 'BUS WITHIN CAP');
+    q('#repair-bus-state').style.color = stale ? '#efbe77' : frame.sample.tripped ? '#ff8777' : '#dbfa86';
+    q('#repair-stage').classList.toggle('bus-tripped', !stale && frame.sample.tripped);
+    q('#repair-packed').textContent = stale ? 'NOT CURRENT' : `${frame.packed}/${run.repair.orderCount}`;
+    q('#repair-arm-a').classList.toggle('surging', !stale && frame.armSurges.includes('A'));
+    q('#repair-arm-b').classList.toggle('surging', !stale && frame.armSurges.includes('B'));
+    q('#repair-queue').textContent = stale ? 'STALE / RECOMPUTE REQUIRED' : run.recipe.handoff ? 'QUEUE → STATION B' : 'QUEUE → A + B / A FAULTED';
     q('#repair-parts').innerHTML = run.repair.parts.map((part, index) => {
-      const checked = index < frame.checked;
+      const checked = !stale && index < frame.checked;
       return `<span class="repair-order ${checked ? part.packed ? 'packed' : 'missed' : 'waiting'}" aria-label="Order ${part.order}, station ${part.station}, ${checked ? part.packed ? 'packed' : 'missed' : 'not checked'}"><b>${checked ? part.packed ? '✓' : '×' : String(part.order).padStart(2,'0')}</b><small>${part.station}</small></span>`;
     }).join('');
     const x = 36 + Math.min(1200, elapsed) / 1200 * 680;
     q('#repair-cursor').setAttribute('x1', x); q('#repair-cursor').setAttribute('x2', x);
     q('#repair-plot').setAttribute('aria-label', `Selected fix power trace: ${frame.sample.kw} kW at ${Math.min(1200,Math.round(elapsed))} ms, cap ${run.breakerKw} kW`);
     q('#repair-results').hidden = !done || stale;
-    q('#repair-parts').hidden=Boolean(run.photoBinding&&stale);q('.repair-meters').hidden=Boolean(run.photoBinding&&stale);
+    q('#repair-parts').hidden=stale;q('.repair-meters').hidden=stale;
+    q('#repair-plot').hidden=stale;q('.repair-plot-heading').hidden=stale;
     if (done && !resultShown) {
       resultShown = true;
       q('#repair-announcement').textContent = `${run.photoBinding?'Reference workcell hypothesis: ':''}${title}. ${run.passed ? 'Passed' : 'Failed'} judge and challenger checks. ${run.repair.packed} of ${run.repair.orderCount} parts packed, peak ${run.repair.peakKw.toFixed(3)} kilowatts.${run.photoBinding?' Photographed component remains unverified.':''}`;
@@ -114,7 +115,7 @@ export function createRepairTwinPlayer(root) {
     root.innerHTML = `<div class="repair-header"><div><p class="eyebrow">REPAIR TWIN / EXECUTABLE CONTROLLER RECIPE</p><h2 id="repair-title">${esc(title)}</h2></div><strong id="repair-verdict" role="status"></strong></div>
       <p class="scope-note">${esc(snapshotId)} · ${provenanceNote}</p>
       <div class="repair-grid"><div><div class="repair-art-toolbar"><span>REPAIR TWIN / ILLUSTRATED WORKCELL</span><div role="group" aria-label="Repair Twin artwork"><button type="button" data-repair-art="workcell" aria-pressed="true">Workcell</button><button type="button" data-repair-art="cutaway" aria-pressed="false">Robot cutaway</button></div></div><div id="repair-stage" class="repair-stage repair-art-stage">
-        <img id="repair-image" width="1774" height="887" src="/public/assets/breakshift-microgrid-hero-v1.png" alt="Original detailed workcell, shared with the homepage">
+        <img id="repair-image" width="1774" height="887" src="/public/assets/breakshift-microgrid-hero-v1.webp" decoding="async" alt="Original detailed workcell, shared with the homepage">
         <div id="repair-image-fallback" class="repair-art-fallback" hidden><strong>Workcell illustration unavailable</strong><p>The same power trace, order outcomes and controller comparison remain available below.</p></div>
         <svg id="repair-art-overlays" viewBox="0 0 1000 500" role="img"></svg><div class="repair-art-badges"><span class="repair-art-fault">A / GRIPPER FAULT</span><span id="repair-bus-state"></span></div>
       </div><div class="repair-art-caption"><span id="repair-queue"></span><span id="repair-art-note"></span></div><div id="repair-parts" class="repair-order-strip" aria-label="Batch order-check outcomes"></div>

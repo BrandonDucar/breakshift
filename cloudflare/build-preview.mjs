@@ -11,6 +11,7 @@ const files = [
   ['cloudflare/vendor/meta-sam-parser/LICENSE','third-party/meta-sam-LICENSE.txt'],
   ['public/bay-job.css','public/bay-job.css'],
   ['public/mobile-readability.css','public/mobile-readability.css'],
+  ['public/photo-assessment-freshness.mjs','public/photo-assessment-freshness.mjs'],
   ['public/sabotage-console.css','public/sabotage-console.css'],
   ...['playback-speed.mjs','worker-intake.mjs','sabotage-console.mjs'].map(name=>[`public/${name}`,`public/${name}`]),
   ...['fault-lab.mjs','sabotage-command-guard.mjs','experiment-replay.mjs'].map(name=>[`public/${name}`,`public/${name}`]),
@@ -18,6 +19,7 @@ const files = [
   ['uncertainty-lab/repair-envelope.mjs','uncertainty-lab/repair-envelope.mjs'],
   ...['robot-asset-catalog.json','robot-asset-contract.mjs'].map(name=>[`public/${name}`,`public/${name}`]),
   ...['breakshift-microgrid-hero-v1.png','robot-cutaway-v1.png'].map(name=>[`public/assets/${name}`,`public/assets/${name}`]),
+  ...['breakshift-microgrid-hero-v1.webp','robot-cutaway-v1.webp'].map(name=>[`public/assets/${name}`,`public/assets/${name}`]),
   ['session/inspection-session-core.mjs','session/inspection-session-core.mjs'],
   ...['kinematics-timing','planner','power-governor','telemetry-api','repair-compiler'].map(name=>[`controller/${name}.mjs`,`controller/${name}.mjs`]),
   ...['workcell','scenarios','repair-run'].map(name=>[`simulator/${name}.mjs`,`simulator/${name}.mjs`]),
@@ -64,7 +66,7 @@ const bytes=Buffer.from(JSON.stringify(publicDiagnosis));await writeFile(join(ta
 manifest.push({source:'verified-public-diagnosis-projection',path:'preview-diagnosis.json',sha256:hash(bytes),bytes:bytes.length});
 const workerSha256=hash(await readFile(join(root,'cloudflare/worker.mjs')));
 const vendorSources=(await readdir(join(root,'cloudflare/vendor/meta-sam-parser/dist'))).filter(name=>name.endsWith('.js')).map(name=>`cloudflare/vendor/meta-sam-parser/dist/${name}`);
-const workerSources=await Promise.all(['cloudflare/live-muse.mjs','session/muse-diagnosis-contract.mjs','cloudflare/photo-contract.mjs','cloudflare/sam-wonder.mjs','cloudflare/bounded-mp4.mjs','public/photo-repair-bridge.mjs',...vendorSources].map(async path=>({path,sha256:hash(await readFile(join(root,path)))})));
+const workerSources=await Promise.all(['cloudflare/live-muse.mjs','session/muse-diagnosis-contract.mjs','cloudflare/photo-contract.mjs','cloudflare/sam-wonder.mjs','cloudflare/bounded-mp4.mjs','public/photo-repair-bridge.mjs','public/photo-assessment-freshness.mjs',...vendorSources].map(async path=>({path,sha256:hash(await readFile(join(root,path)))})));
 const componentPaths=['controller/kinematics-timing.mjs','controller/planner.mjs','controller/power-governor.mjs','controller/telemetry-api.mjs','simulator/workcell.mjs','simulator/scenarios.mjs','session/inspection-session-core.mjs','session/muse-diagnosis-contract.mjs','public/component-model.mjs'];
 const componentSourceDigest=hash(JSON.stringify(await Promise.all(componentPaths.map(async path=>({path,sha256:hash(await readFile(join(root,path)))})))));
 const photoSourceDigest=hash(await readFile(join(root,'cloudflare/photo-contract.mjs')));

@@ -5,12 +5,15 @@ import {scanAvailability,scanFailure} from './bay-job.mjs';
 import {playbackRate,playbackOptions} from './playback-speed.mjs';
 import {workerIntakeReceipt} from './worker-intake.mjs';
 import {PHOTO_RECIPES,validateTwinProposals} from './photo-repair-bridge.mjs';
+import {photoAssessmentExpired,assertPhotoAssessmentFresh} from './photo-assessment-freshness.mjs';
 const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const hex=bytes=>[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
 export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeInTwin,onTestPhotoFixInTwin,onPhotoContextChanged}){
   let image=null,result=null,stream=null,busy=false,capturing=false,selection=0,fixIndex=0,revision=0,active=false,cameraEpoch=0;
   const cache=new Map();const q=selector=>root.querySelector(selector);
   let recipeOverride='',assumptionsAck=false,inspectionStill=false,photoEpoch=0;
+  let assessmentTimer=null,assessmentExpired=false;
+  const expiredMessage='This image assessment has expired. Its findings and repair-test selection were withdrawn. No new scan was sent; explicitly request a fresh assessment to continue.';
   function invalidatePhoto(){photoEpoch++;onPhotoContextChanged?.();}
   root.innerHTML=`<div class="photo-intro"><div><p class="eyebrow">PHOTO / CAMERA INSPECTION</p><h2>Put the component in view.</h2><p>No hardware? Start with the demo image. Then try your own photo.</p></div><p class="scope-note">Muse marks visible areas and suggests checks or possible fixes. Internal faults and repair success need separate evidence.</p></div>
     <div class="photo-tools"><label class="photo-upload">Upload photo<input id="photo-file" type="file" accept="image/jpeg,image/png,image/webp"></label><button type="button" id="photo-camera">Use camera</button><button type="button" id="photo-demo">Try demo image ↗</button><button type="button" id="photo-demo-track">Try tracking demo ↗</button><button type="button" id="photo-clear" disabled>Clear image</button></div>
@@ -38,6 +41,7 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
   function error(message=''){q('#photo-error').hidden=!message;q('#photo-error').textContent=message;}
   function stopCamera(){cameraEpoch++;if(stream)for(const track of stream.getTracks())track.stop();stream=null;q('#photo-video').srcObject=null;q('#photo-camera-panel').hidden=true;update();}
   function update(){
+    expireAssessmentIfNeeded();scheduleAssessmentExpiry();
     const record=receipt();
     const analysisLabel={NOT_REQUESTED:'Not requested',PENDING:'In progress',ASSESSMENT_REJECTED:'Rejected assessment',FAILED_OR_UNCERTAIN:'Outcome needs review',ASSESSMENT_RECEIVED:'Assessment received',RECORDED_DEMO_RESULT:'Recorded demo only'}[record.analysis]||'Not requested';
     q('#worker-intake-stages').innerHTML=`<div><dt>PHOTO INTAKE</dt><dd>${image?'Accepted on this device':'No photo yet'}</dd></div><div><dt>MODEL ANALYSIS</dt><dd>${analysisLabel}</dd></div><div><dt>PHYSICAL OUTCOME</dt><dd>Not verified</dd></div>`;
@@ -51,9 +55,23 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     q('#photo-status').textContent=busy?'Muse is inspecting this image. Checking for the result; no automatic scan retries.':result?`${result.model} · ${result.mode==='TEST_ADAPTER'?'TEST ADAPTER / NO PROVIDER CALL':result.mode==='RECORDED_SAM_WONDER_DEMO'?'VERIFIED DEMO REPLAY / NO NEW MODEL CALL':result.cached?'cached image assessment':'LIVE IMAGE ASSESSMENT'} · ${allowanceLabel}`:!getStatus()?.authenticated?'Open access. Live model analysis is restricted.':getStatus()?.reason==='MUSE_LEDGER_RECONCILIATION_REQUIRED'?'Live analysis is paused: an earlier request has an uncertain outcome. Upload, camera and demo preview remain available.':getStatus()?.reason==='MUSE_SCAN_BUDGET_NOT_AVAILABLE'?'The current scan allowance is used. Preview, capture and verified demo playback remain available.':image?`${getStatus()?.remainingScans??0} shared scans remaining · review the image before sending.`:'Choose an image to begin.';
     if(capturing)q('#photo-status').textContent='Preparing the camera encoder and recording locally. No model request has been sent.';
     if(!busy&&!result&&!status?.enabled)q('#photo-status').textContent=scanAvailability(status);
+    if(assessmentExpired&&!busy){q('#photo-status').textContent=expiredMessage;q('#photo-analyze').textContent='Request fresh image assessment ↗';}
     fallback.hidden=busy||Boolean(result)||Boolean(status?.enabled);
   }
-  function clearResult(){invalidatePhoto();result=null;attempt={status:'NOT_REQUESTED'};selection=0;fixIndex=0;recipeOverride='';assumptionsAck=false;inspectionStill=false;frameButton.hidden=true;photoTestControls.hidden=true;photoTestControls.textContent='';samOverlay.clear();q('#photo-pins').textContent='';q('#photo-overlay-note').hidden=true;q('#photo-findings').innerHTML=waiting();update();}
+  function clearResult(refresh=true){clearTimeout(assessmentTimer);assessmentTimer=null;assessmentExpired=false;invalidatePhoto();result=null;attempt={status:'NOT_REQUESTED'};selection=0;fixIndex=0;recipeOverride='';assumptionsAck=false;inspectionStill=false;frameButton.hidden=true;photoTestControls.hidden=true;photoTestControls.textContent='';samOverlay.clear();q('#photo-pins').textContent='';q('#photo-overlay-note').hidden=true;q('#photo-findings').innerHTML=waiting();if(refresh)update();}
+  function expireAssessmentIfNeeded(now=Date.now()){
+    for(const [key,value] of cache)if(photoAssessmentExpired(value,now))cache.delete(key);
+    if(!result||!photoAssessmentExpired(result,now))return false;
+    clearResult(false);assessmentExpired=true;
+    attempt={status:'ASSESSMENT_REJECTED',errorCode:'PHOTO_ASSESSMENT_EXPIRED'};
+    error(expiredMessage);return true;
+  }
+  function scheduleAssessmentExpiry(){
+    clearTimeout(assessmentTimer);assessmentTimer=null;
+    const dates=[result,...cache.values()].filter(value=>value&&value.mode!=='RECORDED_SAM_WONDER_DEMO')
+      .map(value=>Date.parse(value.expiresAt)).filter(Number.isFinite);
+    if(dates.length)assessmentTimer=setTimeout(()=>{assessmentTimer=null;update();},Math.min(2147483647,Math.max(1,Math.min(...dates)-Date.now())));
+  }
   async function selectImage(blob,sourceKind,isCurrent=()=>true){
     if(!blob||blob.size>8*1024*1024||!['image/jpeg','image/png','image/webp'].includes(blob.type))throw Error('Choose a JPEG, PNG or WebP image under 8 MB.');
     const current=++revision,priorNote=q('#photo-note').value;
@@ -83,6 +101,14 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     }finally{bitmap.close();}
   }
   function renderAssessment(){
+    if(expireAssessmentIfNeeded()){update();return;}
+    if(!result)return;
+    const focused=document.activeElement;
+    const focusGroup=root.contains(focused)?[
+      '#photo-component-fix','#photo-recipe-map','#photo-pins [data-photo-region]',
+      '#photo-findings [data-photo-region]','#photo-findings [data-photo-fix]',
+    ].find(selector=>focused.matches(selector)):null;
+    const focusIndex=focusGroup?[...root.querySelectorAll(focusGroup)].indexOf(focused):-1;
     const region=result.regions[selection];const chosen=region.possibleFixes[fixIndex]||region.possibleFixes[0];
     const proposal=validateTwinProposals(result.twinProposals||[],result.regions).find(p=>p.regionIndex===selection&&p.fixIndex===fixIndex);
     const mapped=recipeOverride||proposal?.strategyId||'';
@@ -100,13 +126,14 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
     }
     if(onTestPhotoFixInTwin)q('#photo-findings').insertAdjacentHTML('afterbegin',`<p class="scope-note">Choose a fix on the image to test its mapped reference-workcell hypothesis. ${clip?'Use “Inspect analyzed first frame” for fix controls; Wonder diagnosed that frame, not the entire video.':''} A passing model test is not a repaired-photo verdict.</p>`);
     update();
+    if(focusGroup)root.querySelectorAll(focusGroup)[focusIndex]?.focus({preventScroll:true});
   }
   async function analyze(){
     if(!image||busy)return;
-    if(result){renderAssessment();return;}
+    if(result){if(expireAssessmentIfNeeded()){update();return;}renderAssessment();return;}
     const key=`SAM_WONDER:${image.imageDigest}:${clip?.videoDataUrl||''}:${image.sourceKind}:${q('#photo-target').value}:${q('#photo-note').value}`;
-    if(cache.has(key)){result={...cache.get(key),cached:true};samOverlay.setResult(result.segmentation);renderAssessment();return;}
-    const savedImage=image;attempt={status:'PENDING'};busy=true;error();update();
+    if(cache.has(key)){result={...cache.get(key),cached:true};if(expireAssessmentIfNeeded()){update();return;}samOverlay.setResult(result.segmentation);renderAssessment();return;}
+    const savedImage=image;assessmentExpired=false;attempt={status:'PENDING'};busy=true;error();update();
     try{
       const response=await fetch('/api/muse/perception-scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({imageDataUrl:image.imageDataUrl,sourceKind:image.sourceKind,note:q('#photo-note').value,target:q('#photo-target').value.trim(),videoDataUrl:clip?.videoDataUrl||null,requestId:crypto.randomUUID(),consent:getStatus().consent}),signal:AbortSignal.timeout(65000)});
       if(!response.headers.get('content-type')?.includes('application/json'))throw Error('The hosted scan connection failed; its outcome needs review before another scan.');
@@ -126,7 +153,7 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
       }
       if(value.kind!=='PHOTO_VISUAL_ASSESSMENT'||value.imageDigest!==savedImage.imageDigest||!Array.isArray(value.regions)||!value.regions.length)throw Error('Image assessment did not match this image.');
       if(image!==savedImage)throw Error('The image changed. This assessment cannot overlay the new image.');
-      result=value;cache.set(key,value);selection=0;fixIndex=0;if(result.segmentation)samOverlay.setResult(result.segmentation);renderAssessment();
+      result=value;if(expireAssessmentIfNeeded()){update();return;}assessmentExpired=false;cache.set(key,value);selection=0;fixIndex=0;if(result.segmentation)samOverlay.setResult(result.segmentation);renderAssessment();
     }catch(e){attempt={...attempt,status:e.message.includes('MUSE_PHOTO_BOX_OUT_OF_RANGE')?'ASSESSMENT_REJECTED':'FAILED_OR_UNCERTAIN',errorCode:e.message.match(/MUSE_[A-Z_0-9]+/)?.[0]||'SCAN_OUTCOME_UNCONFIRMED'};error(scanFailure(e));}
     finally{busy=false;await refreshStatus();update();}
   }
@@ -167,12 +194,16 @@ export function createPhotoInspector(root,{getStatus,refreshStatus,onTestRecipeI
   for(const field of ['#photo-note','#photo-target'])q(field).addEventListener('input',()=>{clearResult();error();});q('#photo-analyze').addEventListener('click',analyze);
   function changeChoice(){recipeOverride='';assumptionsAck=false;invalidatePhoto();renderAssessment();}
   root.addEventListener('change',event=>{
+    if(!['photo-component-fix','photo-recipe-map','photo-test-assumptions'].includes(event.target.id))return;
+    if(expireAssessmentIfNeeded()){update();return;}if(!result)return;
     if(event.target.id==='photo-component-fix'){fixIndex=Number(event.target.value);changeChoice();}
     if(event.target.id==='photo-recipe-map'){recipeOverride=event.target.value;assumptionsAck=false;invalidatePhoto();renderAssessment();}
     if(event.target.id==='photo-test-assumptions'){assumptionsAck=event.target.checked;const proposal=validateTwinProposals(result.twinProposals||[],result.regions).find(p=>p.regionIndex===selection&&p.fixIndex===fixIndex);q('#photo-run-selected-fix').disabled=!assumptionsAck||!(recipeOverride||proposal?.strategyId);q('[data-photo-open-test]').textContent=q('#photo-run-selected-fix').disabled?'Choose / test this fix ↗':'Test this fix in twin ↗';if(!assumptionsAck)invalidatePhoto();}
   });
-  root.addEventListener('click',async event=>{const button=event.target.closest('button');if(button?.hasAttribute('data-photo-open-test')){if(!q('#photo-run-selected-fix').disabled)q('#photo-run-selected-fix').click();else{photoTestControls.scrollIntoView({block:'center'});q('#photo-component-fix')?.focus();}}if(button?.dataset.samId!==undefined)samOverlay.select(button.dataset.samId);if(button?.dataset.photoRegion!==undefined){selection=Number(button.dataset.photoRegion);fixIndex=0;changeChoice();}if(button?.dataset.photoFix!==undefined){fixIndex=Number(button.dataset.photoFix);changeChoice();}if(button?.dataset.testTwinRecipe&&onTestRecipeInTwin)onTestRecipeInTwin(button.dataset.testTwinRecipe);if(button?.id==='photo-run-selected-fix'&&assumptionsAck&&onTestPhotoFixInTwin){const proposal=validateTwinProposals(result.twinProposals||[],result.regions).find(p=>p.regionIndex===selection&&p.fixIndex===fixIndex);try{const epoch=photoEpoch,saved=image;const bytes=Uint8Array.from(atob(saved.imageDataUrl.split(',')[1]),c=>c.charCodeAt(0));if(hex(await crypto.subtle.digest('SHA-256',bytes))!==saved.imageDigest)throw Error('PHOTO_TWIN_PIXELS_MISMATCH');if(epoch!==photoEpoch||image!==saved)throw Error('STALE_PHOTO_TEST');onTestPhotoFixInTwin({image:{...image},result,regionIndex:selection,fixIndex,strategyId:recipeOverride||proposal?.strategyId,origin:recipeOverride?'OPERATOR_HYPOTHESIS':'WONDER_PROPOSAL',revision:photoEpoch});}catch(e){error(e.message);}}});
+  root.addEventListener('click',async event=>{const button=event.target.closest('button');if(button?.matches('[data-photo-open-test],[data-sam-id],[data-photo-region],[data-photo-fix],[data-test-twin-recipe],#photo-run-selected-fix')){if(expireAssessmentIfNeeded()){update();return;}if(!result)return;}if(button?.hasAttribute('data-photo-open-test')){if(!q('#photo-run-selected-fix').disabled)q('#photo-run-selected-fix').click();else{photoTestControls.scrollIntoView({block:'center'});q('#photo-component-fix')?.focus();}}if(button?.dataset.samId!==undefined)samOverlay.select(button.dataset.samId);if(button?.dataset.photoRegion!==undefined){selection=Number(button.dataset.photoRegion);fixIndex=0;changeChoice();}if(button?.dataset.photoFix!==undefined){fixIndex=Number(button.dataset.photoFix);changeChoice();}if(button?.dataset.testTwinRecipe&&onTestRecipeInTwin)onTestRecipeInTwin(button.dataset.testTwinRecipe);if(button?.id==='photo-run-selected-fix'&&assumptionsAck&&onTestPhotoFixInTwin){const proposal=validateTwinProposals(result.twinProposals||[],result.regions).find(p=>p.regionIndex===selection&&p.fixIndex===fixIndex);try{const epoch=photoEpoch,saved=image;const bytes=Uint8Array.from(atob(saved.imageDataUrl.split(',')[1]),c=>c.charCodeAt(0));if(hex(await crypto.subtle.digest('SHA-256',bytes))!==saved.imageDigest)throw Error('PHOTO_TWIN_PIXELS_MISMATCH');if(epoch!==photoEpoch||image!==saved)throw Error('STALE_PHOTO_TEST');if(expireAssessmentIfNeeded()){update();return;}assertPhotoAssessmentFresh(result);onTestPhotoFixInTwin({image:{...image},result,regionIndex:selection,fixIndex,strategyId:recipeOverride||proposal?.strategyId,origin:recipeOverride?'OPERATOR_HYPOTHESIS':'WONDER_PROPOSAL',revision:photoEpoch});}catch(e){if(expireAssessmentIfNeeded())update();else error(e.message);}}});
   const releaseCapture=()=>{captureAbort?.abort();clipPlayer.pause();stopCamera();};
-  window.addEventListener('pagehide',releaseCapture);document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseCapture();});
+  window.addEventListener('pagehide',()=>{releaseCapture();clearTimeout(assessmentTimer);assessmentTimer=null;});
+  window.addEventListener('focus',update);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseCapture();else update();});
   update();return {setStatus:update,setActive:value=>{active=value;if(!active){captureAbort?.abort();clipPlayer.pause();stopCamera();}}};
 }

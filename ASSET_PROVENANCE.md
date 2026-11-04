@@ -28,7 +28,7 @@ Both PNGs were generated with the built-in image tool for this user-authorized i
 
 ## Asset Size and Mobile Network Considerations
 
-The two primary hero illustrations (`breakshift-microgrid-hero-v1.png` at 2.47 MB and `robot-cutaway-v1.png` at 1.89 MB) are delivered as uncompressed high-fidelity renders to preserve crisp mechanical and electrical details across desktop and retina displays. On mobile connections, initial download times may take several seconds before browser image caching activates. Automated test runners allow appropriate timeout margins for full asset hydration.
+The original PNG illustrations remain the source artwork and are retained for evidence fixtures. Browser presentation uses same-dimension WebP derivatives: `breakshift-microgrid-hero-v1.webp` (248,630 bytes) and `robot-cutaway-v1.webp` (115,430 bytes), mechanically encoded with FFmpeg `libwebp -quality 85`. The combined presentation payload is about 92% smaller than the two source PNGs. Cutaway/reference images load lazily; the first workcell image retains high fetch priority. This encoding change does not alter the separately hash-bound SAM/Wonder JPEG or MP4 inspection examples.
 
 ## Workcell v1
 

@@ -1,5 +1,5 @@
 /* Keep the desktop instrument layout; use reading sizes on handheld screens. */
-@media (max-width: 900px) {
+@media (max-width: 1100px), (any-pointer: coarse) {
   body { font-size: 16px; line-height: 1.5; --muted: #b8c3b1; }
   body *, body *::before, body *::after { letter-spacing: 0 !important; }
   .workspace, .workspace-toolbar, .section-heading, .repair-header,
@@ -17,6 +17,13 @@
   .workspace-toolbar { flex-wrap: wrap; padding: 12px; }
   .workspace-toolbar > .segmented { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace-toolbar .segmented button { text-align: left; }
+  .reasoning-hud:empty { min-height: 600px; }
+  .scene[data-view=spatial] { aspect-ratio: auto; }
+  .scene[data-view=spatial] .scene-fault { position: static; max-width: none; margin: 0; }
+  .spatial-stage { height: auto; }
+  #spatial-canvas, #spatial-pins { height: auto; aspect-ratio: 2 / 1; }
+  #spatial-pins { bottom: auto; }
+  .spatial-controls { position: static; padding: 8px; background: #10140f; }
   .twin-picker { width: 100%; font-size: 14px; }
   .twin-picker select { flex: 1; min-width: 0; }
 
@@ -166,7 +173,8 @@
   .twins { grid-template-columns: minmax(0, 1fr); }
   .component-button { min-width: 0; }
   .scene-topline { font-size: 14px; flex-wrap: wrap; gap: 4px; top: 8px; left: 10px; right: 10px; }
-  .scene-fault { position: static; font-size: 14px; margin: 0; max-width: none; }
+  .scene-topline { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .scene-fault { position: static; font-size: 14px; margin: 0; max-width: none; min-height: 79px; }
   .scene:has(.scene-fault:not([hidden])) { aspect-ratio: auto; }
   .scene > .scene-image { height: auto; aspect-ratio: 2 / 1; }
   .scene > .hotspots, .scene > .fault-lines { height: auto; aspect-ratio: 2 / 1; bottom: auto; }

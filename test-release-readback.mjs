@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {parseReleaseSnapshot,verifyAssetBytes} from './verify-user-facing.mjs';
+const bytes=Buffer.from('source-bound asset');
+const digest=createHash('sha256').update(bytes).digest('hex');
+const raw=()=>({id:'live-1234567890abcdef',manifest:[{path:'public/app.js',sha256:digest,bytes:bytes.length}]});
+const snapshot=()=>parseReleaseSnapshot(Buffer.from(JSON.stringify(raw())));
+test('release readback retains actual served identity and raw digest',()=>{const s=snapshot();assert.equal(s.release.id,'live-1234567890abcdef');assert.match(s.sha256,/^[a-f0-9]{64}$/);});
+test('release paths reject traversal and duplicates',()=>{for(const name of ['../outside','public/../bad','https://other/app']){const r=raw();r.manifest[0].path=name;assert.throws(()=>parseReleaseSnapshot(Buffer.from(JSON.stringify(r))));}const r=raw();r.manifest.push({...r.manifest[0]});assert.throws(()=>parseReleaseSnapshot(Buffer.from(JSON.stringify(r))));});
+test('asset body and release header bind the observed browser response',()=>{assert(verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes,deployed:true,releaseHeader:'live-1234567890abcdef'}).verified);});
+test('changed bytes and different served release fail verification',()=>{assert.throws(()=>verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes:Buffer.from('different')}));assert.throws(()=>verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes,deployed:true,releaseHeader:'live-0000000000000000'}));});
+test('partial media bytes bind to a full hash-verified reference',()=>{assert(verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes:bytes.subarray(2,6),status:206,contentRange:`bytes 2-5/${bytes.length}`,fullBytes:bytes}).verified);});
+test('invalid partial offsets and missing references fail verification',()=>{for(const range of ['bytes 2-5/999','bytes 9-2/18','wrong'])assert.throws(()=>verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes:bytes.subarray(2,6),status:206,contentRange:range,fullBytes:bytes}));assert.throws(()=>verifyAssetBytes({snapshot:snapshot(),assetPath:'public/app.js',bytes:bytes.subarray(2,6),status:206,contentRange:`bytes 2-5/${bytes.length}`}));});

@@ -2,30 +2,203 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 import { createReviewPreviewServer } from './preview-review.mjs';
 import { parseAndReplayExperiment } from './public/experiment-replay.mjs';
 
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+
+export function parseReleaseSnapshot(bytes) {
+  const body = Buffer.from(bytes);
+  assert(body.length > 0 && body.length <= 262144, 'RELEASE_SIZE_INVALID');
+  const release = JSON.parse(body.toString('utf8'));
+  assert(/^live-[a-f0-9]{16}$/.test(release.id), 'RELEASE_ID_INVALID');
+  assert(Array.isArray(release.manifest) && release.manifest.length > 0 && release.manifest.length <= 256, 'RELEASE_MANIFEST_INVALID');
+  const paths = new Set();
+  let totalBytes = 0;
+  const manifestPins = release.manifest.map(file => {
+    assert(typeof file.path === 'string' && /^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_.-]+)*(?:\.[a-zA-Z0-9_-]+)?$/.test(file.path) &&
+      file.path.split('/').every(part => part !== '.' && part !== '..') && !paths.has(file.path), 'RELEASE_PATH_INVALID');
+    assert(/^[a-f0-9]{64}$/.test(file.sha256), 'RELEASE_ASSET_DIGEST_INVALID');
+    assert(Number.isSafeInteger(file.bytes) && file.bytes >= 0 && file.bytes <= 8388608, 'RELEASE_ASSET_SIZE_INVALID');
+    paths.add(file.path); totalBytes += file.bytes;
+    return { path: file.path, sha256: file.sha256, bytes: file.bytes };
+  });
+  assert(totalBytes <= 33554432, 'RELEASE_TOTAL_SIZE_INVALID');
+  return { release, sha256: sha256(body), bytes: body.length, manifestPins };
+}
+
+export function verifyAssetBytes({ snapshot, assetPath, bytes, status = 200, contentRange = null,
+  fullBytes, releaseHeader, deployed = false }) {
+  const pin = snapshot.manifestPins.find(file => file.path === assetPath);
+  assert(pin, `ASSET_NOT_IN_RELEASE:${assetPath}`);
+  if (deployed) assert.equal(releaseHeader, snapshot.release.id, `ASSET_RELEASE_HEADER_MISMATCH:${assetPath}`);
+  const body = Buffer.from(bytes);
+  assert(status === 200 || status === 206, `ASSET_STATUS_INVALID:${assetPath}:${status}`);
+  if (status === 206) {
+    const range = /^bytes (\d+)-(\d+)\/(\d+)$/.exec(contentRange || '');
+    assert(range, `ASSET_RANGE_INVALID:${assetPath}`);
+    const [start, end, total] = range.slice(1).map(Number);
+    assert([start, end, total].every(Number.isSafeInteger) && start >= 0 && end >= start && end < total && total === pin.bytes,
+      `ASSET_RANGE_INVALID:${assetPath}`);
+    assert(fullBytes, `ASSET_RANGE_REFERENCE_MISSING:${assetPath}`);
+    const full = Buffer.from(fullBytes);
+    assert.equal(full.length, pin.bytes, `ASSET_SIZE_MISMATCH:${assetPath}`);
+    assert.equal(sha256(full), pin.sha256, `ASSET_DIGEST_MISMATCH:${assetPath}`);
+    assert.equal(body.length, end - start + 1, `ASSET_RANGE_SIZE_MISMATCH:${assetPath}`);
+    assert(body.equals(full.subarray(start, end + 1)), `ASSET_RANGE_BYTES_MISMATCH:${assetPath}`);
+  } else {
+    assert.equal(body.length, pin.bytes, `ASSET_SIZE_MISMATCH:${assetPath}`);
+    assert.equal(sha256(body), pin.sha256, `ASSET_DIGEST_MISMATCH:${assetPath}`);
+  }
+  return { path: assetPath, status, contentRange, responseSha256: sha256(body), responseBytes: body.length,
+    manifestSha256: pin.sha256, manifestBytes: pin.bytes, verified: true };
+}
+
+export async function readCompletedResponse(response) {
+  const completionError = await response.finished();
+  if (completionError instanceof Error) return { cancelled: true, reason: completionError.message };
+  assert.equal(completionError, null, 'ASSET_COMPLETION_STATUS_INVALID');
+  return { cancelled: false, bytes: await response.body() };
+}
+
+export function unavailableBodyEvidence({ bytes, pin, browserReadbacks }) {
+  if (bytes.length !== 0 || !pin || pin.bytes === 0) return null;
+  const witnesses = browserReadbacks.filter(record => record.status === 200 && Number.isSafeInteger(record.bytes) && record.bytes > 0);
+  if (!witnesses.length) return null;
+  for (const witness of witnesses) {
+    assert.equal(witness.bytes, pin.bytes, `BROWSER_FETCH_SIZE_MISMATCH:${pin.path}`);
+    assert.equal(witness.sha256, pin.sha256, `BROWSER_FETCH_DIGEST_MISMATCH:${pin.path}`);
+  }
+  return { reason: 'EMPTY_INSTRUMENTATION_BODY_WITH_NONEMPTY_BROWSER_FETCH', browserReadbacks: witnesses };
+}
+
+async function getBytes(url, maxBytes) {
+  const response = await fetch(url, { method: 'GET', redirect: 'error', credentials: 'omit', cache: 'no-store',
+    signal: AbortSignal.timeout(15000) });
+  assert.equal(response.status, 200, `READBACK_HTTP_${response.status}`);
+  const chunks = [], reader = response.body.getReader();
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.length;
+      assert(size <= maxBytes, 'READBACK_SIZE_EXCEEDED');
+      chunks.push(Buffer.from(value));
+    }
+  } finally { await reader.cancel(); }
+  return Buffer.concat(chunks);
+}
+
+async function main() {
 const deployed=process.argv.includes('--verify-deployed-user-facing');
 const {chromium}=await import(pathToFileURL(resolve(process.argv[2])).href);
-const release=JSON.parse(await readFile(new URL('./.cf-preview/release.json',import.meta.url),'utf8'));
 const output=fileURLToPath(new URL(`./artifacts/${deployed?'deployed-':''}user-facing-${Date.now()}/`,import.meta.url));await mkdir(output,{recursive:true});
 const server=deployed?null:createReviewPreviewServer();if(server)await new Promise(done=>server.listen(0,'127.0.0.1',done));
 const base=deployed?'https://breakshift-maintenance-bay.dreamnet-intel.workers.dev':`http://127.0.0.1:${server.address().port}`;
-const browser=await chromium.launch({channel:'msedge',headless:true,args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
-const report={release:release.id,url:base,evidence:deployed?'DEPLOYED_PUBLIC_USER_JOURNEYS':'LOCAL_PUBLIC_USER_JOURNEYS',cameraEvidence:'SYNTHETIC_BROWSER_CAMERA_NOT_PHYSICAL_PHONE_HARDWARE',providerCalls:0,unexpectedPosts:0,checks:[],errors:[],buttonCoverage:[]};
+let browser, snapshot;
+const report={release:null,url:base,evidence:deployed?'DEPLOYED_PUBLIC_USER_JOURNEYS':'LOCAL_PUBLIC_USER_JOURNEYS',cameraEvidence:'SYNTHETIC_BROWSER_CAMERA_NOT_PHYSICAL_PHONE_HARDWARE',providerCalls:0,unexpectedPosts:0,checks:[],errors:[],buttonCoverage:[],passed:false,
+  sourceBinding:{baseline:deployed?'DEPLOYED_SAME_ORIGIN_RELEASE':'LOCAL_STAGED_RELEASE',releaseSha256:null,manifestPins:[],capturedAssets:[],cancelledCaptures:[],unavailableBodyCaptures:[],captureStatus:'NOT_COMPLETED',unobservedManifestPaths:[],postReleaseVerified:false,
+    scope:'Captured asset bytes checked against the served manifest; not independent publisher authentication or proof that all manifest assets were exercised.'}};
+const readSnapshot = async () => parseReleaseSnapshot(deployed ? await getBytes(`${base}/release.json`,262144)
+  : await readFile(new URL('./.cf-preview/release.json',import.meta.url)));
+const partialReferences = new Map();
+const capturesByKey = new Map();
 try {
+  snapshot = await readSnapshot();
+  report.release = snapshot.release.id;
+  report.sourceBinding.releaseSha256 = snapshot.sha256;
+  report.sourceBinding.manifestPins = snapshot.manifestPins;
+  browser=await chromium.launch({channel:'msedge',headless:true,args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
   for(const [name,width,height] of [['phone',390,844],['tablet',768,1024],['desktop',1440,1000]]) {
-    const context=await browser.newContext({viewport:{width,height},acceptDownloads:true,permissions:['camera']});
-    await context.addInitScript(()=>{
+    const context=await browser.newContext({viewport:{width,height},acceptDownloads:true,permissions:['camera'],serviceWorkers:'block'});
+    const pendingCaptures = new Set();
+    await context.route('**/*',route=>{
+      const request=route.request(),url=new URL(request.url());
+      if(request.method()!=='GET'){report.unexpectedPosts++;return route.abort();}
+      if(url.origin!==base){report.errors.push(`${name}: EXTERNAL_REQUEST_BLOCKED:${url.origin}`);return route.abort();}
+      return route.continue();
+    });
+    context.on('response',response=>{
+      const url=new URL(response.url());
+      if(url.origin!==base||url.pathname.startsWith('/api/'))return;
+      const task=(async()=>{
+        const assetPath=url.pathname==='/'?'index.html':decodeURIComponent(url.pathname.slice(1));
+        const completed=await readCompletedResponse(response);
+        if(completed.cancelled){
+          report.sourceBinding.cancelledCaptures.push({viewport:name,path:assetPath,status:response.status(),
+            reason:completed.reason,verified:false});
+          return;
+        }
+        const body=completed.bytes;
+        if(body.length===0&&response.status()===200){
+          const pin=snapshot.manifestPins.find(file=>file.path===assetPath);
+          const browserReadbacks=await response.frame().evaluate(async url=>{
+            const records=(window.__breakshiftAssetReadbacks||[]).filter(record=>record.url===url);
+            await Promise.all(records.map(record=>record.done));
+            return records.map(({url,status,bytes,sha256,error})=>({url,status,bytes,sha256,error}));
+          },response.url());
+          const unavailable=unavailableBodyEvidence({bytes:body,pin,browserReadbacks});
+          if(unavailable){
+            // A same-URL witness is not exact request correlation, so this event stays unverified.
+            report.sourceBinding.unavailableBodyCaptures.push({viewport:name,path:assetPath,status:response.status(),
+              ...unavailable,verified:false});
+            return;
+          }
+        }
+        if(assetPath==='release.json'){
+          assert.equal(sha256(body),snapshot.sha256,'BROWSER_RELEASE_CHANGED');return;
+        }
+        let fullBytes;
+        if(response.status()===206){
+          const pin=snapshot.manifestPins.find(file=>file.path===assetPath);
+          assert(pin,`ASSET_NOT_IN_RELEASE:${assetPath}`);
+          if(!partialReferences.has(assetPath))partialReferences.set(assetPath,getBytes(new URL(assetPath,`${base}/`).href,pin.bytes));
+          fullBytes=await partialReferences.get(assetPath);
+        }
+        const capture=verifyAssetBytes({snapshot,assetPath,bytes:body,status:response.status(),
+          contentRange:response.headers()['content-range']||null,releaseHeader:response.headers()['x-breakshift-release'],deployed,fullBytes});
+        const key=JSON.stringify([name,capture.path,capture.status,capture.contentRange,capture.responseSha256]);
+        const prior=capturesByKey.get(key);
+        if(prior)prior.responses++;
+        else{const record={viewport:name,...capture,responses:1};capturesByKey.set(key,record);report.sourceBinding.capturedAssets.push(record);}
+      })().catch(error=>report.errors.push(`${name}: ${error.message}`));
+      pendingCaptures.add(task);task.finally(()=>pendingCaptures.delete(task));
+    });
+    await context.addInitScript(({sourceOrigin,paths})=>{
+      const allowed=new Set(paths),nativeFetch=window.fetch;
+      const readbacks=window.__breakshiftAssetReadbacks=[];
+      window.fetch=async function(...args){
+        const response=await Reflect.apply(nativeFetch,this,args);
+        const url=new URL(response.url),path=url.pathname.slice(1);
+        if(url.origin===sourceOrigin&&allowed.has(path)){
+          const record={url:response.url,status:response.status,bytes:null,sha256:null,error:null};
+          record.done=(async()=>{
+            try{
+              const bytes=await response.clone().arrayBuffer();
+              record.bytes=bytes.byteLength;
+              record.sha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');
+            }catch(error){record.error=error.message;}
+          })();
+          readbacks.push(record);
+        }
+        return response;
+      };
       const key=el=>el.id||`${el.closest('[id]')?.id||el.parentElement?.closest('[id]')?.id||el.tagName}/${JSON.stringify({...el.dataset})}${Object.keys(el.dataset).length?'':`/${el.getAttribute('aria-label')||el.textContent.trim().slice(0,70)}`}`;
       window.__buttonAudit={seen:{},clicked:[],key};
       document.addEventListener('click',e=>{const b=e.target.closest('button');if(b)window.__buttonAudit.clicked.push(key(b));},true);
-    });
+    },{sourceOrigin:base,paths:snapshot.manifestPins.map(pin=>pin.path)});
     const page=await context.newPage();page.setDefaultTimeout(8000);page.on('pageerror',e=>report.errors.push(`${name}: ${e.message}`));
-    await page.route('**/api/**',route=>{if(route.request().method()!=='GET'){report.unexpectedPosts++;return route.abort();}return route.continue();});
     const seen=new Map(),clicked=new Set();
     const scan=async()=>{const value=await page.evaluate(()=>{const a=window.__buttonAudit;for(const el of document.querySelectorAll('button')){if(!el.getClientRects().length)continue;const k=a.key(el),old=a.seen[k];a.seen[k]={label:el.textContent.trim(),everEnabled:Boolean(old?.everEnabled||!el.disabled),disabled:el.disabled};}return {seen:a.seen,clicked:a.clicked};});for(const [k,v]of Object.entries(value.seen))seen.set(k,{...v,everEnabled:Boolean(v.everEnabled||seen.get(k)?.everEnabled)});value.clicked.forEach(k=>clicked.add(k));};
-    const reset=async()=>{if(page.url()!=='about:blank')await scan();await page.goto(base);await page.locator('#sync-pill').filter({hasText:'DEVICE-LOCAL'}).waitFor();await scan();};
+    const reset=async()=>{
+      if(page.url()!=='about:blank'){
+        await scan();
+        while(pendingCaptures.size)await Promise.all([...pendingCaptures]);
+      }
+      await page.goto(base);await page.locator('#sync-pill').filter({hasText:'DEVICE-LOCAL'}).waitFor();await scan();
+    };
     const click=async selector=>{await scan();await page.locator(selector).click();};
     const download=async selector=>{const [file]=await Promise.all([page.waitForEvent('download'),click(selector)]);return readFile(await file.path(),'utf8');};
     const setRange=async(selector,value)=>page.locator(selector).evaluate((el,v)=>{el.value=String(v);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));},value);
@@ -149,8 +322,37 @@ try {
       await click('#photo-clear');await click('#photo-demo-track');await page.locator('#photo-first-frame').waitFor();await click('#photo-first-frame');await click('#photo-first-frame');
     });
     await scan();const untested=[...seen].filter(([key,v])=>v.everEnabled&&!clicked.has(key));report.buttonCoverage.push({viewport:name,observedButtons:seen.size,clickedButtons:clicked.size,notClickedEnabled:untested.map(([key,v])=>({key,label:v.label})),disabledOnly:[...seen].filter(([,v])=>!v.everEnabled).map(([key,v])=>({key,label:v.label}))});
+    await page.waitForLoadState('networkidle');
+    while(pendingCaptures.size)await Promise.all([...pendingCaptures]);
+    for(const path of ['index.html','style.css','public/component-bay.js'])assert(report.sourceBinding.capturedAssets.some(asset=>asset.viewport===name&&asset.path===path),`REQUIRED_ASSET_NOT_CAPTURED:${name}:${path}`);
     await context.close();
   }
   report.passed=report.checks.every(c=>c.passed)&&report.buttonCoverage.every(c=>c.notClickedEnabled.length===0)&&report.unexpectedPosts===0&&report.errors.length===0;if(!report.passed)process.exitCode=1;
-} finally {await browser.close();if(server){server.closeAllConnections();await new Promise(done=>server.close(done));}await writeFile(resolve(output,'receipt.json'),JSON.stringify(report,null,2));}
+} catch(error) {
+  report.errors.push(error.message);report.passed=false;process.exitCode=1;
+} finally {
+  if(snapshot){
+    try{
+      const after=await readSnapshot();
+      report.sourceBinding.postReleaseId=after.release.id;
+      report.sourceBinding.postReleaseSha256=after.sha256;
+      assert.equal(after.sha256,snapshot.sha256,'RELEASE_CHANGED_DURING_VERIFICATION');
+      assert.equal(after.release.id,snapshot.release.id,'RELEASE_ID_CHANGED_DURING_VERIFICATION');
+      report.sourceBinding.postReleaseVerified=true;
+    }catch(error){report.errors.push(error.message);report.passed=false;process.exitCode=1;}
+    const observed=new Set(report.sourceBinding.capturedAssets.map(asset=>asset.path));
+    report.sourceBinding.unobservedManifestPaths=snapshot.manifestPins.filter(pin=>!observed.has(pin.path)).map(pin=>pin.path);
+  }
+  if(report.errors.length||!report.sourceBinding.postReleaseVerified){report.passed=false;process.exitCode=1;}
+  report.behaviorPassed=report.checks.length===24&&report.checks.every(check=>check.passed)&&
+    report.buttonCoverage.length===3&&report.buttonCoverage.every(coverage=>coverage.notClickedEnabled.length===0)&&report.unexpectedPosts===0;
+  const partial=report.sourceBinding.unavailableBodyCaptures.length>0||report.sourceBinding.cancelledCaptures.length>0;
+  report.sourceBinding.captureStatus=report.errors.length||!report.sourceBinding.postReleaseVerified?'FAILED':partial?'PARTIAL_CAPTURE':'OBSERVED_RESPONSES_VERIFIED';
+  if(partial){report.passed=false;process.exitCode=1;}
+  await browser?.close();if(server){server.closeAllConnections();await new Promise(done=>server.close(done));}
+  await writeFile(resolve(output,'receipt.json'),JSON.stringify(report,null,2));
+}
 console.log(JSON.stringify({output,...report},null,2));
+}
+
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();

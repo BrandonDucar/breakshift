@@ -729,7 +729,15 @@ export function createSpatialXrController({
       );
       session.requestAnimationFrame(onXrFrame);
     } catch (error) {
+      const failedSession = xrSession;
       xrSession = null;
+      xrRefSpace = null;
+      try { xrHitTestSource?.cancel?.(); } catch { /* Retain session cleanup if hit testing already ended. */ }
+      xrHitTestSource = null;
+      if (failedSession) {
+        try { await failedSession.end(); } catch { /* The device may already have ended it. */ }
+      }
+      document.body.classList.remove('xr-immersive-active');
       if (xrButtonEl) {
         xrButtonEl.disabled = !xrSupported;
         xrButtonEl.textContent = xrSupported ? 'Enter WebXR AR' : 'WebXR AR unavailable here';
@@ -746,19 +754,23 @@ export function createSpatialXrController({
     let moved = false;
     let startX = 0;
     let startY = 0;
+    let pressX = 0;
+    let pressY = 0;
 
     canvasEl.addEventListener('pointerdown', ev => {
       dragging = true;
       moved = false;
       startX = ev.clientX;
       startY = ev.clientY;
+      pressX = ev.clientX;
+      pressY = ev.clientY;
       canvasEl.setPointerCapture?.(ev.pointerId);
     });
     canvasEl.addEventListener('pointermove', ev => {
       if (!dragging) return;
       const dx = ev.clientX - startX;
       const dy = ev.clientY - startY;
-      if (Math.hypot(dx, dy) > 4) moved = true;
+      if (Math.hypot(ev.clientX - pressX, ev.clientY - pressY) > 4) moved = true;
       startX = ev.clientX;
       startY = ev.clientY;
       yaw -= dx * 0.009;
@@ -803,7 +815,7 @@ export function createSpatialXrController({
   if (stageEl && typeof IntersectionObserver === 'function') {
     const io = new IntersectionObserver(
       entries => {
-        isVisible = entries.some(e => e.isIntersecting);
+        isVisible = entries.some(e => e.isIntersecting && e.intersectionRatio >= 0.05);
         if (isVisible) scheduleInlineLoop();
         else stopInlineLoop();
       },
@@ -834,9 +846,12 @@ export function createSpatialXrController({
         return;
       }
       if (isStageActive) {
-        isVisible = true;
-        renderInlineFrame();
-        scheduleInlineLoop();
+        const rect = stageEl?.getBoundingClientRect();
+        const visibleWidth = rect ? Math.max(0, Math.min(rect.right, innerWidth) - Math.max(rect.left, 0)) : 0;
+        const visibleHeight = rect ? Math.max(0, Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0)) : 0;
+        isVisible = Boolean(rect?.width > 0 && rect.height > 0 && visibleWidth * visibleHeight / (rect.width * rect.height) >= 0.05);
+        if (isVisible) { renderInlineFrame(); scheduleInlineLoop(); }
+        else stopInlineLoop();
       } else {
         stopInlineLoop();
       }

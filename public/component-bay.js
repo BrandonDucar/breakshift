@@ -534,7 +534,15 @@ document.addEventListener('click', event => {
 $('#qr-target-select').addEventListener('change', event => { qrTarget = event.target.value; renderPairing(); });
 $('#copy-join-url').addEventListener('click', async () => {
   const urlText = $('#join-url-code').textContent;
-  try { await navigator.clipboard?.writeText(urlText); $('#copy-join-url').textContent = 'Copied ✓'; setTimeout(() => { $('#copy-join-url').textContent = 'Copy link'; }, 1400); } catch {}
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(urlText);
+    $('#copy-join-url').textContent = 'Copied ✓';
+    setTimeout(() => { $('#copy-join-url').textContent = 'Copy link'; }, 1400);
+  } catch {
+    $('#copy-join-url').textContent = 'Copy unavailable';
+    $('#pairing-notice').textContent = 'Clipboard access is unavailable. Select and copy the displayed join link manually.';
+  }
 });
 $('#rotate-room-code').addEventListener('click', async () => {
   try {
